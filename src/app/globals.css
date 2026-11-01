@@ -1,0 +1,55 @@
+/* Visual system tokens — "02 · Visual system — colours, type, pieces" */
+:root {
+  --ink: #2a2733;       /* Kohl Ink — text, outlines, offset shadows */
+  --paper: #f7f3ec;     /* Rice Paper — base background */
+  --lotus: #f5c9c6;     /* Lotus Pink — Ch. 01 Home, primary button */
+  --marigold: #f7dda4;  /* Marigold — Ch. 02 About, highlights, badges */
+  --pond: #c3daec;      /* Pond Blue — Ch. 03 Projects, media frames */
+  --sage: #cfe0c3;      /* Leaf Sage — Ch. 04 Contact, form fields */
+  --lilac: #dcd3f2;     /* Lune Lilac — cursor, hover and focus states */
+  --graphite: #67636f;  /* Graphite — captions and secondary text */
+
+  /* Font stacks exactly as in the design export */
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-accent: 'Instrument Serif', serif;
+  --font-mono: 'DM Mono', monospace;
+
+  /* Stage scale + offset, set before first paint by the script in layout.tsx */
+  --s: 1;
+  --ox: 0px;
+  --oy: 0px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink);
+  /* .hk-grid from the export, scaled with the stage and aligned to its corner
+     so the margins around the 1920×1080 frame continue the same dot grid */
+  background-color: var(--paper);
+  background-image: radial-gradient(
+    rgba(42, 39, 51, 0.1) calc(1.3px * var(--s)),
+    transparent calc(1.6px * var(--s))
+  );
+  background-size: calc(32px * var(--s)) calc(32px * var(--s));
+  background-position: var(--ox) var(--oy);
+}
+
+a {
+  color: var(--ink);
+}
+
+a:hover {
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--ink);
+  outline-offset: 4px;
+}
+

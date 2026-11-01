@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# vercel
+.vercel/
+
+# env files
+.env*
+!.env.example
+
+# playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# os / editor
+.DS_Store
+Thumbs.db
+
+# design references and local tool config (kept out of git)
+assets/
+.claude/

@@ -1,0 +1,406 @@
+/*
+ * Chapter 01 — Landing. Every value below is copied 1:1 from the design export.
+ * Additions from the visual system are marked as such.
+ */
+
+/* ---------- Artboard ---------- */
+.root {
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--font-display);
+  color: var(--ink);
+  box-sizing: border-box;
+}
+
+.main {
+  width: 1832px;
+  height: 1080px;
+  box-sizing: border-box;
+  padding: 0 72px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ---------- Header ---------- */
+.header {
+  height: 120px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.brandMark {
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  background: var(--lilac);
+  border: 2.5px solid var(--ink);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.navLinkActive {
+  background: var(--lotus);
+  border-color: var(--ink);
+}
+
+/* Visual system: navigation hover = dashed outline */
+.navLink:not(.navLinkActive):hover {
+  border-color: var(--ink);
+  border-style: dashed;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 80px;
+  min-height: 0;
+}
+
+.intro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  position: relative;
+}
+
+.name {
+  margin: 0;
+  font-size: 232px;
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.012em;
+  position: relative;
+}
+
+.nameLine {
+  display: block;
+}
+
+.nameLineIndent {
+  display: block;
+  position: relative;
+  padding-left: 96px;
+}
+
+.squiggle {
+  position: absolute;
+  left: 110px;
+  bottom: -34px;
+}
+
+.role {
+  margin: 64px 0 0 0;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 58px;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+.roleAmp {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 300;
+}
+
+.actions {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 36px;
+}
+
+.cta {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  height: 76px;
+  padding: 0 36px 0 40px;
+  border-radius: 999px;
+  background: var(--lotus);
+  border: 2.5px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--ink);
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+/* Visual system: button hover = lilac, presses into its shadow */
+.cta:hover {
+  background: var(--lilac);
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.cta:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.tagline {
+  margin: 0;
+  max-width: 300px;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--graphite);
+}
+
+/* ---------- Arch / showreel frame ---------- */
+.archColumn {
+  width: 640px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.arch {
+  width: 640px;
+  height: 780px;
+  border-radius: 320px 320px 32px 32px;
+  border: 2.5px solid var(--ink);
+  background: var(--pond);
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  box-shadow: 10px 10px 0 var(--ink);
+}
+
+.archImage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 635px;
+  height: 775px;
+  display: block;
+}
+
+.archOrbit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+
+.statusStrip {
+  position: absolute;
+  left: 0px;
+  top: 557px;
+  width: 330px;
+  height: 62px;
+  box-sizing: border-box;
+  padding: 0 0 0 40px;
+  transform: rotate(-8deg);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--ink);
+  flex-shrink: 0;
+}
+
+.roleScrap {
+  position: absolute;
+  left: 304px;
+  top: 576px;
+  width: 296px;
+  height: 176px;
+  box-sizing: border-box;
+  padding: 22px 34px;
+  transform: rotate(-5deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  color: var(--ink);
+}
+
+.roleScrapTitle {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.roleScrapCompany {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.experience {
+  position: absolute;
+  left: 34px;
+  top: 646px;
+  width: 252px;
+  box-sizing: border-box;
+  transform: rotate(-3deg);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.experienceText {
+  font-size: 16px;
+  line-height: 1.42;
+  font-weight: 500;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  height: 112px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scrollHint {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+}
+
+/* ---------- Rotating badge ---------- */
+.badge {
+  position: absolute;
+  left: 948px;
+  top: 168px;
+  width: 184px;
+  height: 184px;
+  border-radius: 999px;
+  background: var(--marigold);
+  border: 2.5px solid var(--ink);
+  box-sizing: border-box;
+  transform: rotate(-14deg);
+  animation: badge-spin 24s linear infinite;
+}
+
+.badgeText {
+  font-family: var(--font-mono);
+}
+
+@keyframes badge-spin {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(346deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    animation: none;
+  }
+
+  .cta {
+    transition: none;
+  }
+}
+
+/* ---------- Next chapter peek ---------- */
+.peek {
+  width: 88px;
+  height: 1080px;
+  flex-shrink: 0;
+  background: var(--marigold);
+  border-left: 2.5px solid var(--ink);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 44px 0;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.peekNumber {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+
+.peekTitle {
+  writing-mode: vertical-rl;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 44px;
+  letter-spacing: 0;
+}
