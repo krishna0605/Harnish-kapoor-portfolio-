@@ -1,0 +1,283 @@
+/*
+ * Chapter 01 — Home. Landscape values are the design export's, in --u
+ * (1 design px; exactly 1px at 1920×1080). Portrait and phone layouts follow.
+ */
+
+/* ---------- Chapter ---------- */
+.home {
+  width: calc(100vw - var(--spine));
+  height: 100svh;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: var(--header-h) var(--pad-x) 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: calc(80 * var(--u));
+  min-height: 0;
+}
+
+.intro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  position: relative;
+}
+
+/* ---------- Name ---------- */
+.name {
+  margin: 0;
+  font-size: calc(232 * var(--u));
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.012em;
+  position: relative;
+}
+
+.nameLine {
+  display: block;
+  white-space: nowrap;
+}
+
+.nameLineIndent {
+  display: block;
+  position: relative;
+  padding-left: 0.41379em; /* 96px at 232px */
+  white-space: nowrap;
+}
+
+/* 430×40 at left 110, bottom −34 (at 232px) */
+.squiggle {
+  position: absolute;
+  left: 0.47414em;
+  bottom: -0.14655em;
+  width: 1.85345em;
+  height: 0.17241em;
+  overflow: hidden;
+}
+
+/* ---------- Role + actions ---------- */
+.role {
+  margin: calc(64 * var(--u)) 0 0 0;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: max(18px, calc(58 * var(--u)));
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+.roleAmp {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 300;
+}
+
+.actions {
+  margin-top: calc(48 * var(--u));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(36 * var(--u));
+}
+
+.cta {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: max(10px, calc(16 * var(--u)));
+  height: max(40px, calc(76 * var(--u)));
+  padding: 0 max(18px, calc(36 * var(--u))) 0 max(20px, calc(40 * var(--u)));
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--lotus);
+  border: var(--stroke) solid var(--ink);
+  box-shadow: max(3px, calc(6 * var(--u))) max(3px, calc(6 * var(--u))) 0 var(--ink);
+  font-size: max(14px, calc(24 * var(--u)));
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--ink);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.cta svg {
+  width: max(20px, calc(30 * var(--u)));
+  height: auto;
+}
+
+/* Visual system: button hover = lilac, presses into its shadow */
+.cta:hover {
+  background: var(--lilac);
+  transform: translate(max(1.5px, calc(3 * var(--u))), max(1.5px, calc(3 * var(--u))));
+  box-shadow: max(1.5px, calc(3 * var(--u))) max(1.5px, calc(3 * var(--u))) 0 var(--ink);
+}
+
+.cta:active {
+  transform: translate(max(3px, calc(6 * var(--u))), max(3px, calc(6 * var(--u))));
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.tagline {
+  margin: 0;
+  max-width: max(180px, calc(300 * var(--u)));
+  font-size: max(13px, calc(19 * var(--u)));
+  line-height: 1.45;
+  color: var(--graphite);
+}
+
+/* ---------- Arch column (card scales to whatever space it gets) ---------- */
+.archColumn {
+  width: calc(640 * var(--u));
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  container: arch / size;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  height: var(--footer-h);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: max(11px, calc(14 * var(--u)));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scrollHint {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: max(10px, calc(18 * var(--u)));
+}
+
+.scrollHint svg {
+  width: max(60px, calc(120 * var(--u)));
+  height: auto;
+}
+
+.touchOnly {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .pointerOnly {
+    display: none;
+  }
+
+  .touchOnly {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta {
+    transition: none;
+  }
+}
+
+/* ---------- Portrait tablets ---------- */
+@media (orientation: portrait) {
+  .hero {
+    flex-direction: column;
+    gap: 28px;
+    padding-top: 16px;
+  }
+
+  .intro {
+    flex: none;
+    justify-content: flex-start;
+  }
+
+  .name {
+    font-size: min(calc((100vw - var(--spine) - 2 * var(--pad-x)) / 3.75), 15svh);
+  }
+
+  .role {
+    margin-top: 0.62em;
+    font-size: clamp(22px, 4.6vw, 44px);
+  }
+
+  .actions {
+    margin-top: 24px;
+    gap: 20px;
+  }
+
+  .cta {
+    height: 56px;
+    padding: 0 26px 0 30px;
+    font-size: 18px;
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+
+  .tagline {
+    font-size: 15px;
+    max-width: 240px;
+  }
+
+  .archColumn {
+    width: auto;
+    flex: 1;
+    min-height: 0;
+    align-items: flex-end;
+  }
+}
+
+/* ---------- Phones ---------- */
+@media (orientation: portrait) and (max-width: 599px) {
+  .hero {
+    gap: 14px;
+    padding-top: 10px;
+  }
+
+  .name {
+    font-size: min(calc((100vw - var(--spine) - 2 * var(--pad-x)) / 3.75), 11.5svh);
+  }
+
+  .role {
+    margin-top: 0.75em;
+    font-size: clamp(18px, 6.4vw, 28px);
+  }
+
+  .actions {
+    margin-top: 16px;
+  }
+
+  .cta {
+    height: 46px;
+    gap: 10px;
+    padding: 0 18px 0 22px;
+    font-size: 15px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .cta svg {
+    width: 20px;
+  }
+
+  .tagline {
+    display: none;
+  }
+}

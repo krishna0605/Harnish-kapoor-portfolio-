@@ -1,0 +1,66 @@
+/* Chapter spine — the 88px "next chapter peek" strip from the design export */
+.spine {
+  width: var(--spine);
+  height: 100svh;
+  flex-shrink: 0;
+  border-left: var(--stroke) solid var(--ink);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(16px, calc(44 * var(--u))) 0;
+  text-decoration: none;
+  color: var(--ink);
+  transition: filter 220ms ease;
+}
+
+.spine:hover {
+  filter: brightness(0.96);
+}
+
+.number {
+  font-family: var(--font-mono);
+  font-size: max(11px, calc(14 * var(--u)));
+  letter-spacing: 0.08em;
+}
+
+.title {
+  writing-mode: vertical-rl;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: max(22px, calc(44 * var(--u)));
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.arrow {
+  width: max(24px, calc(36 * var(--u)));
+  height: max(24px, calc(36 * var(--u)));
+  transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.spine:hover .arrow,
+.spine:focus-visible .arrow {
+  transform: translateX(4px);
+}
+
+@media (orientation: portrait) {
+  .spine {
+    padding: 20px 0;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 599px) {
+  .spine {
+    padding: 14px 0;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+}

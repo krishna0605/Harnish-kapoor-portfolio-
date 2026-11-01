@@ -1,0 +1,43 @@
+.letter {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ---------- Typewriter ---------- */
+.typewriter {
+  display: inline-grid;
+}
+
+.typeSizer,
+.typeText {
+  grid-area: 1 / 1;
+}
+
+.typeSizer {
+  visibility: hidden;
+}
+
+.typeLine {
+  display: block;
+}
+
+.caret {
+  display: inline-block;
+  width: max(2px, 0.045em);
+  height: 0.9em;
+  margin-left: 0.06em;
+  /* takes no space, so the line never widens past the reserved full text */
+  margin-right: calc(-1 * max(2px, 0.045em) - 0.06em);
+  vertical-align: -0.08em;
+  background: var(--ink);
+}
+
+.caretBlink {
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}

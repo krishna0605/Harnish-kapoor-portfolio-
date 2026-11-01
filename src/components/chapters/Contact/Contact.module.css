@@ -1,0 +1,206 @@
+/* Last chapter: full width, nothing peeks in after it (content still lines up with the header) */
+.contact {
+  width: 100vw;
+  padding-right: calc(var(--spine) + var(--pad-x));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(96 * var(--u));
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.subtitle {
+  font-size: max(18px, calc(44 * var(--u)));
+}
+
+.email {
+  display: inline-block;
+  margin-top: calc(44 * var(--u));
+  font-size: max(16px, calc(30 * var(--u)));
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--sage);
+  text-decoration-thickness: max(4px, calc(8 * var(--u)));
+  text-underline-offset: max(3px, calc(6 * var(--u)));
+  text-decoration-skip-ink: none;
+  transition: text-decoration-color 200ms ease;
+}
+
+.email:hover {
+  text-decoration-color: var(--lilac);
+}
+
+.links {
+  margin-top: calc(32 * var(--u));
+}
+
+.links a {
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+
+.links a:hover {
+  background: var(--lilac);
+}
+
+/* Form card */
+.form {
+  width: calc(720 * var(--u));
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: calc(48 * var(--u));
+  border-radius: calc(28 * var(--u));
+  border: var(--stroke) solid var(--ink);
+  background: var(--paper);
+  box-shadow: calc(10 * var(--u)) calc(10 * var(--u)) 0 var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: calc(22 * var(--u));
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: calc(8 * var(--u));
+}
+
+.input {
+  height: max(40px, calc(64 * var(--u)));
+  box-sizing: border-box;
+  padding: 0 max(14px, calc(28 * var(--u)));
+  border-radius: 999px;
+  border: var(--stroke) solid var(--ink);
+  background: var(--sage);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: max(16px, calc(20 * var(--u)));
+  outline: none;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.input:focus-visible {
+  background: var(--lilac);
+  box-shadow: max(3px, calc(4 * var(--u))) max(3px, calc(4 * var(--u))) 0 var(--ink);
+}
+
+.textarea {
+  height: calc(150 * var(--u));
+  min-height: 72px;
+  padding-top: max(10px, calc(18 * var(--u)));
+  border-radius: max(18px, calc(28 * var(--u)));
+  resize: none;
+}
+
+.submitRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(20 * var(--u));
+  margin-top: calc(6 * var(--u));
+}
+
+.submit {
+  background: var(--sage);
+}
+
+.note {
+  margin: 0;
+  font-size: max(12px, calc(16 * var(--u)));
+  color: var(--graphite);
+}
+
+/* ---------- Portrait (tablets and phones) ---------- */
+@media (orientation: portrait) {
+  .contact {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .text {
+    flex: none;
+  }
+
+  .subtitle {
+    font-size: clamp(17px, 3.8vw, 30px);
+  }
+
+  .email {
+    margin-top: 16px;
+    font-size: clamp(16px, 2.8vw, 22px);
+  }
+
+  .links {
+    margin-top: 12px;
+  }
+
+  .form {
+    width: auto;
+    padding: 20px;
+    border-radius: 22px;
+    gap: 12px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .field {
+    gap: 6px;
+  }
+
+  .input {
+    height: 46px;
+  }
+
+  .textarea {
+    height: 96px;
+    border-radius: 18px;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 599px) {
+  .links {
+    display: none;
+  }
+
+  .form {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .input {
+    height: 42px;
+  }
+
+  .textarea {
+    height: 76px;
+  }
+}
+
+/* ---------- Short landscape screens (phones held sideways) ---------- */
+@media (orientation: landscape) and (max-height: 560px) {
+  .form {
+    padding: 14px 18px;
+    gap: 6px;
+  }
+
+  .field {
+    gap: 4px;
+  }
+
+  .input {
+    height: 34px;
+  }
+
+  .textarea {
+    height: 54px;
+    min-height: 0;
+  }
+}

@@ -1,0 +1,139 @@
+/* Shared pieces for the About, Projects and Contact chapters (visual system values, in --u) */
+
+.chapter {
+  height: 100svh;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: var(--header-h) var(--pad-x) var(--footer-h);
+  position: relative;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+
+/* Display L — 132px Bricolage 800 */
+.title {
+  margin: 0;
+  font-size: calc(132 * var(--u));
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.titleLine {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Accent — Instrument Serif italic */
+.subtitle {
+  margin: calc(24 * var(--u)) 0 0;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: max(18px, calc(58 * var(--u)));
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+/* Body L */
+.body {
+  margin: 0;
+  font-size: max(14px, calc(22 * var(--u)));
+  line-height: 1.5;
+}
+
+/* Label — DM Mono caps +8% */
+.label {
+  font-family: var(--font-mono);
+  font-size: max(11px, calc(14 * var(--u)));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: max(6px, calc(10 * var(--u)));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: max(26px, calc(36 * var(--u)));
+  padding: 0 max(10px, calc(16 * var(--u)));
+  box-sizing: border-box;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: max(10px, calc(13 * var(--u)));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Pill button with an ink offset shadow; hover = lilac, presses into its shadow */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: max(8px, calc(12 * var(--u)));
+  height: max(40px, calc(64 * var(--u)));
+  padding: 0 max(18px, calc(32 * var(--u)));
+  box-sizing: border-box;
+  border-radius: 999px;
+  border: var(--stroke) solid var(--ink);
+  box-shadow: max(3px, calc(6 * var(--u))) max(3px, calc(6 * var(--u))) 0 var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: max(14px, calc(22 * var(--u)));
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.button:hover {
+  background: var(--lilac);
+  transform: translate(max(1.5px, calc(3 * var(--u))), max(1.5px, calc(3 * var(--u))));
+  box-shadow: max(1.5px, calc(3 * var(--u))) max(1.5px, calc(3 * var(--u))) 0 var(--ink);
+}
+
+.button:active {
+  transform: translate(max(3px, calc(6 * var(--u))), max(3px, calc(6 * var(--u))));
+  box-shadow: 0 0 0 var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}
+
+@media (orientation: portrait) {
+  .title {
+    font-size: clamp(44px, 11vw, 104px);
+  }
+
+  .subtitle {
+    margin-top: 12px;
+    font-size: clamp(18px, 4.4vw, 36px);
+  }
+
+  .body {
+    font-size: clamp(14px, 2.3vw, 18px);
+  }
+
+  .button {
+    height: 48px;
+    font-size: 16px;
+    padding: 0 22px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+}

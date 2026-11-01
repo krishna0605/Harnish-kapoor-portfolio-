@@ -1,0 +1,193 @@
+/*
+ * The arch / portrait card. Built at the export's 640×780 and scaled as one unit:
+ * --cu is one card pixel, sized to fit the arch column (a size container).
+ */
+.cardWrap {
+  --cu: min(calc(100cqw / 640), calc(100cqh / 780));
+  --shadow: 10;
+  position: relative;
+  width: calc(640 * var(--cu));
+  height: calc(780 * var(--cu));
+  flex-shrink: 0;
+  perspective: calc(1600 * var(--cu));
+}
+
+.arch {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(320 * var(--cu)) calc(320 * var(--cu)) calc(32 * var(--cu)) calc(32 * var(--cu));
+  border: max(1.5px, calc(2.5 * var(--cu))) solid var(--ink);
+  background: var(--pond);
+  overflow: hidden;
+  box-sizing: border-box;
+  box-shadow: calc(var(--shadow) * var(--cu)) calc(var(--shadow) * var(--cu)) 0 var(--ink);
+  transform-style: preserve-3d;
+}
+
+.image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.orbit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* yellow strip: status label */
+.statusStrip {
+  position: absolute;
+  left: 0;
+  top: calc(557 * var(--cu));
+  width: calc(330 * var(--cu));
+  height: calc(62 * var(--cu));
+  box-sizing: border-box;
+  padding: 0 0 0 calc(40 * var(--cu));
+  transform: rotate(-8deg);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(10 * var(--cu));
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: max(8px, calc(14 * var(--cu)));
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.statusDot {
+  width: max(5px, calc(10 * var(--cu)));
+  height: max(5px, calc(10 * var(--cu)));
+  border-radius: 999px;
+  background: var(--ink);
+  flex-shrink: 0;
+}
+
+/* white scrap: role (typed) */
+.roleScrap {
+  position: absolute;
+  left: calc(304 * var(--cu));
+  top: calc(576 * var(--cu));
+  width: calc(296 * var(--cu));
+  height: calc(176 * var(--cu));
+  box-sizing: border-box;
+  padding: calc(22 * var(--cu)) calc(34 * var(--cu));
+  transform: rotate(-5deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--ink);
+  /* line boxes follow the typed text, not the default 16px strut */
+  font-size: max(9px, calc(22 * var(--cu)));
+  line-height: 1;
+}
+
+.roleScrapTitle {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: max(12px, calc(40 * var(--cu)));
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.roleScrapCompany {
+  display: inline-block;
+  margin-top: calc(6 * var(--cu));
+  font-family: var(--font-display);
+  font-size: max(9px, calc(22 * var(--cu)));
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* green ground: experience line */
+.experience {
+  position: absolute;
+  left: calc(34 * var(--cu));
+  top: calc(646 * var(--cu));
+  width: calc(252 * var(--cu));
+  box-sizing: border-box;
+  transform: rotate(-3deg);
+  color: var(--ink);
+  font-size: max(7px, calc(16 * var(--cu)));
+  line-height: 1.42;
+  font-weight: 500;
+}
+
+/* too small to read comfortably: the sentence is on the About chapter too */
+@container arch (max-width: 420px) {
+  .experience {
+    display: none;
+  }
+}
+
+@container arch (max-height: 512px) {
+  .experience {
+    display: none;
+  }
+}
+
+/* ---------- Rotating badge (184px at left 948, top 168 in the export) ---------- */
+.badge {
+  position: absolute;
+  z-index: 2;
+  left: calc(-172 * var(--cu));
+  top: calc(14 * var(--cu));
+  width: calc(184 * var(--cu));
+  height: calc(184 * var(--cu));
+}
+
+.badgeDisc {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--marigold);
+  border: max(1.5px, calc(2.5 * var(--cu))) solid var(--ink);
+  box-sizing: border-box;
+  transform: rotate(-14deg);
+  animation: badge-spin 24s linear infinite;
+}
+
+.badgeDisc svg {
+  display: block;
+  width: calc(180 * var(--cu));
+  height: calc(180 * var(--cu));
+}
+
+.badgeText {
+  font-family: var(--font-mono);
+}
+
+@keyframes badge-spin {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(346deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badgeDisc {
+    animation: none;
+  }
+}
+
+/* phones: the card spans the width, so the badge sits on its top-right shoulder */
+@media (orientation: portrait) and (max-width: 599px) {
+  .badge {
+    left: auto;
+    right: calc(-40 * var(--cu));
+    top: calc(-24 * var(--cu));
+  }
+}

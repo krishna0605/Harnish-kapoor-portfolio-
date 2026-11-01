@@ -1,0 +1,241 @@
+.about {
+  width: calc(100vw - var(--spine));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(80 * var(--u));
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.bio {
+  margin-top: calc(40 * var(--u));
+  max-width: calc(780 * var(--u));
+}
+
+.actions {
+  margin-top: calc(40 * var(--u));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: calc(28 * var(--u));
+}
+
+.skills {
+  margin-top: calc(36 * var(--u));
+}
+
+.skills li:nth-child(odd) {
+  background: var(--marigold);
+}
+
+/* Marigold arch holding the experience list */
+.frame {
+  width: calc(600 * var(--u));
+  height: calc(760 * var(--u));
+  flex-shrink: 0;
+  box-sizing: border-box;
+  border-radius: calc(300 * var(--u)) calc(300 * var(--u)) calc(32 * var(--u)) calc(32 * var(--u));
+  border: var(--stroke) solid var(--ink);
+  box-shadow: calc(10 * var(--u)) calc(10 * var(--u)) 0 var(--ink);
+  background: var(--marigold);
+  padding: calc(64 * var(--u)) calc(52 * var(--u)) calc(52 * var(--u));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.moon {
+  width: calc(150 * var(--u));
+  height: calc(150 * var(--u));
+  flex-shrink: 0;
+}
+
+.frameLabel {
+  margin: calc(16 * var(--u)) 0 calc(24 * var(--u));
+}
+
+.jobs {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 * var(--u));
+}
+
+.job {
+  border: 2px solid var(--ink);
+  border-radius: calc(24 * var(--u));
+  background: var(--paper);
+  padding: calc(22 * var(--u)) calc(26 * var(--u));
+}
+
+.jobRole {
+  display: block;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: max(18px, calc(36 * var(--u)));
+  line-height: 1.05;
+}
+
+.jobMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: calc(8 * var(--u));
+  font-size: max(13px, calc(20 * var(--u)));
+  font-weight: 700;
+}
+
+.jobPeriod {
+  font-weight: 400;
+  color: var(--graphite);
+}
+
+.jobSummary {
+  margin: calc(10 * var(--u)) 0 0;
+  font-size: max(12px, calc(16 * var(--u)));
+  line-height: 1.45;
+  color: var(--graphite);
+}
+
+/* ---------- Portrait tablets ---------- */
+@media (orientation: portrait) {
+  .about {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 28px;
+  }
+
+  .text {
+    flex: none;
+  }
+
+  .bio {
+    margin-top: 20px;
+    max-width: 640px;
+  }
+
+  .actions {
+    margin-top: 20px;
+    gap: 16px;
+  }
+
+  .skills {
+    margin-top: 18px;
+  }
+
+  .frame {
+    width: auto;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 20px;
+    align-items: stretch;
+  }
+
+  .moon {
+    display: none;
+  }
+
+  .frameLabel {
+    margin: 0 0 12px;
+  }
+
+  .jobs {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .job {
+    flex: 1;
+    border-radius: 18px;
+    padding: 14px 16px;
+  }
+}
+
+/* ---------- Phones ---------- */
+@media (orientation: portrait) and (max-width: 599px) {
+  .about {
+    gap: 18px;
+  }
+
+  .bio {
+    margin-top: 14px;
+  }
+
+  .actions {
+    margin-top: 16px;
+  }
+
+  .skills {
+    margin-top: 14px;
+  }
+
+  .frame {
+    padding: 14px;
+  }
+
+  .jobs li:nth-child(n + 2) {
+    display: none;
+  }
+
+  .jobSummary {
+    display: none;
+  }
+}
+
+@media (orientation: portrait) and (max-height: 700px) {
+  .skills li:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+/* ---------- Short landscape screens (phones held sideways) ---------- */
+@media (orientation: landscape) and (max-height: 560px) {
+  .bio {
+    max-width: none;
+  }
+
+  .actions,
+  .skills {
+    margin-top: 10px;
+  }
+
+  .skills li:nth-child(n + 4) {
+    display: none;
+  }
+
+  .frame {
+    height: auto;
+    max-height: 100%;
+    border-radius: 18px;
+    padding: 14px;
+  }
+
+  .moon,
+  .jobSummary {
+    display: none;
+  }
+
+  .frameLabel {
+    margin: 0 0 8px;
+  }
+
+  .jobs {
+    gap: 8px;
+  }
+
+  .job {
+    padding: 8px 12px;
+    border-radius: 14px;
+  }
+}

@@ -6,7 +6,7 @@
   --marigold: #f7dda4;  /* Marigold — Ch. 02 About, highlights, badges */
   --pond: #c3daec;      /* Pond Blue — Ch. 03 Projects, media frames */
   --sage: #cfe0c3;      /* Leaf Sage — Ch. 04 Contact, form fields */
-  --lilac: #dcd3f2;     /* Lune Lilac — cursor, hover and focus states */
+  --lilac: #dcd3f2;     /* Lune Lilac — hover and focus states */
   --graphite: #67636f;  /* Graphite — captions and secondary text */
 
   /* Font stacks exactly as in the design export */
@@ -14,30 +14,49 @@
   --font-accent: 'Instrument Serif', serif;
   --font-mono: 'DM Mono', monospace;
 
-  /* Stage scale + offset, set before first paint by the script in layout.tsx */
-  --s: 1;
-  --ox: 0px;
-  --oy: 0px;
+  /*
+   * Responsive scale. --u is one pixel of the 1920×1080 design: exactly 1px at
+   * 1920×1080, proportionally smaller or larger elsewhere (landscape screens).
+   */
+  --u: min(calc(100vw / 1920), calc(100svh / 1080));
+  --spine: max(40px, calc(88 * var(--u)));
+  --header-h: max(52px, calc(120 * var(--u)));
+  --pad-x: max(20px, calc(72 * var(--u)));
+  --footer-h: max(36px, calc(112 * var(--u)));
+  --stroke: max(1.5px, calc(2.5 * var(--u)));
 }
 
-html,
-body {
-  height: 100%;
+/* Portrait tablets */
+@media (orientation: portrait) {
+  :root {
+    --u: calc(100vw / 1024);
+    --spine: 56px;
+    --header-h: 76px;
+    --pad-x: 32px;
+    --footer-h: 52px;
+    --stroke: 2px;
+  }
+}
+
+/* Phones */
+@media (orientation: portrait) and (max-width: 599px) {
+  :root {
+    --spine: 40px;
+    --header-h: 60px;
+    --pad-x: 20px;
+    --footer-h: 40px;
+  }
+}
+
+html {
+  background-color: var(--paper);
 }
 
 body {
   margin: 0;
-  overflow: hidden;
+  overflow-x: clip;
   color: var(--ink);
-  /* .hk-grid from the export, scaled with the stage and aligned to its corner
-     so the margins around the 1920×1080 frame continue the same dot grid */
   background-color: var(--paper);
-  background-image: radial-gradient(
-    rgba(42, 39, 51, 0.1) calc(1.3px * var(--s)),
-    transparent calc(1.6px * var(--s))
-  );
-  background-size: calc(32px * var(--s)) calc(32px * var(--s));
-  background-position: var(--ox) var(--oy);
 }
 
 a {
@@ -53,3 +72,36 @@ a:hover {
   outline-offset: 4px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Elements revealed by the load / scroll animations start hidden — only when JS
+   is running and motion is allowed, so content is never lost without them. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal] {
+    visibility: hidden;
+  }
+}
+
+/* Lenis smooth scrolling */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}

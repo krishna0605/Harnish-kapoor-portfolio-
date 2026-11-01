@@ -1,0 +1,78 @@
+/**
+ * Site content. Everything marked TODO is demo placeholder text, written only from
+ * facts already on the landing page — replace it with the real content.
+ */
+
+export type ChapterId = "home" | "about" | "projects" | "contact";
+
+export const CHAPTERS: { id: ChapterId; number: string; label: string; spine: string; color: string }[] = [
+  { id: "home", number: "01", label: "Home", spine: "Home", color: "var(--lotus)" },
+  { id: "about", number: "02", label: "About", spine: "About me →", color: "var(--marigold)" },
+  { id: "projects", number: "03", label: "Projects", spine: "Projects →", color: "var(--pond)" },
+  { id: "contact", number: "04", label: "Contact", spine: "Contact →", color: "var(--sage)" },
+];
+
+export const HOME = {
+  firstName: "Harnish",
+  lastName: "Kapoor",
+  role: [["Graphic Designer ", "&"], ["Motion Graphic Designer"]] as const,
+  cta: "Explore my work",
+  tagline: "Stories drawn by hand and set in motion.",
+  status: "Currently working as",
+  currentRole: "Graphic Designer",
+  currentCompany: "at Accenture",
+  experience:
+    "3+ years drawing brands, explainers and a festival-selected short film — every still designed as if it’s about to move.",
+  badge: "ANIMATION · ILLUSTRATION · MOTION ·",
+};
+
+// TODO: replace with the real bio, experience and CV link
+export const ABOUT = {
+  title: "About me",
+  subtitle: "Drawn by hand, made to move.",
+  bio: "I’m a graphic and motion designer with 3+ years of drawing brands, explainers and a festival-selected short film. I sketch every frame on paper first, then bring it to life — every still is designed as if it’s about to move.",
+  cvLabel: "Download CV",
+  cvHref: "#",
+  skills: ["Illustration", "Motion graphics", "Brand identity", "Explainers", "Storyboarding"],
+  experience: [
+    {
+      role: "Graphic Designer",
+      company: "Accenture",
+      period: "Present",
+      summary: "Brand, illustration and motion work for client campaigns.",
+    },
+    {
+      role: "Motion Designer",
+      company: "Studio / freelance",
+      period: "Earlier",
+      summary: "Explainers, animated identities and a festival-selected short film.",
+    },
+  ],
+};
+
+export type Motif = "moon" | "lotus" | "sparkle" | "arch";
+
+// TODO: replace with real projects (title, description, tags, media from the media CDN)
+export const PROJECTS: { title: string; subtitle: string; tags: string[]; motif: Motif; href: string }[] = [
+  { title: "Festival short film", subtitle: "A hand-drawn story, frame by frame", tags: ["Animation", "Film"], motif: "moon", href: "#" },
+  { title: "Brand explainer series", subtitle: "Complex ideas, told simply", tags: ["Motion", "Explainer"], motif: "lotus", href: "#" },
+  { title: "Identity system", subtitle: "A brand that moves on every screen", tags: ["Brand", "Motion"], motif: "sparkle", href: "#" },
+  { title: "Illustration set", subtitle: "Pastel worlds in ink", tags: ["Illustration"], motif: "arch", href: "#" },
+];
+
+export const PROJECTS_INTRO = {
+  title: ["Selected", "work"],
+  subtitle: "Brands, explainers and a short film.",
+};
+
+// TODO: replace with real email and profile links
+export const CONTACT = {
+  title: ["Let’s make", "it move"],
+  subtitle: "Commissions, collaborations or just a hello.",
+  email: "hello@example.com",
+  links: [
+    { label: "Instagram", href: "#" },
+    { label: "Behance", href: "#" },
+    { label: "LinkedIn", href: "#" },
+  ],
+};

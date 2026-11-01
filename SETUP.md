@@ -1,6 +1,6 @@
 # Setup: from a new Windows laptop to a live site
 
-This project is a static Next.js site. There's no Docker, no database and no backend server.
+This project is a static Next.js site (GSAP + Lenis for the sideways scroll and animations). There's no Docker, no database and no backend server.
 Node's `package.json` + `package-lock.json` do the job that `requirements.txt` does in Python:
 the lock file pins the exact version of every library, and `npm ci` installs exactly those.
 
@@ -36,7 +36,7 @@ The second command downloads the browser used by the end-to-end tests (about 150
 | `npm run start` | Serve the production build locally |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript check |
-| `npm run test:e2e` | Builds the site and runs the Playwright end-to-end tests |
+| `npm run test:e2e` | Builds the site and runs the Playwright tests: every chapter at 8 screen sizes (fits the screen, reachable from the nav), the 1920×1080 measurements, typing, reduced motion, keys and deep links. Screenshots go to `test-results/screens/` |
 | `npm run fonts` | Re-downloads the exact Google Font files the design uses into `public/fonts` (only needed if the fonts change) |
 
 ## 4. GitHub

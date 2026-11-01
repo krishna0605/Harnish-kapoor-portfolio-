@@ -1,0 +1,4 @@
+# Keep line endings consistent (LF) on every machine and on Vercel/GitHub
+* text=auto eol=lf
+*.png binary
+*.woff2 binary
