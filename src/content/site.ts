@@ -21,7 +21,7 @@ export const HOME = {
   role: [["Graphic Designer ", "&"], ["Motion Graphic Designer"]] as const,
   cta: "Explore my work",
   tagline: "Stories drawn by hand and set in motion.",
-  status: "Currently working as",
+  status: ["Currently ", "working as"] as const, // the first word is dropped on very small cards
   currentRole: "Graphic Designer",
   currentCompany: "at Accenture",
   experience:

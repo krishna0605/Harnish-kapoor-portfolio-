@@ -25,7 +25,10 @@ export function ArchCard({ paused }: { paused: boolean }) {
         {/* yellow strip: status label */}
         <div className={styles.statusStrip} data-reveal="label">
           <span className={styles.statusDot} />
-          <span>{HOME.status}</span>
+          <span>
+            <span className={styles.statusLead}>{HOME.status[0]}</span>
+            {HOME.status[1]}
+          </span>
         </div>
 
         {/* white scrap: role, typed */}

@@ -60,18 +60,32 @@
   gap: calc(10 * var(--cu));
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: max(8px, calc(14 * var(--cu)));
-  letter-spacing: 0.1em;
+  font-size: max(9px, calc(17 * var(--cu)));
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .statusDot {
-  width: max(5px, calc(10 * var(--cu)));
-  height: max(5px, calc(10 * var(--cu)));
+  width: max(6px, calc(11 * var(--cu)));
+  height: max(6px, calc(11 * var(--cu)));
   border-radius: 999px;
   background: var(--ink);
   flex-shrink: 0;
+}
+
+/* on very small cards the full label is wider than the strip */
+@container arch (max-width: 300px) {
+  .statusLead {
+    display: none;
+  }
+}
+
+@container arch (max-height: 365px) {
+  .statusLead {
+    display: none;
+  }
 }
 
 /* white scrap: role (typed) */
