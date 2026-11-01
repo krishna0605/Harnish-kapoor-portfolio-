@@ -25,15 +25,7 @@
   gap: calc(28 * var(--u));
 }
 
-.skills {
-  margin-top: calc(36 * var(--u));
-}
-
-.skills li:nth-child(odd) {
-  background: var(--marigold);
-}
-
-/* Marigold arch holding the experience list */
+/* Marigold arch holding what she does */
 .frame {
   width: calc(600 * var(--u));
   height: calc(760 * var(--u));
@@ -60,50 +52,42 @@
   margin: calc(16 * var(--u)) 0 calc(24 * var(--u));
 }
 
-.jobs {
+.skills {
   width: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: calc(20 * var(--u));
+  gap: calc(14 * var(--u));
 }
 
-.job {
+.skill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: max(32px, calc(60 * var(--u)));
+  box-sizing: border-box;
+  border-radius: 999px;
   border: 2px solid var(--ink);
-  border-radius: calc(24 * var(--u));
   background: var(--paper);
-  padding: calc(22 * var(--u)) calc(26 * var(--u));
-}
-
-.jobRole {
-  display: block;
   font-family: var(--font-accent);
   font-style: italic;
-  font-size: max(18px, calc(36 * var(--u)));
-  line-height: 1.05;
+  font-size: max(16px, calc(30 * var(--u)));
+  transition:
+    background-color 160ms ease,
+    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.jobMeta {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: calc(8 * var(--u));
-  font-size: max(13px, calc(20 * var(--u)));
-  font-weight: 700;
+.skill:hover {
+  background: var(--lilac);
+  transform: rotate(-2deg) scale(1.03);
 }
 
-.jobPeriod {
-  font-weight: 400;
-  color: var(--graphite);
-}
-
-.jobSummary {
-  margin: calc(10 * var(--u)) 0 0;
-  font-size: max(12px, calc(16 * var(--u)));
-  line-height: 1.45;
-  color: var(--graphite);
+@media (prefers-reduced-motion: reduce) {
+  .skill {
+    transition: none;
+  }
 }
 
 /* ---------- Portrait tablets ---------- */
@@ -129,10 +113,6 @@
     gap: 16px;
   }
 
-  .skills {
-    margin-top: 18px;
-  }
-
   .frame {
     width: auto;
     height: auto;
@@ -150,15 +130,16 @@
     margin: 0 0 12px;
   }
 
-  .jobs {
+  .skills {
     flex-direction: row;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .job {
-    flex: 1;
-    border-radius: 18px;
-    padding: 14px 16px;
+  .skill {
+    height: 38px;
+    padding: 0 16px;
+    font-size: 18px;
   }
 }
 
@@ -176,26 +157,14 @@
     margin-top: 16px;
   }
 
-  .skills {
-    margin-top: 14px;
-  }
-
   .frame {
     padding: 14px;
   }
 
-  .jobs li:nth-child(n + 2) {
-    display: none;
-  }
-
-  .jobSummary {
-    display: none;
-  }
-}
-
-@media (orientation: portrait) and (max-height: 700px) {
-  .skills li:nth-child(n + 4) {
-    display: none;
+  .skill {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 16px;
   }
 }
 
@@ -205,13 +174,8 @@
     max-width: none;
   }
 
-  .actions,
-  .skills {
-    margin-top: 10px;
-  }
-
-  .skills li:nth-child(n + 4) {
-    display: none;
+  .actions {
+    margin-top: 12px;
   }
 
   .frame {
@@ -221,8 +185,7 @@
     padding: 14px;
   }
 
-  .moon,
-  .jobSummary {
+  .moon {
     display: none;
   }
 
@@ -230,12 +193,7 @@
     margin: 0 0 8px;
   }
 
-  .jobs {
-    gap: 8px;
-  }
-
-  .job {
-    padding: 8px 12px;
-    border-radius: 14px;
+  .skills {
+    gap: 6px;
   }
 }

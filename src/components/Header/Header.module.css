@@ -79,7 +79,9 @@
   border-radius: 999px;
   border: 2px solid var(--ink);
   background: var(--lotus);
+  box-shadow: 0 0 0 var(--ink);
   transition:
+    box-shadow 200ms ease,
     transform 520ms cubic-bezier(0.65, 0, 0.35, 1),
     width 520ms cubic-bezier(0.65, 0, 0.35, 1),
     background-color 400ms ease;
@@ -97,12 +99,58 @@
   box-sizing: border-box;
   text-decoration: none;
   color: var(--ink);
+  transition:
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 160ms ease;
 }
 
-/* Visual system: navigation hover = dashed outline */
-.navLink:not([aria-current]):hover {
+/* Visual system: navigation hover = dashed outline; plus a small lift */
+.navLink:not([aria-current]):hover,
+.navLink:not([aria-current]):focus-visible {
   border-color: var(--ink);
   border-style: dashed;
+  transform: translateY(-2px);
+}
+
+.navLink:active {
+  transform: scale(0.96);
+}
+
+/* Label roll: the text slides up and its copy rises in from below */
+.roll {
+  position: relative;
+  display: block;
+  height: 1.25em;
+  line-height: 1.25em;
+  overflow: hidden;
+}
+
+.rollText {
+  display: block;
+  white-space: nowrap;
+  transition: transform 420ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.navLink:hover .rollText,
+.navLink:focus-visible .rollText {
+  transform: translateY(-100%);
+}
+
+/* Hovering the active link pops its pill onto an ink shadow */
+.nav:has(.navLink[aria-current]:hover) .indicator {
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navLink,
+  .rollText {
+    transition: none;
+  }
+
+  .navLink:hover .rollText,
+  .navLink:focus-visible .rollText {
+    transform: none;
+  }
 }
 
 /* ---------- Phone menu ---------- */
@@ -189,7 +237,8 @@
   line-height: 1.1;
 }
 
-@media (orientation: portrait) and (max-width: 599px) {
+/* five chapters no longer fit across narrow portrait screens: use the Menu sheet */
+@media (orientation: portrait) and (max-width: 767px) {
   .nav {
     display: none;
   }

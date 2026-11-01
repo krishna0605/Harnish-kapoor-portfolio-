@@ -32,27 +32,15 @@ export function About() {
             {ABOUT.cvLabel} ↓
           </a>
         </div>
-        <ul className={`${shared.tags} ${styles.skills}`} aria-label="Skills" data-reveal="block">
-          {ABOUT.skills.map((skill) => (
-            <li key={skill} className={shared.tag}>
-              {skill}
-            </li>
-          ))}
-        </ul>
       </div>
 
       <div className={styles.frame} data-reveal="block">
         <MotifArt motif="moon" className={styles.moon} />
-        <h3 className={`${shared.label} ${styles.frameLabel}`}>Experience</h3>
-        <ul className={styles.jobs}>
-          {ABOUT.experience.map((job) => (
-            <li key={job.role + job.company} className={styles.job}>
-              <span className={styles.jobRole}>{job.role}</span>
-              <span className={styles.jobMeta}>
-                <span>{job.company}</span>
-                <span className={styles.jobPeriod}>{job.period}</span>
-              </span>
-              <p className={styles.jobSummary}>{job.summary}</p>
+        <h3 className={`${shared.label} ${styles.frameLabel}`}>{ABOUT.skillsLabel}</h3>
+        <ul className={styles.skills}>
+          {ABOUT.skills.map((skill) => (
+            <li key={skill} className={styles.skill}>
+              {skill}
             </li>
           ))}
         </ul>

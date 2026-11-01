@@ -6,7 +6,7 @@ import { Squiggle } from "@/components/icons/Squiggle";
 import { useChapters } from "@/components/Track/ChapterContext";
 import { SplitLetters } from "@/components/ui/SplitLetters";
 import { Typewriter } from "@/components/ui/Typewriter";
-import { HOME } from "@/content/site";
+import { chapterIndex, HOME } from "@/content/site";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useFinePointer, useReducedMotion } from "@/lib/useMediaQuery";
 import { ArchCard } from "./ArchCard";
@@ -21,25 +21,44 @@ export function Home() {
   const finePointer = useFinePointer();
   const paused = active !== 0;
 
-  // Load sequence + continuous loops (squiggle flow, orbit spin)
+  // Load sequence + continuous loops (squiggle flow, star orbit)
   useGSAP(
     () => {
       if (reduced) return;
       const q = gsap.utils.selector(ref);
-      const arcs = q("[data-orbit-arc]");
+      const arcs = q("[data-orbit-arc]") as unknown as SVGPathElement[];
       arcs.forEach((arc) => arc.setAttribute("pathLength", "1"));
       gsap.set(arcs, { strokeDasharray: 1, strokeDashoffset: 1 });
 
       const flow = gsap.to(q("[data-squiggle-wave]"), { x: -204, duration: 6, ease: "none", repeat: -1, paused: true });
-      const spin = gsap.to(q("[data-orbit]"), {
-        rotation: 360,
-        svgOrigin: "317 300",
-        duration: 18,
+
+      // The star revolves along the (static, horizontal) ring: right → left across the
+      // back, where it is hidden behind the photo, then left → right across the front,
+      // growing slightly as it comes forward.
+      const [backArc, frontArc] = arcs;
+      const star = q("[data-orbit-star]")[0];
+      const starWrap = q("[data-orbit-star-wrap]")[0];
+      const loop = `${backArc.getAttribute("d")} ${frontArc.getAttribute("d")!.replace(/^M/, "L")}`;
+      const backLength = backArc.getTotalLength();
+      const backShare = backLength / (backLength + frontArc.getTotalLength());
+      const frontMiddle = backShare + (1 - backShare) / 2;
+      gsap.set(star, { transformOrigin: "50% 50%" });
+      const orbit = gsap.to(star, {
+        motionPath: { path: loop, align: backArc, alignOrigin: [0.5, 0.5] },
+        duration: 14,
         ease: "none",
         repeat: -1,
         paused: true,
+        onUpdate() {
+          const progress = this.progress();
+          if (progress < backShare) starWrap.setAttribute("mask", "url(#archStarMask)");
+          else starWrap.removeAttribute("mask");
+          const depth = Math.cos(2 * Math.PI * (progress - frontMiddle)); // 1 in front, −1 behind
+          gsap.set(star, { scale: 0.92 + 0.2 * depth, rotation: progress * 360 });
+        },
       });
-      loops.current = [flow, spin];
+      orbit.progress(0.02); // start on the ring near the star's place in the design
+      loops.current = [flow, orbit];
 
       gsap
         .timeline({ defaults: { ease: "expo.out" } })
@@ -62,7 +81,8 @@ export function Home() {
         .fromTo(q('[data-reveal="card"]'), { autoAlpha: 0, y: 70, rotate: 2 }, { autoAlpha: 1, y: 0, rotate: 0, duration: 1.3 }, 0.35)
         .fromTo(q("[data-arch]"), { "--shadow": 0 }, { "--shadow": 10, duration: 0.9, ease: "back.out(2.2)" }, 1.2)
         .to(arcs, { strokeDashoffset: 0, duration: 0.9, stagger: 0.35, ease: "power2.inOut" }, 1.25)
-        .add(() => spin.play(), 2.2)
+        .fromTo(starWrap, { autoAlpha: 0, scale: 0, transformOrigin: "50% 50%" }, { autoAlpha: 1, scale: 1, duration: 0.6, ease: "back.out(2)" }, 1.9)
+        .add(() => orbit.play(), 2.2)
         .fromTo(
           q('[data-reveal="label"]'),
           { autoAlpha: 0, y: 14 },
@@ -84,6 +104,7 @@ export function Home() {
   }, [paused]);
 
   // Pointer effects: letters lift in a wave near the pointer; the card tilts toward it
+  // and the star speeds up
   useGSAP(
     (_, contextSafe) => {
       if (reduced || !finePointer || !contextSafe) return;
@@ -105,24 +126,25 @@ export function Home() {
 
       const card = q("[data-card]")[0] as HTMLElement;
       const arch = q("[data-arch]")[0] as HTMLElement;
-      const orbit = q("[data-orbit]")[0]?.closest("svg") as SVGSVGElement | null;
+      const ring = q("[data-orbit]")[0]?.closest("svg") as SVGSVGElement | null;
       const onCardMove = contextSafe((event: PointerEvent) => {
+        if ((event.target as Element).closest("[data-badge]")) return; // the badge has its own hover
         const rect = card.getBoundingClientRect();
         const px = (event.clientX - rect.left) / rect.width - 0.5;
         const py = (event.clientY - rect.top) / rect.height - 0.5;
         gsap.to(arch, { rotationY: px * 12, rotationX: -py * 12, duration: 0.6, ease: "power3.out", overwrite: "auto" });
-        if (orbit) gsap.to(orbit, { x: -px * rect.width * 0.03, y: -py * rect.height * 0.03, duration: 0.6, ease: "power3.out", overwrite: "auto" });
+        if (ring) gsap.to(ring, { x: -px * rect.width * 0.03, y: -py * rect.height * 0.03, duration: 0.6, ease: "power3.out", overwrite: "auto" });
       });
       const onCardEnter = contextSafe(() => {
         gsap.to(arch, { "--shadow": 16, duration: 0.4, ease: "power2.out" });
-        const spin = loops.current[1];
-        if (spin) gsap.to(spin, { timeScale: 2, duration: 0.6 });
+        const orbit = loops.current[1];
+        if (orbit) gsap.to(orbit, { timeScale: 2.2, duration: 0.6 });
       });
       const onCardLeave = contextSafe(() => {
         gsap.to(arch, { rotationX: 0, rotationY: 0, "--shadow": 10, duration: 0.8, ease: "elastic.out(1, 0.6)" });
-        if (orbit) gsap.to(orbit, { x: 0, y: 0, duration: 0.8, ease: "power3.out" });
-        const spin = loops.current[1];
-        if (spin) gsap.to(spin, { timeScale: 1, duration: 0.8 });
+        if (ring) gsap.to(ring, { x: 0, y: 0, duration: 0.8, ease: "power3.out" });
+        const orbit = loops.current[1];
+        if (orbit) gsap.to(orbit, { timeScale: 1, duration: 0.8 });
       });
 
       name.addEventListener("pointermove", onNameMove);
@@ -139,6 +161,48 @@ export function Home() {
       };
     },
     { scope: ref, dependencies: [reduced, finePointer], revertOnUpdate: true },
+  );
+
+  // The badge only turns when asked: it spins while hovered (then eases back upright),
+  // and a tap on a touch screen gives it one full turn
+  useGSAP(
+    (_, contextSafe) => {
+      if (reduced || !contextSafe) return;
+      const q = gsap.utils.selector(ref);
+      const badge = q("[data-badge]")[0] as HTMLElement;
+      const disc = q("[data-badge-disc]")[0] as HTMLElement;
+      let spinning: gsap.core.Tween | null = null;
+
+      const upright = () => {
+        const turned = (gsap.getProperty(disc, "rotation") as number) + 14;
+        return -14 + Math.ceil(turned / 360) * 360;
+      };
+      const onEnter = contextSafe((event: PointerEvent) => {
+        if (event.pointerType === "touch") return;
+        spinning?.kill();
+        spinning = gsap.to(disc, { rotation: "+=360", duration: 3.2, ease: "none", repeat: -1 });
+      });
+      const onLeave = contextSafe((event: PointerEvent) => {
+        if (event.pointerType === "touch") return;
+        spinning?.kill();
+        spinning = gsap.to(disc, { rotation: upright(), duration: 1.1, ease: "power3.out" });
+      });
+      const onTap = contextSafe((event: PointerEvent) => {
+        if (event.pointerType !== "touch") return;
+        spinning?.kill();
+        spinning = gsap.to(disc, { rotation: upright() + 360, duration: 1.5, ease: "power3.inOut" });
+      });
+
+      badge.addEventListener("pointerenter", onEnter);
+      badge.addEventListener("pointerleave", onLeave);
+      badge.addEventListener("pointerup", onTap);
+      return () => {
+        badge.removeEventListener("pointerenter", onEnter);
+        badge.removeEventListener("pointerleave", onLeave);
+        badge.removeEventListener("pointerup", onTap);
+      };
+    },
+    { scope: ref, dependencies: [reduced], revertOnUpdate: true },
   );
 
   return (
@@ -171,6 +235,7 @@ export function Home() {
                 [{ text: HOME.role[1][0] }],
               ]}
               startDelay={1500}
+              holdMs={12000}
               paused={paused}
             />
           </p>
@@ -181,7 +246,7 @@ export function Home() {
               className={styles.cta}
               onClick={(event) => {
                 event.preventDefault();
-                goTo(2);
+                goTo(chapterIndex("projects"));
               }}
             >
               {HOME.cta}

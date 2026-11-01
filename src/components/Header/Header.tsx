@@ -74,7 +74,15 @@ export function Header() {
             onClick={(event) => onNav(event, index)}
             data-reveal="header"
           >
-            {chapter.number} {chapter.label}
+            {/* the label rolls up on hover; the copy below it is decorative */}
+            <span className={styles.roll}>
+              <span className={styles.rollText}>
+                {chapter.number} {chapter.label}
+              </span>
+              <span className={styles.rollText} aria-hidden="true">
+                {chapter.number} {chapter.label}
+              </span>
+            </span>
           </a>
         ))}
       </nav>

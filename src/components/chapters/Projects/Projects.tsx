@@ -11,7 +11,7 @@ import shared from "../chapter.module.css";
 import { useChapterReveal } from "../useChapterReveal";
 import styles from "./Projects.module.css";
 
-/** Chapter 03 — Projects (demo content from src/content/site.ts). */
+/** Chapter 04 — Projects (demo content from src/content/site.ts). */
 export function Projects() {
   const ref = useRef<HTMLElement>(null);
   const { containerAnimation } = useChapters();

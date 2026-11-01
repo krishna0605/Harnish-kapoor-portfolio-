@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const CHAPTERS = ["home", "about", "projects", "contact"] as const;
+const CHAPTERS = ["home", "about", "experience", "projects", "contact"] as const;
 
 const SIZES = [
   { width: 1920, height: 1080 },
@@ -68,7 +68,7 @@ for (const size of SIZES) {
       }
 
       if (!isPhone(size.width, size.height)) {
-        await expect(page.locator('nav[aria-label="Main"] a[aria-current="page"]')).toHaveText("04 Contact");
+        await expect(page.locator('nav[aria-label="Main"] a[aria-current="page"]')).toHaveAttribute("href", "#contact");
       }
       expect(errors).toEqual([]);
     });
@@ -116,15 +116,42 @@ test.describe("motion", () => {
     await page.goto("/");
     await expect(page.locator("#home p [class*=typeText]")).toHaveText("Graphic Designer &Motion Graphic Designer");
     await expect(page.locator("[data-letter]").first()).toBeVisible();
-    const badgeAnimation = await page.evaluate(() => getComputedStyle(document.querySelector("[class*=badgeDisc]")!).animationName);
-    expect(badgeAnimation).toBe("none");
     await page.close();
+  });
+
+  test("the badge turns only while hovered, and the ring stays still while the star orbits", async ({ page }) => {
+    const badgeAngle = () =>
+      page.evaluate(() => {
+        const m = new DOMMatrix(getComputedStyle(document.querySelector("[data-badge-disc]")!).transform);
+        return Math.round((Math.atan2(m.b, m.a) * 180) / Math.PI);
+      });
+    const starCentre = () =>
+      page.evaluate(() => {
+        const r = document.querySelector("[data-orbit-star]")!.getBoundingClientRect();
+        return Math.round(r.x + r.width / 2);
+      });
+
+    await page.goto("/");
+    await page.waitForTimeout(3000);
+    expect(await badgeAngle()).toBe(-14);
+    const starBefore = await starCentre();
+    await page.waitForTimeout(1500);
+    expect(await badgeAngle()).toBe(-14);
+    expect(await starCentre()).not.toBe(starBefore);
+    expect(await page.locator("[data-orbit]").getAttribute("transform")).toBeNull();
+
+    await page.hover("[data-badge]");
+    await page.waitForTimeout(800);
+    expect(await badgeAngle()).not.toBe(-14);
+    await page.mouse.move(5, 5);
+    await page.waitForTimeout(1600);
+    expect(await badgeAngle()).toBe(-14);
   });
 
   test("arrow keys and deep links move between chapters", async ({ page }) => {
     await page.goto("/#contact");
     await page.waitForTimeout(1500);
-    await expect(page.locator('nav[aria-label="Main"] a[aria-current="page"]')).toHaveText("04 Contact");
+    await expect(page.locator('nav[aria-label="Main"] a[aria-current="page"]')).toHaveAttribute("href", "#contact");
 
     await page.goto("/");
     await page.waitForTimeout(2500);

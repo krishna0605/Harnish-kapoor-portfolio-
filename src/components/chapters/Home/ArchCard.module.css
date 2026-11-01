@@ -137,7 +137,7 @@
   }
 }
 
-/* ---------- Rotating badge (184px at left 948, top 168 in the export) ---------- */
+/* ---------- Badge (184px at left 948, top 168 in the export); spins on hover / tap ---------- */
 .badge {
   position: absolute;
   z-index: 2;
@@ -155,7 +155,6 @@
   border: max(1.5px, calc(2.5 * var(--cu))) solid var(--ink);
   box-sizing: border-box;
   transform: rotate(-14deg);
-  animation: badge-spin 24s linear infinite;
 }
 
 .badgeDisc svg {
@@ -168,20 +167,6 @@
   font-family: var(--font-mono);
 }
 
-@keyframes badge-spin {
-  from {
-    transform: rotate(-14deg);
-  }
-  to {
-    transform: rotate(346deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .badgeDisc {
-    animation: none;
-  }
-}
 
 /* phones: the card spans the width, so the badge sits on its top-right shoulder */
 @media (orientation: portrait) and (max-width: 599px) {

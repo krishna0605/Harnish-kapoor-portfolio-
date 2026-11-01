@@ -1,6 +1,6 @@
 # Harnish Kapoor — portfolio
 
-A pastel sketchbook that scrolls sideways: four chapters (Home, About, Projects, Contact) on one horizontal track.
+A pastel sketchbook that scrolls sideways: five chapters (Home, About, Experience, Projects, Contact) on one horizontal track.
 
 - **Stack:** Next.js 16 (App Router), React 19, TypeScript, CSS Modules, GSAP (ScrollTrigger + Observer) and Lenis. Hosted on Vercel, no backend.
 - **Setup on a new machine:** see [SETUP.md](SETUP.md).
@@ -11,7 +11,7 @@ A pastel sketchbook that scrolls sideways: four chapters (Home, About, Projects,
   - The track is pinned, and vertical scrolling (wheel, trackpad, touch, keyboard) moves it horizontally. Mouse drag, horizontal swipes and ← → also move it.
   - It snaps to chapter starts and project cards, in the direction of travel.
   - It keeps `#about` / `#projects` / `#contact` in the URL.
-- `src/components/Header` — the fixed logo and nav. The active pill slides to the current chapter and takes its pastel. Phones get a Menu sheet.
+- `src/components/Header` — the fixed logo and nav. The active pill slides to the current chapter and takes its pastel, and labels roll on hover. Screens narrower than 768px in portrait get a Menu sheet.
 - `src/components/Spine` — the pastel strip that peeks in from the next chapter.
 - `src/components/chapters/*` — one folder per chapter.
   - Home keeps the design export's values: at 1920×1080 it measures exactly as the export.
@@ -35,6 +35,7 @@ Short landscape phones get a condensed variant. Every chapter fits one screen at
 
 Everything respects `prefers-reduced-motion`: with it on, text appears at once and nothing loops.
 
-- **Load sequence:** letters rise in, the squiggle draws and then flows, and the card lands. The ring draws in and then spins with its star, and the badge pops in.
-- **Typing loops:** the role line and the card's role/company.
-- **Pointer effects:** a letter wave on the name, a 3D tilt on the card, a spin on the logo, and lifts on the project cards.
+- **Load sequence:** letters rise in, the squiggle draws and then flows, and the card lands. The ring draws in, and the star starts orbiting it: behind the photo across the top, in front across the bottom. The badge pops in.
+- **Typing loops:** the role line and the card's role/company. Each holds about 12 seconds before deleting.
+- **Pointer effects:** a letter wave on the name, a 3D tilt on the card, a spin on the logo, a label roll on the nav, and lifts on the project and experience cards.
+- **Badge:** still by default. It spins while hovered and eases back upright; on touch screens a tap gives it one turn.

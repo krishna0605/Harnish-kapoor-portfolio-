@@ -7,7 +7,7 @@ import shared from "../chapter.module.css";
 import { useChapterReveal } from "../useChapterReveal";
 import styles from "./Contact.module.css";
 
-/** Chapter 04 — Contact. The form is a demo: there is no backend yet, nothing is sent. */
+/** Chapter 05 — Contact. The form is a demo: there is no backend yet, nothing is sent. */
 export function Contact() {
   const ref = useRef<HTMLElement>(null);
   const [sent, setSent] = useState(false);

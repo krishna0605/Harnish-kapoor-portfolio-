@@ -36,7 +36,7 @@ export function ArchCard({ paused }: { paused: boolean }) {
               [{ text: HOME.currentCompany, className: styles.roleScrapCompany }],
             ]}
             startDelay={2400}
-            holdMs={3600}
+            holdMs={13000}
             paused={paused}
           />
         </div>
@@ -47,8 +47,8 @@ export function ArchCard({ paused }: { paused: boolean }) {
         </div>
       </div>
 
-      <div className={styles.badge} aria-hidden="true" data-reveal="badge">
-        <div className={styles.badgeDisc}>
+      <div className={styles.badge} aria-hidden="true" data-reveal="badge" data-badge>
+        <div className={styles.badgeDisc} data-badge-disc>
           <svg width="180" height="180" viewBox="0 0 180 180">
             <defs>
               <path id="hkBadgeCircle" d="M90,90 m-62,0 a62,62 0 1,1 124,0 a62,62 0 1,1 -124,0" />
