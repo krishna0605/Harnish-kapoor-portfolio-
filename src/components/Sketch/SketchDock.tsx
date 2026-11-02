@@ -74,10 +74,7 @@ export function SketchDock() {
   const onSaveView = async () => {
     const layer = document.querySelector<HTMLCanvasElement>("[data-sketch-layer]");
     if (!layer) return;
-    if (!(await saveView(layer))) {
-      const saved = await saveNotes(currentLayout(), currentU());
-      say(saved ? "Saved your notes (this browser can't capture the page)" : "This browser can't capture the page");
-    }
+    await saveView(layer);
   };
 
   return (
@@ -155,10 +152,10 @@ export function SketchDock() {
           )}
         </div>
         <span className={styles.divider} />
-        <button type="button" className={styles.save} onClick={onSaveView} aria-label="Save view as PNG" title="The page as you see it, with your marks">
+        <button type="button" className={styles.save} onClick={onSaveView} disabled={!marks} aria-label="Save view as PNG" title="Your marks where you drew them, with the logo">
           Save view
         </button>
-        <button type="button" className={styles.save} onClick={onSaveNotes} disabled={!marks} aria-label="Save notes as PNG" title="Just your marks, on paper">
+        <button type="button" className={styles.save} onClick={onSaveNotes} disabled={!marks} aria-label="Save notes as PNG" title="Just your marks, cropped, with the logo">
           Save notes
         </button>
       </div>

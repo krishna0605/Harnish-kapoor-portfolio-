@@ -143,6 +143,43 @@ test("save notes and save view download PNGs", async ({ page }) => {
   }
 });
 
+test("downloads hold only the pencil marks and the logo, never the page", async ({ page }) => {
+  await sketchMode(page);
+  await scribble(page, 230, 780);
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Save view as PNG" }).click();
+  const file = await (await download).path();
+  const base64 = fs.readFileSync(file).toString("base64");
+  const pixels = await page.evaluate(async (base64) => {
+    const image = new Image();
+    image.src = "data:image/png;base64," + base64;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(image, 0, 0);
+    const k = image.width / innerWidth;
+    // darkest pixel in a box (screen coordinates)
+    const darkest = (x: number, y: number, w: number, h: number) => {
+      const d = ctx.getImageData(x * k, y * k, w * k, h * k).data;
+      let min = 255;
+      for (let i = 0; i < d.length; i += 4) min = Math.min(min, (d[i] + d[i + 1] + d[i + 2]) / 3);
+      return Math.round(min);
+    };
+    const name = document.querySelector("[data-name]")!.getBoundingClientRect();
+    const logo = document.querySelector("[data-header] a[aria-label^='Harnish Kapoor'] span")!.getBoundingClientRect();
+    return {
+      headline: darkest(name.left, name.top, name.width, name.height * 0.4), // the big ink name on the page
+      marks: darkest(230, 750, 160, 60),
+      logo: darkest(logo.left, logo.top, logo.width, logo.height),
+    };
+  }, base64);
+  expect(pixels.headline).toBeGreaterThan(200); // only paper where the name is
+  expect(pixels.marks).toBeLessThan(150); // the charcoal is there
+  expect(pixels.logo).toBeLessThan(120); // the logo's ink outline is there
+});
+
 test("no drawing while a story envelope is open", async ({ page }) => {
   await page.goto("/#experience");
   await page.waitForTimeout(2500);

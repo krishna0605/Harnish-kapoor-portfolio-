@@ -33,8 +33,7 @@
   font-family: var(--font-mono);
 }
 
-html:has(dialog[open]) .dock,
-html[data-capturing] .dock {
+html:has(dialog[open]) .dock {
   display: none;
 }
 

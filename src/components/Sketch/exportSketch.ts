@@ -50,7 +50,28 @@ async function paintPaper(ctx: CanvasRenderingContext2D, width: number, height: 
   }
 }
 
-/** "Save notes": only the pencil marks, on paper, cropped to what was drawn. */
+/** The HK logo (the same file as the favicon), drawn into an export. */
+async function paintLogo(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
+  try {
+    const logo = await loadImage("/icon.svg");
+    ctx.drawImage(logo, x, y, size, size);
+  } catch {
+    // the marks are still saved without it
+  }
+}
+
+/** On-screen box of the header logo, so "Save view" puts it exactly where it was. */
+function logoBox() {
+  const mark = document.querySelector("[data-header] a[aria-label^='Harnish Kapoor'] span")?.getBoundingClientRect();
+  return mark && mark.width ? { x: mark.left, y: mark.top, size: mark.width } : { x: 24, y: 24, size: 60 };
+}
+
+/**
+ * Downloads contain ONLY the pencil layer and the HK logo, on plain paper. Nothing from
+ * the page itself (text, photos, artwork) is ever captured.
+ */
+
+/** "Save notes": just the marks, cropped to what was drawn, with the logo top-left. */
 export async function saveNotes(layout: string, u: number) {
   const strokes = sketchStore.get().strokes.filter((stroke) => stroke.layout === layout && stroke.points.length);
   if (!strokes.length) return false;
@@ -67,18 +88,21 @@ export async function saveNotes(layout: string, u: number) {
       maxY = Math.max(maxY, (p.y + p.w * 2) * k);
     }
   }
+  const LOGO = 48;
+  const top = MARGIN + LOGO + 24; // room for the logo above the marks
   const scale = Math.min(2, window.devicePixelRatio || 1);
-  const width = Math.ceil(maxX - minX + MARGIN * 2);
-  const height = Math.ceil(maxY - minY + MARGIN * 2 + 28);
+  const width = Math.ceil(Math.max(maxX - minX + MARGIN * 2, 320));
+  const height = Math.ceil(maxY - minY + top + MARGIN + 28);
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(width * scale);
   canvas.height = Math.round(height * scale);
   const ctx = canvas.getContext("2d")!;
   await paintPaper(ctx, canvas.width, canvas.height, scale);
+  await paintLogo(ctx, MARGIN * scale, MARGIN * scale, LOGO * scale);
 
   // the same brush and seeds, so the marks look exactly as on the page
   const ox = minX - MARGIN;
-  const oy = minY - MARGIN;
+  const oy = minY - top;
   for (const stroke of strokes) {
     const k = u / stroke.u;
     const painter = new StrokePainter(stroke.seed, () => [{ ctx, ox: ox / k, oy: oy / k, scale: k * scale }]);
@@ -95,40 +119,22 @@ export async function saveNotes(layout: string, u: number) {
 }
 
 /**
- * "Save view": the page exactly as on screen, with the pencil marks on top.
- * Returns false if the browser can't capture the page (then the caller saves notes).
+ * "Save view": the screen as a blank sheet of paper with the marks exactly where they
+ * were drawn and the logo where it sits in the header.
  */
 export async function saveView(sketchCanvas: HTMLCanvasElement) {
-  const root = document.documentElement;
-  root.setAttribute("data-capturing", "");
-  try {
-    const { domToCanvas } = await import("modern-screenshot");
-    const scale = Math.min(2, window.devicePixelRatio || 1);
-    const page = await domToCanvas(document.body, {
-      width: innerWidth,
-      height: innerHeight,
-      scale,
-      backgroundColor: "#F7F3EC",
-      timeout: 4000, // never let one slow image hold the download up
-      // only what is on screen: skipping the off-screen chapters keeps the capture quick
-      filter: (node) => {
-        if (!(node instanceof Element)) return true;
-        if (node.closest("[data-sketch-ignore], [data-sketch-layer], nextjs-portal")) return false;
-        const rect = node.getBoundingClientRect();
-        if (!rect.width && !rect.height) return true;
-        return rect.right > 0 && rect.left < innerWidth && rect.bottom > 0 && rect.top < innerHeight;
-      },
-    });
-    const ctx = page.getContext("2d")!;
-    ctx.save();
-    ctx.globalCompositeOperation = "multiply";
-    ctx.drawImage(sketchCanvas, 0, 0, page.width, page.height);
-    ctx.restore();
-    await download(page, "harnish-kapoor-sketch-view.png");
-    return true;
-  } catch {
-    return false;
-  } finally {
-    root.removeAttribute("data-capturing");
-  }
+  const scale = Math.min(2, window.devicePixelRatio || 1);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(innerWidth * scale);
+  canvas.height = Math.round(innerHeight * scale);
+  const ctx = canvas.getContext("2d")!;
+  await paintPaper(ctx, canvas.width, canvas.height, scale);
+  ctx.save();
+  ctx.globalCompositeOperation = "multiply";
+  ctx.drawImage(sketchCanvas, 0, 0, canvas.width, canvas.height);
+  ctx.restore();
+  const logo = logoBox();
+  await paintLogo(ctx, logo.x * scale, logo.y * scale, logo.size * scale);
+  await download(canvas, "harnish-kapoor-sketch-view.png");
+  return true;
 }

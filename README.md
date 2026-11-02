@@ -20,7 +20,7 @@ A pastel sketchbook that scrolls sideways: five chapters (Home, About, Experienc
 - `src/components/Sketch` — the charcoal pencil.
   - **Sketch mode** is switched on with the pencil button (bottom right) and off with it again or Esc. While it is on, the page is locked: no scrolling, keys or clicks that change the page (hover effects still play), and dragging anywhere draws. The toolbar and the sound button still work.
   - Marks are painted into 1024-px tiles in track coordinates, so they move with the page, and composited onto one fixed canvas. They last until the page is refreshed.
-  - The dock (bottom right): pencil size, undo (Ctrl/Cmd+Z), clear (with confirm), **Save view** (the page as seen, via modern-screenshot) and **Save notes** (just the marks on paper).
+  - The dock (bottom right): pencil size, undo (Ctrl/Cmd+Z), clear (with confirm), **Save view** (the marks where they were drawn, screen-sized) and **Save notes** (the marks cropped). Downloads contain only the pencil layer and the HK logo on plain paper — never the page itself.
 - `public/textures/paper-grain.png` — the background paper, cut from the collage's cream scrap by `npm run texture` and multiplied onto each chapter colour.
 - `public/cursors` — the pencil cursors.
 - `src/app/fonts.css` + `public/fonts` — self-hosted copies of the Google Font files the design uses (`npm run fonts`).
