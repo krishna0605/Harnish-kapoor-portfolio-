@@ -37,19 +37,22 @@ The second command downloads the browser used by the end-to-end tests (about 150
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript check |
 | `npm run test:e2e` | Builds the site and runs the Playwright tests: every chapter at 8 screen sizes (fits the screen, reachable from the nav), the 1920×1080 measurements, typing, reduced motion, keys and deep links. Screenshots go to `test-results/screens/` |
+| `npm run texture` | Rebuilds the paper texture from the Home collage into `public/textures` |
 | `npm run fonts` | Re-downloads the exact Google Font files the design uses into `public/fonts` (only needed if the fonts change) |
 
 ## 4. GitHub
 
-```bash
-git remote add origin https://github.com/<your-account>/<repo>.git
-```
+The repository is https://github.com/krishna0605/Harnish-kapoor-portfolio-. To get the code on a new machine:
 
 ```bash
-git push -u origin main
+git clone https://github.com/krishna0605/Harnish-kapoor-portfolio-.git
 ```
 
-Or, with the GitHub CLI: `gh repo create <repo> --private --source . --push`.
+After committing changes, publish them with:
+
+```bash
+git push
+```
 
 Every push and pull request runs `.github/workflows/ci.yml`: lint, type check, build and the end-to-end tests.
 Test results and screenshots are attached to the run as the `playwright-results` artifact.

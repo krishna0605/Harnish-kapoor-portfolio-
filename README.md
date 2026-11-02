@@ -1,49 +1,126 @@
-# Harnish Kapoor — portfolio
+# Harnish Kapoor — Portfolio
 
-A pastel sketchbook that scrolls sideways: five chapters (Home, About, Experience, Projects, Contact) on one horizontal track.
+**A pastel sketchbook that scrolls sideways.** The portfolio of Harnish Kapoor, Graphic Designer & Motion Graphic Designer: five chapters laid out on one horizontal track, drawn in ink outlines on collage paper, with hand-made motion throughout.
 
-- **Stack:** Next.js 16 (App Router), React 19, TypeScript, CSS Modules, GSAP (ScrollTrigger + Observer) and Lenis. Hosted on Vercel, no backend.
-- **Setup on a new machine:** see [SETUP.md](SETUP.md).
-
-## How it works
-
-- `src/components/Track/SiteShell.tsx` — the sideways scroll.
-  - The track is pinned, and vertical scrolling (wheel, trackpad, touch, keyboard) moves it horizontally. Mouse drag, horizontal swipes and ← → also move it.
-  - It snaps to chapter starts and project cards, in the direction of travel.
-  - It keeps `#about` / `#projects` / `#contact` in the URL.
-- `src/components/Header` — the fixed logo and nav. The active pill slides to the current chapter and takes its pastel, and labels roll on hover. Screens narrower than 768px in portrait get a Menu sheet.
-- `src/components/Spine` — the pastel strip that peeks in from the next chapter.
-- `src/components/chapters/*` — one folder per chapter.
-  - Home keeps the design export's values: at 1920×1080 it measures exactly as the export.
-- `src/components/ui/Typewriter.tsx` — type / hold / delete loop. It reserves space, so nothing moves, and pauses while off-screen.
-- `src/content/site.ts` — all text, links and project entries. Items marked `TODO` are placeholders.
-- `src/components/Sketch` — the charcoal pencil.
-  - **Sketch mode** is switched on with the pencil button (bottom right) and off with it again or Esc. While it is on, the page is locked: no scrolling, keys or clicks that change the page (hover effects still play), and dragging anywhere draws. The toolbar and the sound button still work.
-  - Marks are painted into 1024-px tiles in track coordinates, so they move with the page, and composited onto one fixed canvas. They last until the page is refreshed.
-  - The dock (bottom right): pencil size, undo (Ctrl/Cmd+Z), clear (with confirm), **Save view** (the marks where they were drawn, screen-sized) and **Save notes** (the marks cropped). Downloads contain only the pencil layer and the HK logo on plain paper — never the page itself.
-- `public/textures/paper-grain.png` — the background paper, cut from the collage's cream scrap by `npm run texture` and multiplied onto each chapter colour.
-- `src/components/chapters/Contact` — real email (with Copy), phone and Behance / Instagram / LinkedIn links. The email and phone are joined in the browser only, so the HTML never holds them whole. **Send** opens the visitor's own email app with the message ready (`src/lib/mailto.ts`); the site sends nothing itself and needs no server.
-- `src/components/ui/TornPaper.tsx` — surfaces cut from paper like the Home collage scraps (seeded torn outline, white paper core, grain); used for the contact form.
-- `public/cursors` — the pencil cursors.
-- `src/app/fonts.css` + `public/fonts` — self-hosted copies of the Google Font files the design uses (`npm run fonts`).
-
-## Responsive
-
-Sizes come from `--u`, one pixel of the 1920×1080 design (see `globals.css`), plus dedicated layouts:
-
-| Screens | Layout |
+| | |
 |---|---|
-| Landscape (desktop, laptop, landscape tablet) | The design layout |
-| Portrait tablets | Stacked |
-| Phones | Compact, with a Menu sheet |
+| **Chapters** | 01 Home · 02 About · 03 Experience · 04 Projects · 05 Contact |
+| **Stack** | Next.js 16 (App Router) · React 19 · TypeScript · CSS Modules · GSAP · Lenis |
+| **Hosting** | Vercel (static, no backend, no Docker) |
+| **Tests** | Playwright end-to-end, 8 screen sizes, runs on every push |
 
-Short landscape phones get a condensed variant. Every chapter fits one screen at all of these sizes; `npm run test:e2e` checks it.
+---
 
-## Motion
+## Highlights
 
-Everything respects `prefers-reduced-motion`: with it on, text appears at once and nothing loops.
+- **Sideways scrolling.** The wheel, trackpad, arrow keys, mouse drag and swipes all move the track. It snaps to chapters and project cards and keeps `#about`, `#experience`, `#projects` and `#contact` in the URL.
+- **Home:** the name rises in letter by letter, and the role types itself out. The squiggle draws itself and then flows. A star orbits the portrait card, passing behind and in front of the photo, and the card tilts in 3D toward the pointer.
+- **About — "Frame by frame."**
+  - A 3840-px storyboard: six story **stamps** with perforated edges and paper grain, taped along a dashed story line.
+  - Hover a stamp and the rest of the page blurs. Click it, and it zooms in, then sticks onto an **envelope**; scroll and the envelope opens to a letter with the story.
+  - ← / → move between the stories.
+- **Sketch mode:** turn on the pencil (bottom right) and the page locks in place.
+  - Draw anywhere with a charcoal pencil; marks stay with the page as you scroll.
+  - Undo, Clear, and **Save view** / **Save notes**: PNG downloads that contain only the pencil marks and the HK logo, never the page itself.
+- **Contact:**
+  - real email (with Copy), phone, and Behance / Instagram / LinkedIn links;
+  - the form is cut from **torn paper**, and **Send** opens the visitor's own email app with the message ready.
+- **Paper everywhere:** the background texture is cut from the actual paper scraps in the Home collage.
+- **Paper sounds** for the stamps, envelopes and pencil, with a mute button that is remembered.
+- **Responsive:** desktop, laptop, tablet (portrait and landscape) and phones (portrait and held sideways). Every chapter fits one screen at every size.
+- **Accessible:** keyboard navigation, visible focus, screen-reader text for animated type, and full support for `prefers-reduced-motion`.
 
-- **Load sequence:** letters rise in, the squiggle draws and then flows, and the card lands. The ring draws in, and the star starts orbiting it: behind the photo across the top, in front across the bottom. The badge pops in.
-- **Typing loops:** the role line and the card's role/company. Each holds about 12 seconds before deleting.
-- **Pointer effects:** a letter wave on the name, a 3D tilt on the card, a spin on the logo, a label roll on the nav, and lifts on the project and experience cards.
-- **Badge:** still by default. It spins while hovered and eases back upright; on touch screens a tap gives it one turn.
+## Getting started
+
+Requirements: **Node.js 22** (see `.nvmrc`) and Git. Python and Docker are not needed.
+
+```bash
+git clone https://github.com/krishna0605/Harnish-kapoor-portfolio-.git
+```
+
+```bash
+cd Harnish-kapoor-portfolio-
+```
+
+```bash
+npm ci
+```
+
+```bash
+npm run dev
+```
+
+Open http://localhost:3000. For a step-by-step guide on a new Windows machine, see [SETUP.md](SETUP.md).
+
+## Scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server on http://localhost:3000 |
+| `npm run build` | Production build (what Vercel runs) |
+| `npm run start` | Serve the production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript check |
+| `npm run test:e2e` | Build, then run the Playwright suite (needs `npx playwright install chromium` once) |
+| `npm run fonts` | Re-download the exact Google Font files into `public/fonts` |
+| `npm run texture` | Rebuild the paper texture from the Home collage |
+
+## Project structure
+
+```
+src/
+  app/                 layout, global styles, design tokens, fonts, favicon
+  content/site.ts      all text, links, stories and projects — edit content here
+  components/
+    Track/             the sideways scroll engine (GSAP ScrollTrigger + Lenis)
+    Header/            logo, nav with sliding pill, phone menu, sound toggle
+    Spine/             the pastel strip that peeks in from the next chapter
+    chapters/          Home, About (stamps, envelope), Projects, Contact
+    Sketch/            sketch mode: canvas layer, charcoal brush, dock, exports
+    ui/                Typewriter, SplitLetters, TornPaper
+    icons/             SVG artwork (monogram, orbit, motifs, socials)
+  lib/                 GSAP setup, sound, media queries, contact, mailto helpers
+public/                images, fonts, sounds, paper texture, cursors
+scripts/               font + paper texture generators
+tests/                 Playwright end-to-end tests
+```
+
+## Editing content
+
+Almost everything you'd want to change lives in **`src/content/site.ts`**:
+- chapter names;
+- Home text;
+- the About stories: each story's text, plus the "What I did" and "Highlights" lists;
+- the toolkit;
+- the projects;
+- contact links.
+
+Items marked `TODO` are placeholders waiting for real content:
+- the About "What I did" / "Highlights" lists;
+- the Projects entries;
+- the CV link.
+
+Large artwork and video should go to a media CDN (for example Cloudinary or Mux), not into this repo. See `src/lib/media.ts` and [SETUP.md](SETUP.md).
+
+## Deployment
+
+The site is deployed on **Vercel** from this repository:
+1. Import the repo in Vercel. It detects Next.js; keep the default settings. No environment variables are needed.
+2. Every push to `main` deploys to production, and every pull request gets a preview URL.
+
+GitHub Actions (`.github/workflows/ci.yml`) runs lint, type check, build and the end-to-end tests on every push and pull request.
+
+## Privacy
+
+- **Sketches** stay in the visitor's browser and disappear on refresh. Downloads contain only the pencil marks and the logo.
+- **The contact form** sends nothing itself: it opens the visitor's own email app.
+- **The email address and phone number** are joined in the browser, so the page HTML never contains them whole.
+
+## Credits
+
+- **Design & content:** Harnish Kapoor.
+- **Fonts:** [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque), [Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif) and [DM Mono](https://fonts.google.com/specimen/DM+Mono), self-hosted. All are under the SIL Open Font License.
+- **Sound effects:** [Mixkit](https://mixkit.co/free-sound-effects/), under the Mixkit Sound Effects Free License. The stamp thunk, whoosh and pencil scratch are generated in the browser.
+- **Animation:** [GSAP](https://gsap.com/) (standard license) and [Lenis](https://lenis.darkroom.engineering/).
+
+© Harnish Kapoor. All rights reserved: the artwork, illustrations, photographs and written content in this repository may not be reused without permission.
