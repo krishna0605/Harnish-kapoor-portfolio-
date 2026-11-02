@@ -125,7 +125,8 @@ GitHub Actions (`.github/workflows/ci.yml`) runs lint, type check, build and the
 - **Headers** (set in `next.config.ts` for every response): a strict Content-Security-Policy (everything self-hosted, no plugins, can't be framed), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy` (camera, microphone, location and payments off) and `Cross-Origin-Opener-Policy`. `X-Powered-By` is switched off. `tests/security.spec.ts` checks them, and checks that nothing on the site is blocked by its own policy.
 - **No secrets.** The site needs no keys or environment variables.
 - **CI** runs with a read-only token, and its actions are pinned to exact commits. Dependabot proposes npm and GitHub Actions updates weekly.
-- **`npm audit`** reports 0 problems in what ships to visitors. It does list moderate `minimatch` warnings inside ESLint plugins; those are developer-only tools that never reach the site, and the forced fix would break the linter.
+- **`npm audit`** reports 0 vulnerabilities, developer tools included. ESLint and its plugins still ask for an older `minimatch`, so `overrides` in `package.json` moves them to the patched 11.x. If an ESLint upgrade ever stops working with it, that override is the first thing to check.
+- **Dependabot** leaves `@types/node` on the Node version the site runs on (22), and TypeScript on the range typescript-eslint supports.
 - To report a problem, see [SECURITY.md](SECURITY.md).
 
 ## Licence
