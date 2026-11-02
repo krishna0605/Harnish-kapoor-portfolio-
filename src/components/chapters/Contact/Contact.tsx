@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { SocialIcon } from "@/components/icons/Socials";
 import { SplitLetters } from "@/components/ui/SplitLetters";
+import { TornPaper } from "@/components/ui/TornPaper";
 import { CONTACT } from "@/content/site";
 import { useContactDetails } from "@/lib/contact";
 import shared from "../chapter.module.css";
@@ -88,26 +89,38 @@ export function Contact() {
           setSent(true);
         }}
       >
-        <label className={styles.field}>
-          <span className={shared.label}>Name</span>
-          <input className={styles.input} name="name" autoComplete="name" required />
-        </label>
-        <label className={styles.field}>
-          <span className={shared.label}>Email</span>
-          <input className={styles.input} name="email" type="email" autoComplete="email" required />
-        </label>
-        <label className={styles.field}>
-          <span className={shared.label}>Message</span>
-          <textarea className={`${styles.input} ${styles.textarea}`} name="message" required />
-        </label>
-        <div className={styles.submitRow}>
-          <button type="submit" className={`${shared.button} ${styles.submit}`}>
-            Send →
-          </button>
-          <p className={styles.note} role="status">
-            {sent ? "Demo form — not connected yet." : ""}
-          </p>
-        </div>
+        <span className={`${styles.tape} ${styles.tapeA}`} aria-hidden="true" />
+        <span className={`${styles.tape} ${styles.tapeB}`} aria-hidden="true" />
+        <TornPaper color="#FFFDF8" seed={41} roughness={1.8} className={styles.sheet}>
+          <label className={styles.field}>
+            <span className={shared.label}>Name</span>
+            <TornPaper color="#CFE0C3" seed={51} edges={{ left: false, right: false }} className={styles.strip}>
+              <input className={styles.input} name="name" autoComplete="name" required />
+            </TornPaper>
+          </label>
+          <label className={styles.field}>
+            <span className={shared.label}>Email</span>
+            <TornPaper color="#CFE0C3" seed={61} edges={{ left: false, right: false }} className={styles.strip}>
+              <input className={styles.input} name="email" type="email" autoComplete="email" required />
+            </TornPaper>
+          </label>
+          <label className={styles.field}>
+            <span className={shared.label}>Message</span>
+            <TornPaper color="#CFE0C3" seed={71} edges={{ left: false, right: false }} className={styles.strip}>
+              <textarea className={`${styles.input} ${styles.textarea}`} name="message" required />
+            </TornPaper>
+          </label>
+          <div className={styles.submitRow}>
+            <TornPaper color="#F7DDA4" seed={81} edges={{ top: false, bottom: false, left: false }} className={styles.sendTab}>
+              <button type="submit" className={styles.submit}>
+                Send →
+              </button>
+            </TornPaper>
+            <p className={styles.note} role="status">
+              {sent ? "Demo form — not connected yet." : ""}
+            </p>
+          </div>
+        </TornPaper>
       </form>
     </section>
   );

@@ -105,19 +105,52 @@
   background: var(--lilac);
 }
 
-/* Form card */
+/* ---------- The form: a white sheet torn from paper, taped to the page ---------- */
 .form {
+  position: relative;
   width: calc(720 * var(--u));
   flex-shrink: 0;
+  transform: rotate(-1.2deg);
+}
+
+.sheet {
   box-sizing: border-box;
-  padding: calc(48 * var(--u));
-  border-radius: calc(28 * var(--u));
-  border: var(--stroke) solid var(--ink);
-  background: var(--paper);
-  box-shadow: calc(10 * var(--u)) calc(10 * var(--u)) 0 var(--ink);
+  /* the big sheet sits a little higher off the page than the strips */
+  filter: drop-shadow(1px 2px 0 rgba(42, 39, 51, 0.1));
+  padding: calc(52 * var(--u)) calc(48 * var(--u)) calc(44 * var(--u));
+}
+
+.sheet > div:last-child {
   display: flex;
   flex-direction: column;
   gap: calc(22 * var(--u));
+}
+
+/* washi tape holding the sheet at its top corners */
+.tape {
+  position: absolute;
+  z-index: 2;
+  top: calc(-12 * var(--u));
+  width: max(64px, calc(110 * var(--u)));
+  height: max(18px, calc(28 * var(--u)));
+  background-image: var(--grain);
+  background-size: 120px 120px;
+  background-blend-mode: multiply;
+  opacity: 0.88;
+  clip-path: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+  pointer-events: none;
+}
+
+.tapeA {
+  left: calc(36 * var(--u));
+  background-color: var(--lilac);
+  transform: rotate(-6deg);
+}
+
+.tapeB {
+  right: calc(40 * var(--u));
+  background-color: var(--marigold);
+  transform: rotate(5deg);
 }
 
 .field {
@@ -126,32 +159,46 @@
   gap: calc(8 * var(--u));
 }
 
+/* each field sits on its own torn sage strip, tilted a hair */
+.strip {
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.field:nth-child(odd) .strip {
+  transform: rotate(0.5deg);
+}
+
+.field:nth-child(even) .strip {
+  transform: rotate(-0.6deg);
+}
+
+.strip:focus-within {
+  --paper-face: var(--lilac) !important;
+  transform: translateY(-2px) rotate(0deg) !important;
+}
+
 .input {
-  height: max(40px, calc(64 * var(--u)));
+  display: block;
+  width: 100%;
+  height: max(40px, calc(62 * var(--u)));
   box-sizing: border-box;
-  padding: 0 max(14px, calc(28 * var(--u)));
-  border-radius: 999px;
-  border: var(--stroke) solid var(--ink);
-  background: var(--sage);
+  padding: 0 max(14px, calc(24 * var(--u)));
+  border: 0;
+  background: transparent;
   color: var(--ink);
   font-family: var(--font-display);
   font-size: max(16px, calc(20 * var(--u)));
   outline: none;
-  transition:
-    background-color 160ms ease,
-    box-shadow 160ms ease;
 }
 
-.input:focus-visible {
-  background: var(--lilac);
-  box-shadow: max(3px, calc(4 * var(--u))) max(3px, calc(4 * var(--u))) 0 var(--ink);
+.input::placeholder {
+  color: var(--graphite);
 }
 
 .textarea {
   height: calc(150 * var(--u));
   min-height: 72px;
-  padding-top: max(10px, calc(18 * var(--u)));
-  border-radius: max(18px, calc(28 * var(--u)));
+  padding-top: max(10px, calc(16 * var(--u)));
   resize: none;
 }
 
@@ -163,14 +210,51 @@
   margin-top: calc(6 * var(--u));
 }
 
+/* Send: a marigold tab torn off along its right edge, like a ticket */
+.sendTab {
+  flex-shrink: 0;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sendTab:hover {
+  transform: translateY(-3px) rotate(-1deg);
+}
+
+.sendTab:active {
+  transform: translateY(1px);
+}
+
 .submit {
-  background: var(--sage);
+  display: block;
+  height: max(42px, calc(60 * var(--u)));
+  padding: 0 max(22px, calc(38 * var(--u))) 0 max(18px, calc(28 * var(--u)));
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: max(15px, calc(22 * var(--u)));
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: var(--cursor-link, pointer);
+}
+
+.submit:focus-visible {
+  outline: 2.5px solid var(--ink);
+  outline-offset: 4px;
 }
 
 .note {
   margin: 0;
   font-size: max(12px, calc(16 * var(--u)));
+  line-height: 1.4;
   color: var(--graphite);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strip,
+  .sendTab {
+    transition: none;
+  }
 }
 
 /* ---------- Portrait (tablets and phones) ---------- */
@@ -209,10 +293,15 @@
 
   .form {
     width: auto;
-    padding: 20px;
-    border-radius: 22px;
+    transform: rotate(-0.8deg);
+  }
+
+  .sheet {
+    padding: 24px 20px 20px;
+  }
+
+  .sheet > div:last-child {
     gap: 12px;
-    box-shadow: 6px 6px 0 var(--ink);
   }
 
   .field {
@@ -225,7 +314,6 @@
 
   .textarea {
     height: 96px;
-    border-radius: 18px;
   }
 }
 
@@ -234,8 +322,11 @@
     display: none;
   }
 
-  .form {
-    padding: 16px;
+  .sheet {
+    padding: 20px 16px 16px;
+  }
+
+  .sheet > div:last-child {
     gap: 10px;
   }
 
@@ -250,8 +341,11 @@
 
 /* ---------- Short landscape screens (phones held sideways) ---------- */
 @media (orientation: landscape) and (max-height: 560px) {
-  .form {
+  .sheet {
     padding: 14px 18px;
+  }
+
+  .sheet > div:last-child {
     gap: 6px;
   }
 

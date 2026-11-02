@@ -51,3 +51,16 @@ test.describe("phone", () => {
     }
   });
 });
+
+test("the form is cut from torn paper, and the tear follows a resize", async ({ page }) => {
+  await page.goto("/#contact");
+  await page.waitForTimeout(2000);
+  const torn = page.locator("#contact form svg[data-torn]");
+  await expect(torn).toHaveCount(5); // the sheet, three field strips, the Send tab
+  const before = await torn.first().locator("path").first().getAttribute("d");
+  expect(before!.split("L").length).toBeGreaterThan(100); // a ragged outline, not a rectangle
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.waitForTimeout(600);
+  const after = await torn.first().locator("path").first().getAttribute("d");
+  expect(after).not.toBe(before);
+});

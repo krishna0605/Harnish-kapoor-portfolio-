@@ -1,0 +1,29 @@
+.paper {
+  position: relative;
+}
+
+/* the torn shape, drawn behind the content and allowed to bleed past the box */
+.shape {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+  filter: drop-shadow(2px 3px 0 rgba(42, 39, 51, 0.12));
+}
+
+/* the face colour comes from --paper-face, so callers can change it in CSS (e.g. on focus) */
+.face {
+  fill: var(--paper-face);
+  transition: fill 200ms ease;
+}
+
+.grain {
+  mix-blend-mode: multiply;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
