@@ -186,14 +186,23 @@ export const PROJECTS_INTRO = {
   subtitle: "Brands, explainers and a short film.",
 };
 
-// TODO: replace with real email and profile links
+/**
+ * Contact details. The email and phone are kept in pieces and only joined in the browser
+ * (see useContactDetails), so they never appear whole in the page HTML or source — a
+ * small hurdle for address-harvesting bots. Visitors see and use them normally.
+ */
 export const CONTACT = {
   title: ["Let’s make", "it move"],
   subtitle: "Commissions, collaborations or just a hello.",
-  email: "hello@example.com",
+  emailParts: ["harnish.kapoor03", "gmail", "com"],
+  phoneParts: ["+91", "81605", "04042"],
   links: [
-    { label: "Instagram", href: "#" },
-    { label: "Behance", href: "#" },
-    { label: "LinkedIn", href: "#" },
+    { label: "Behance", href: "https://www.behance.net/Harnish_Kapoor" },
+    { label: "Instagram", href: "https://www.instagram.com/_harnish.kapoor_/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/harnish-kapoor-animator/" },
   ],
+  form: {
+    subject: "Hello from your portfolio",
+    sentNote: "Your email app should open with the message ready to send.",
+  },
 };

@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { CHAPTERS } from "@/content/site";
+import { SocialIcon } from "@/components/icons/Socials";
+import { CHAPTERS, CONTACT } from "@/content/site";
 import styles from "./Header.module.css";
 
 /** Phone navigation: a full-screen <dialog> (native focus trap, Esc closes). */
@@ -38,6 +39,16 @@ export function MobileMenu({ active, onSelect }: { active: number; onSelect: (in
                 >
                   <span className={styles.sheetNumber}>{chapter.number}</span>
                   <span className={styles.sheetLabel}>{chapter.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <ul className={styles.sheetSocials} aria-label="Harnish online">
+            {CONTACT.links.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} target="_blank" rel="noopener noreferrer" className={styles.sheetSocial} aria-label={`Harnish on ${link.label} (opens in a new tab)`}>
+                  <SocialIcon name={link.label} className={styles.sheetSocialIcon} />
+                  {link.label}
                 </a>
               </li>
             ))}
