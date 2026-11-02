@@ -1,7 +1,7 @@
 "use client";
 
 import Lenis from "lenis";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Header } from "@/components/Header/Header";
 import { SketchDock } from "@/components/Sketch/SketchDock";
 import { SketchLayer } from "@/components/Sketch/SketchLayer";
@@ -12,6 +12,16 @@ import { ChapterContext } from "./ChapterContext";
 import styles from "./Track.module.css";
 
 const EDITABLE = "input, textarea, select, [contenteditable='true']";
+
+// The address bar only ever shows the site itself: chapters never put #about etc. in the URL.
+// An old link opened with a hash is remembered here, wiped from the address as soon as the
+// page is set up, and honoured once the scroll setup is ready.
+const openingHash = typeof window === "undefined" ? "" : window.location.hash;
+
+/** Removes any #… from the address bar without adding a history entry. */
+function clearHash() {
+  if (window.location.hash) history.replaceState(null, "", window.location.pathname + window.location.search);
+}
 
 /**
  * The sideways site. The track is pinned and moved horizontally while the page
@@ -27,8 +37,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const [active, setActive] = useState(0);
   const [containerAnimation, setContainerAnimation] = useState<gsap.core.Tween | null>(null);
 
-  // the hash the page was opened with; the URL isn't touched until the scroll setup has jumped to it
-  const [openingHash] = useState(() => (typeof window === "undefined" ? "" : window.location.hash));
   const hashPending = useRef(true);
 
   // filled in by the GSAP setup below; stable wrappers are handed to the context
@@ -45,6 +53,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
       ScrollTrigger.config({ ignoreMobileResize: true });
       history.scrollRestoration = "manual";
+      clearHash();
 
       // Smooth scrolling for wheel / trackpad (touch keeps native scrolling)
       let lenis: Lenis | null = null;
@@ -155,9 +164,10 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       };
       window.addEventListener("keydown", onKey);
 
-      // in-page hash links (#about, #experience, …) scroll to their chapter
+      // a typed or pasted #about, #contact, … still scrolls to its chapter; the address is then wiped
       const onHash = () => {
         const index = CHAPTERS.findIndex((c) => `#${c.id}` === window.location.hash);
+        clearHash();
         if (index >= 0) scrollToChapter.current(index);
       };
       window.addEventListener("hashchange", onHash);
@@ -214,7 +224,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       };
       viewport.addEventListener("click", blockClickAfterDrag, true);
 
-      // Recalculate once fonts and images have settled, then honour a deep link
+      // Recalculate once fonts and images have settled, then honour an old deep link
       // (#about, #projects, #contact) — after the browser's own anchor jump is done
       let alive = true;
       const loaded = new Promise<void>((resolve) =>
@@ -244,14 +254,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     },
     { dependencies: [reduced], revertOnUpdate: true },
   );
-
-  // Keep the URL in step with the chapter in view (not before a deep link has been honoured)
-  useEffect(() => {
-    if (hashPending.current && openingHash) return;
-    const id = CHAPTERS[active]?.id;
-    const url = id === "home" ? window.location.pathname : `#${id}`;
-    if (url !== window.location.pathname + window.location.hash) history.replaceState(null, "", url);
-  }, [active, openingHash]);
 
   const value = useMemo(() => ({ active, goTo, containerAnimation, lockScroll }), [active, goTo, containerAnimation, lockScroll]);
 

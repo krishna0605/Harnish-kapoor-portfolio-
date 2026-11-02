@@ -19,11 +19,12 @@ const usesMenu = (width: number, height: number) => height > width && width < 76
 async function openChapter(page: Page, id: (typeof NAV)[number], menu: boolean) {
   if (menu) {
     await page.getByRole("button", { name: "Menu" }).click();
-    await page.locator(`dialog a[href="#${id}"]`).click();
+    await page.locator(`dialog [data-go="${id}"]`).click();
   } else {
-    await page.locator(`nav[aria-label="Main"] a[href="#${id}"]`).click();
+    await page.locator(`nav[aria-label="Main"] [data-go="${id}"]`).click();
   }
-  await expect(page).toHaveURL(id === "home" ? /\/$/ : new RegExp(`#${id}$`));
+  await expect(page.locator(`nav[aria-label="Main"] [data-go="${id}"]`)).toHaveAttribute("aria-current", "page");
+  await expect(page).toHaveURL(/\/$/); // the address never shows the chapter
   await page.waitForTimeout(1700); // scroll animation + snap
 }
 
@@ -74,7 +75,7 @@ for (const size of SIZES) {
       }
 
       if (!usesMenu(size.width, size.height)) {
-        await expect(page.locator('nav[aria-label="Main"] a[aria-current="page"]')).toHaveAttribute("href", "#contact");
+        await expect(page.locator('nav[aria-label="Main"] [aria-current="page"]')).toHaveAttribute("data-go", "contact");
       }
       expect(errors).toEqual([]);
     });
@@ -89,7 +90,7 @@ for (const size of SIZES) {
         await page.screenshot({ path: `test-results/screens/${size.width}x${size.height}-about-${stop}.png` });
         await page.keyboard.press("ArrowRight");
         await page.waitForTimeout(1500);
-        if (await page.evaluate(() => location.hash === "#projects")) break;
+        if ((await page.locator('nav[aria-label="Main"] [aria-current="page"]').getAttribute("data-go")) === "projects") break;
       }
     });
   });
@@ -110,8 +111,8 @@ test.describe("1920×1080 matches the design exports", () => {
         nameSize: getComputedStyle(document.querySelector("[data-name]")!).fontSize,
         header: box("[data-header]"),
         arch: box("[data-arch]"),
-        cta: box('a[href="#projects"][class*=cta]'),
-        spine: box('a[href="#about"][aria-label^="Chapter"]'),
+        cta: box('[data-go="projects"][class*=cta]'),
+        spine: box('[data-go="about"][aria-label^="Chapter"]'),
       };
     });
     expect(m.nameSize).toBe("232px");
@@ -277,13 +278,27 @@ test.describe("motion and interaction", () => {
   test("arrow keys and deep links move between chapters", async ({ page }) => {
     await page.goto("/#contact");
     await page.waitForTimeout(1500);
-    await expect(page.locator('nav[aria-label="Main"] a[aria-current="page"]')).toHaveAttribute("href", "#contact");
+    await expect(page.locator('nav[aria-label="Main"] [aria-current="page"]')).toHaveAttribute("data-go", "contact");
+    await expect(page).toHaveURL(/\/$/); // an old #contact link still works, and is wiped from the address
 
     await page.goto("/");
     await page.waitForTimeout(2500);
     await page.keyboard.press("ArrowRight");
     await page.waitForTimeout(1600);
-    await expect(page).toHaveURL(/#about$/);
+    await expect(page.locator('nav[aria-label="Main"] [aria-current="page"]')).toHaveAttribute("data-go", "about");
+  });
+
+  test("the address bar stays on the site itself while browsing every chapter", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForTimeout(2500);
+    // no in-page #links anywhere, so hovering never shows one in the status bar either
+    expect(await page.locator('a[href^="#"], a[href*="/#"]').count()).toBe(0);
+    for (const id of [...NAV.slice(1), "home"] as const) {
+      await page.locator(`nav[aria-label="Main"] [data-go="${id}"]`).click();
+      await page.waitForTimeout(1400);
+      await expect(page.locator('nav[aria-label="Main"] [aria-current="page"]')).toHaveAttribute("data-go", id);
+      expect(page.url()).not.toContain("#");
+    }
   });
 
   test("reduced motion shows everything at once and opens the letter directly", async ({ browser }) => {

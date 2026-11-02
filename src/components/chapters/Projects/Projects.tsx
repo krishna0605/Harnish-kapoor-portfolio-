@@ -67,7 +67,7 @@ export function Projects() {
 
       {PROJECTS.map((project) => (
         <div key={project.title} className={styles.cell} data-snap>
-          <a href={project.href} className={styles.card} data-project data-reveal="project">
+          <a href={project.href || undefined} className={styles.card} data-project data-reveal="project">
             <div className={styles.media}>
               <MotifArt motif={project.motif} className={styles.art} />
             </div>

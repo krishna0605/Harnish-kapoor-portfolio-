@@ -13,7 +13,7 @@
 
 ## Highlights
 
-- **Sideways scrolling.** The wheel, trackpad, arrow keys, mouse drag and swipes all move the track. It snaps to chapters and project cards and keeps `#about`, `#experience`, `#projects` and `#contact` in the URL.
+- **Sideways scrolling.** The wheel, trackpad, arrow keys, mouse drag and swipes all move the track. It snaps to chapters and project cards. The address bar always shows just the site: chapters never add `#about` and the like to the URL, though old links such as `/#contact` still open the right chapter.
 - **Home:** the name rises in letter by letter, and the role types itself out. The squiggle draws itself and then flows. A star orbits the portrait card, passing behind and in front of the photo, and the card tilts in 3D toward the pointer.
 - **About — "Frame by frame."**
   - A 3840-px storyboard: six story **stamps** with perforated edges and paper grain, taped along a dashed story line.
@@ -118,7 +118,19 @@ GitHub Actions (`.github/workflows/ci.yml`) runs lint, type check, build and the
 
 - **Sketches** stay in the visitor's browser and disappear on refresh. Downloads contain only the pencil marks and the logo.
 - **The contact form** sends nothing itself: it opens the visitor's own email app.
-- **The email address and phone number** are joined in the browser, so the page HTML never contains them whole.
+- **The email address and phone number** are joined in the browser, so the page HTML never contains them whole. The repository never holds them whole either: the tests build them from the same parts.
+
+## Security
+
+- **Headers** (set in `next.config.ts` for every response): a strict Content-Security-Policy (everything self-hosted, no plugins, can't be framed), `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy` (camera, microphone, location and payments off) and `Cross-Origin-Opener-Policy`. `X-Powered-By` is switched off. `tests/security.spec.ts` checks them, and checks that nothing on the site is blocked by its own policy.
+- **No secrets.** The site needs no keys or environment variables.
+- **CI** runs with a read-only token, and its actions are pinned to exact commits. Dependabot proposes npm and GitHub Actions updates weekly.
+- **`npm audit`** reports 0 problems in what ships to visitors. It does list moderate `minimatch` warnings inside ESLint plugins; those are developer-only tools that never reach the site, and the forced fix would break the linter.
+- To report a problem, see [SECURITY.md](SECURITY.md).
+
+## Licence
+
+All rights reserved; see [LICENSE](LICENSE). Fonts and sound effects keep their own licences (below).
 
 ## Credits
 

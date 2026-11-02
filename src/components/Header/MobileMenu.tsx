@@ -9,8 +9,7 @@ import styles from "./Header.module.css";
 export function MobileMenu({ active, onSelect }: { active: number; onSelect: (index: number) => void }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  const select = (event: React.MouseEvent, index: number) => {
-    event.preventDefault();
+  const select = (index: number) => {
     dialogRef.current?.close();
     onSelect(index);
   };
@@ -30,16 +29,17 @@ export function MobileMenu({ active, onSelect }: { active: number; onSelect: (in
           <ul className={styles.sheetList}>
             {CHAPTERS.map((chapter, index) => (
               <li key={chapter.id}>
-                <a
-                  href={`#${chapter.id}`}
+                <button
+                  type="button"
+                  data-go={chapter.id}
                   className={styles.sheetLink}
                   aria-current={index === active ? "page" : undefined}
                   style={index === active ? { background: chapter.color } : undefined}
-                  onClick={(event) => select(event, index)}
+                  onClick={() => select(index)}
                 >
                   <span className={styles.sheetNumber}>{chapter.number}</span>
                   <span className={styles.sheetLabel}>{chapter.label}</span>
-                </a>
+                </button>
               </li>
             ))}
           </ul>

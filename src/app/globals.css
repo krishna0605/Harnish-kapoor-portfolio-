@@ -82,6 +82,20 @@ a:hover {
   color: var(--ink);
 }
 
+/* Chapter links are buttons (no #id in the address bar); they start out looking like plain text */
+:where(button[data-go]) {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-decoration: none;
+}
+
 :focus-visible {
   outline: 2.5px solid var(--ink);
   outline-offset: 4px;

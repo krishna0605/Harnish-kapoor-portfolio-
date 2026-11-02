@@ -25,7 +25,7 @@ export function Header() {
     const nav = navRef.current;
     if (!nav) return;
     const place = () => {
-      const link = nav.querySelectorAll<HTMLElement>("a")[active];
+      const link = nav.querySelectorAll<HTMLElement>("button")[active];
       if (link) setPill({ x: link.offsetLeft, width: link.offsetWidth });
     };
     place();
@@ -39,25 +39,21 @@ export function Header() {
     gsap.fromTo(markRef.current, { rotation: 0 }, { rotation: 360, duration: 0.7, ease: "back.out(1.6)", overwrite: true });
   };
 
-  const onNav = (event: React.MouseEvent, index: number) => {
-    event.preventDefault();
-    goTo(index);
-  };
-
   return (
     <header className={besideStrip ? `${styles.header} ${styles.besideStrip}` : styles.header} data-header>
-      <a
-        href="#home"
+      <button
+        type="button"
+        data-go="home"
         className={styles.brand}
         aria-label="Harnish Kapoor — home"
-        onClick={(event) => onNav(event, 0)}
+        onClick={() => goTo(0)}
         onMouseEnter={spin}
         onFocus={spin}
       >
         <span ref={markRef} className={styles.brandMark} data-reveal="header">
           <HkMonogram />
         </span>
-      </a>
+      </button>
 
       <div className={styles.right}>
       <nav ref={navRef} aria-label="Main" className={styles.nav}>
@@ -71,12 +67,13 @@ export function Header() {
           }}
         />
         {CHAPTERS.map((chapter, index) => (
-          <a
+          <button
+            type="button"
             key={chapter.id}
-            href={`#${chapter.id}`}
+            data-go={chapter.id}
             aria-current={index === active ? "page" : undefined}
             className={styles.navLink}
-            onClick={(event) => onNav(event, index)}
+            onClick={() => goTo(index)}
             data-reveal="header"
           >
             {/* the label rolls up on hover; the copy below it is decorative */}
@@ -88,7 +85,7 @@ export function Header() {
                 {chapter.number} {chapter.label}
               </span>
             </span>
-          </a>
+          </button>
         ))}
       </nav>
 
