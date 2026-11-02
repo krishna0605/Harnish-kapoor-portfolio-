@@ -306,8 +306,9 @@
 .closingActions {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
+  gap: 12px 20px;
 }
 
 .cv {
@@ -349,6 +350,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: underline;
+  white-space: nowrap;
   color: var(--ink);
 }
 
@@ -422,7 +424,9 @@
   }
 
 
+  /* wider, so the longer skill names pair up two to a row */
   .toolkit {
+    flex: 2;
     padding: 14px;
     gap: 6px;
   }
@@ -431,12 +435,53 @@
     font-size: 24px;
   }
 
+  .tags {
+    gap: 4px;
+  }
+
   .tag {
-    height: 21px;
+    height: 20px;
+    padding: 0 8px;
   }
 
   .closingLine {
     font-size: 28px;
+  }
+}
+
+/* portrait phones: smaller pill text so the longest skill fits the card; a pill that still
+   doesn't fit wraps inside the card instead of poking out of it */
+@media (orientation: portrait) and (max-width: 767px) {
+  .tag {
+    max-width: 100%;
+    height: auto;
+    min-height: 24px;
+    padding-block: 3px;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    line-height: 1.3;
+    white-space: normal;
+  }
+}
+
+/* short portrait phones: a tighter toolkit, so it and the closing line share one screen */
+@media (orientation: portrait) and (max-height: 700px) {
+  .toolkit {
+    padding: 14px 12px;
+    gap: 6px;
+  }
+
+  .toolkitTitle {
+    font-size: 26px;
+  }
+
+  .tags {
+    gap: 4px;
+  }
+
+  .tag {
+    min-height: 20px;
+    padding-inline: 8px;
   }
 }
 

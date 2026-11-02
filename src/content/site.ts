@@ -160,8 +160,30 @@ export const ABOUT = {
   scenes: SCENES,
   toolkit: {
     title: "The toolkit",
-    skills: ["2D Animation", "Motion Graphics", "Storyboarding", "Illustration", "Character Design", "Branding", "Matte Painting"],
-    software: ["Photoshop", "Illustrator", "Animate", "After Effects", "Premiere Pro", "InDesign", "TVPaint", "Figma", "Blender"],
+    skillsLabel: "Visual design",
+    skills: [
+      "Graphic Design",
+      "Visual Communication",
+      "Branding & Visual Identity",
+      "Social Media & Marketing Design",
+      "Brochure & Publication Design",
+      "Concept Development & Creative Research",
+      "Visual Storytelling & Storyboarding",
+    ],
+    softwareLabel: "Software & tools",
+    // "Adobe" is left off the Adobe apps so the pills stay short
+    software: [
+      "Illustrator",
+      "Photoshop",
+      "InDesign",
+      "After Effects",
+      "Premiere Pro",
+      "Audition",
+      "Figma",
+      "Canva",
+      "Articulate Storyline",
+      "Articulate Rise",
+    ],
   },
   closing: {
     line: ["The next frame", "is yours."],

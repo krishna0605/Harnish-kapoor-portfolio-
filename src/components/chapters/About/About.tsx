@@ -307,7 +307,7 @@ export function About() {
             <h3 id="toolkit-title" className={styles.toolkitTitle}>
               {ABOUT.toolkit.title}
             </h3>
-            <span className={styles.toolkitLabel}>Skills</span>
+            <span className={styles.toolkitLabel}>{ABOUT.toolkit.skillsLabel}</span>
             <ul className={styles.tags}>
               {ABOUT.toolkit.skills.map((skill) => (
                 <li key={skill} className={`${styles.tag} ${styles.tagSkill}`} data-reveal="tool">
@@ -315,7 +315,7 @@ export function About() {
                 </li>
               ))}
             </ul>
-            <span className={styles.toolkitLabel}>Software</span>
+            <span className={styles.toolkitLabel}>{ABOUT.toolkit.softwareLabel}</span>
             <ul className={styles.tags}>
               {ABOUT.toolkit.software.map((tool) => (
                 <li key={tool} className={styles.tag} data-reveal="tool">
