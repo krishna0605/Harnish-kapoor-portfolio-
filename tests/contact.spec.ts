@@ -64,3 +64,37 @@ test("the form is cut from torn paper, and the tear follows a resize", async ({ 
   const after = await torn.first().locator("path").first().getAttribute("d");
   expect(after).not.toBe(before);
 });
+
+test("Send opens the email app with the message ready; an empty form doesn't send", async ({ page }) => {
+  await page.goto("/#contact");
+  await page.waitForTimeout(2000);
+  // record the mailto link instead of opening a real email app
+  await page.evaluate(() => {
+    const original = HTMLAnchorElement.prototype.click;
+    HTMLAnchorElement.prototype.click = function () {
+      if (this.href.startsWith("mailto:")) (window as unknown as { __opened: string }).__opened = this.href;
+      else original.call(this);
+    };
+  });
+  const form = page.locator("#contact form");
+  const send = form.getByRole("button", { name: "Send →" });
+
+  await send.click();
+  expect(await form.getAttribute("data-mailto")).toBeNull(); // the browser asked for the missing fields
+
+  await form.locator("input[name=name]").fill("Asha Rao");
+  await form.locator("input[name=email]").fill("asha@example.com");
+  await form.locator("textarea[name=message]").fill("Loved the film — can we talk about a reel? 50% & more");
+  await send.click();
+
+  const expected =
+    "mailto:harnish.kapoor03@gmail.com?subject=" +
+    encodeURIComponent("Hello from your portfolio — Asha Rao") +
+    "&body=" +
+    encodeURIComponent("Loved the film — can we talk about a reel? 50% & more\n\n— Asha Rao\nasha@example.com");
+  await expect(form).toHaveAttribute("data-mailto", expected);
+  expect(await page.evaluate(() => (window as unknown as { __opened: string }).__opened)).toBe(expected);
+  await expect(form.getByRole("status")).toContainText("Your email app should open");
+  // the form keeps what was written
+  await expect(form.locator("input[name=name]")).toHaveValue("Asha Rao");
+});

@@ -250,6 +250,19 @@
   color: var(--graphite);
 }
 
+.noteLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--sage);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+  cursor: var(--cursor-link, pointer);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .strip,
   .sendTab {

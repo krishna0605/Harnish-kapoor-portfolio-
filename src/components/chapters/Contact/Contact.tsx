@@ -6,14 +6,20 @@ import { SplitLetters } from "@/components/ui/SplitLetters";
 import { TornPaper } from "@/components/ui/TornPaper";
 import { CONTACT } from "@/content/site";
 import { useContactDetails } from "@/lib/contact";
+import { buildMailto, openMailto } from "@/lib/mailto";
+import { playSound } from "@/lib/sound";
 import shared from "../chapter.module.css";
 import { useChapterReveal } from "../useChapterReveal";
 import styles from "./Contact.module.css";
 
-/** Chapter 05 — Contact. The form is a demo: there is no backend yet, nothing is sent. */
+/**
+ * Chapter 05 — Contact. Send opens the visitor's own email app with the message ready,
+ * addressed to Harnish: the site itself sends nothing and needs no server.
+ */
 export function Contact() {
   const ref = useRef<HTMLElement>(null);
   const [sent, setSent] = useState(false);
+  const [mailto, setMailto] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const details = useContactDetails();
   useChapterReveal(ref);
@@ -84,9 +90,22 @@ export function Contact() {
       <form
         className={styles.form}
         data-reveal="block"
+        data-mailto={mailto ?? undefined}
         onSubmit={(event) => {
           event.preventDefault();
+          if (!details) return;
+          const data = new FormData(event.currentTarget);
+          const href = buildMailto({
+            to: details.email,
+            subject: CONTACT.form.subject,
+            name: String(data.get("name") ?? ""),
+            email: String(data.get("email") ?? ""),
+            message: String(data.get("message") ?? ""),
+          });
+          setMailto(href);
           setSent(true);
+          playSound("slide", { volume: 0.7 });
+          openMailto(href);
         }}
       >
         <span className={`${styles.tape} ${styles.tapeA}`} aria-hidden="true" />
@@ -117,7 +136,14 @@ export function Contact() {
               </button>
             </TornPaper>
             <p className={styles.note} role="status">
-              {sent ? "Demo form — not connected yet." : ""}
+              {sent && (
+                <>
+                  {CONTACT.form.sentNote}{" "}
+                  <button type="button" className={styles.noteLink} onClick={copyEmail} data-sketch-allow>
+                    {copied ? "Address copied ✓" : "No email app? Copy the address"}
+                  </button>
+                </>
+              )}
             </p>
           </div>
         </TornPaper>

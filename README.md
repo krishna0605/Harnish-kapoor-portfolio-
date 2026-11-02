@@ -22,6 +22,8 @@ A pastel sketchbook that scrolls sideways: five chapters (Home, About, Experienc
   - Marks are painted into 1024-px tiles in track coordinates, so they move with the page, and composited onto one fixed canvas. They last until the page is refreshed.
   - The dock (bottom right): pencil size, undo (Ctrl/Cmd+Z), clear (with confirm), **Save view** (the marks where they were drawn, screen-sized) and **Save notes** (the marks cropped). Downloads contain only the pencil layer and the HK logo on plain paper — never the page itself.
 - `public/textures/paper-grain.png` — the background paper, cut from the collage's cream scrap by `npm run texture` and multiplied onto each chapter colour.
+- `src/components/chapters/Contact` — real email (with Copy), phone and Behance / Instagram / LinkedIn links. The email and phone are joined in the browser only, so the HTML never holds them whole. **Send** opens the visitor's own email app with the message ready (`src/lib/mailto.ts`); the site sends nothing itself and needs no server.
+- `src/components/ui/TornPaper.tsx` — surfaces cut from paper like the Home collage scraps (seeded torn outline, white paper core, grain); used for the contact form.
 - `public/cursors` — the pencil cursors.
 - `src/app/fonts.css` + `public/fonts` — self-hosted copies of the Google Font files the design uses (`npm run fonts`).
 
