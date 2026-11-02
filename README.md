@@ -106,7 +106,7 @@ Large artwork and video should go to a media CDN (for example Cloudinary or Mux)
 
 The repository is connected to the existing [Vercel project](https://vercel.com/krishna0605s-projects/harnish-kapoor-portfolio).
 
-The assigned production address is [harnish-kapoor-portfolio.vercel.app](https://harnish-kapoor-portfolio.vercel.app). **Initial launch status: access is protected while commercial-plan billing and release verification are completed.**
+The assigned production address is [harnish-kapoor-portfolio.vercel.app](https://harnish-kapoor-portfolio.vercel.app). **Current status: deployed on the free Hobby plan, with Vercel sign-in required for all deployments at the owner's request.** No paid upgrade or add-ons have been purchased. Public commercial launch is deferred.
 
 Use a pull request for changes. Once the required CI check passes, merging into `main` triggers a production deployment; other branches receive preview deployments. No application environment variables are required.
 

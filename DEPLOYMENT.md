@@ -7,8 +7,8 @@
 - Source: [krishna0605/Harnish-kapoor-portfolio-](https://github.com/krishna0605/Harnish-kapoor-portfolio-); production branch: `main`.
 - Assigned production address: <https://harnish-kapoor-portfolio.vercel.app>.
 - Initial setup date: 2 November 2026.
-- Public launch is pending: all deployments require Vercel Authentication until billing and release checks are complete. An assigned production URL does not mean the site is publicly launched.
-- The team is currently on Hobby. Commercial launch requires Pro or an existing commercial-compatible subscription. Checkout quoted $20/month plus $3.60 estimated tax ($23.60 initially); confirm the current checkout before purchasing. CDN tier increases and other metered usage can add charges. Existing team spending controls must remain unchanged.
+- The owner chose to retain the **free Hobby plan** and keep **all deployments protected**. No subscription upgrade or paid add-ons are authorized. An assigned production URL does not mean the site is publicly launched.
+- Public commercial launch is deferred. Hobby is limited to personal, non-commercial use; any future commercial launch requires a compatible subscription and separate billing approval. Existing team spending controls remain unchanged.
 
 ## Build and environment settings
 
@@ -37,8 +37,19 @@ The initial application commit is `d0e41ad93c312a755768941a34f986e71cd813b1`. It
 | --- | --- | --- |
 | Protected initial production build | `dpl_8AFjjVswxCyUHy7doez2nA1ktw2S` | <https://harnish-kapoor-portfolio-4ww7nalw1-krishna0605s-projects.vercel.app> |
 | Protected preview | `dpl_5ZGcJEDGGkXrAsNp8dvP4Ch53ifQ` | <https://harnish-kapoor-portfolio-fecqynsao-krishna0605s-projects.vercel.app> |
+| Automatic PR #1 preview, commit `460c790` | `dpl_CXkFvvBSUwGdht6EN6BjmC7TA4gA` | <https://harnish-kapoor-portfolio-lwelu6z0y-krishna0605s-projects.vercel.app> |
 
 Vercel assigned its first deployment to Production during bootstrap. It was protected before creation and is not a public release. Inspect the environment reported by Vercel rather than assuming a requested preview is always treated as one.
+
+Verified setup results:
+
+- Initial production and preview deployments reached `READY`; build logs confirmed static prerendering and successful deployment.
+- The GitHub-connected documentation branch automatically created a `READY` preview, confirming branch deployment integration.
+- No application environment variables are configured.
+- Anonymous requests to both the production address and preview redirect to Vercel Authentication.
+- The saved `main` protection rule requires a PR, the GitHub Actions `check` job, and an up-to-date branch. It also applies to administrators, requires no additional reviewer, and disallows force pushes and deletions.
+
+The following checklist is for a **future public launch**, not authorization to change the current free, protected setup.
 
 Before making production public:
 

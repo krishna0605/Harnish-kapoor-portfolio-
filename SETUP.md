@@ -65,11 +65,11 @@ The repository already has a connected [Vercel project](https://vercel.com/krish
 - Install: `npm ci`; build: `npm run build`; output: framework default.
 - No application environment variables are required. Leave `NEXT_PUBLIC_MEDIA_BASE_URL` unset to serve the committed assets from `public/`.
 - Open pull requests for changes; wait for the `check` CI job and inspect the Vercel preview before merging into `main`.
-- The production address is [harnish-kapoor-portfolio.vercel.app](https://harnish-kapoor-portfolio.vercel.app). It remains protected until the initial commercial launch is completed.
+- The production address is [harnish-kapoor-portfolio.vercel.app](https://harnish-kapoor-portfolio.vercel.app). All deployments remain protected by Vercel sign-in at the owner's request; the project stays on free Hobby.
 
 Follow [DEPLOYMENT.md](DEPLOYMENT.md) for first-launch status, settings, verification, and recovery.
 
-**Plan:** This portfolio promotes paid services, so the public launch requires Pro or another commercial-compatible plan. The team was on Hobby when setup began. A billing upgrade is a separate, explicit purchase; do not enable paid add-ons or change team spending controls as part of deployment.
+**Plan:** Keep the existing free Hobby plan. No billing upgrade or paid add-ons are authorized. Hobby is limited to personal, non-commercial use; a future public launch promoting paid services requires a commercial-compatible plan. Existing team spending controls remain unchanged.
 
 ## 6. Heavy media (for the Projects chapter onward)
 
