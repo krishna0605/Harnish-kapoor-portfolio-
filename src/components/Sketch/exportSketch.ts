@@ -13,6 +13,7 @@ function download(canvas: HTMLCanvasElement, filename: string) {
       const link = document.createElement("a");
       link.href = url;
       link.download = filename;
+      link.dataset.sketchAllow = ""; // sketch mode blocks clicks, but not this one
       document.body.appendChild(link);
       link.click();
       link.remove();

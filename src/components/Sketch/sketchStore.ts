@@ -15,11 +15,11 @@ export type SketchSize = keyof typeof SIZES;
 type State = {
   strokes: Stroke[];
   size: SketchSize;
-  /** touch screens: finger strokes draw instead of scrolling */
-  touchDrawing: boolean;
+  /** sketch mode: the page is locked in place and dragging draws */
+  drawing: boolean;
 };
 
-let state: State = { strokes: [], size: "medium", touchDrawing: false };
+let state: State = { strokes: [], size: "medium", drawing: false };
 const listeners = new Set<() => void>();
 let nextId = 1;
 
@@ -58,8 +58,9 @@ export const sketchStore = {
   setSize(size: SketchSize) {
     set({ size });
   },
-  setTouchDrawing(on: boolean) {
-    set({ touchDrawing: on });
-    document.documentElement.toggleAttribute("data-touch-drawing", on);
+  setDrawing(on: boolean) {
+    if (state.drawing === on) return;
+    set({ drawing: on });
+    document.documentElement.toggleAttribute("data-sketch-mode", on);
   },
 };

@@ -18,7 +18,7 @@ A pastel sketchbook that scrolls sideways: five chapters (Home, About, Experienc
 - `src/components/ui/Typewriter.tsx` — type / hold / delete loop. It reserves space, so nothing moves, and pauses while off-screen.
 - `src/content/site.ts` — all text, links and project entries. Items marked `TODO` are placeholders.
 - `src/components/Sketch` — the charcoal pencil.
-  - With a mouse, dragging anywhere draws (a plain click still clicks); the wheel, trackpad and arrow keys scroll. On touch screens, the pencil button switches swipes to drawing.
+  - **Sketch mode** is switched on with the pencil button (bottom right) and off with it again or Esc. While it is on, the page is locked: no scrolling, keys or clicks that change the page (hover effects still play), and dragging anywhere draws. The toolbar and the sound button still work.
   - Marks are painted into 1024-px tiles in track coordinates, so they move with the page, and composited onto one fixed canvas. They last until the page is refreshed.
   - The dock (bottom right): pencil size, undo (Ctrl/Cmd+Z), clear (with confirm), **Save view** (the page as seen, via modern-screenshot) and **Save notes** (just the marks on paper).
 - `public/textures/paper-grain.png` — the background paper, cut from the collage's cream scrap by `npm run texture` and multiplied onto each chapter colour.

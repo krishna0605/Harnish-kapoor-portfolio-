@@ -65,8 +65,45 @@ html[data-capturing] .dock {
   transform: rotate(-12deg) translateY(-2px);
 }
 
+/* sketch mode on: the button turns ink with a marigold ring, the pencil tip glows lilac */
 .pencil[aria-pressed="true"] {
-  background: var(--marigold);
+  background: var(--ink);
+  box-shadow:
+    0 0 0 3px var(--marigold),
+    3px 3px 0 3px var(--ink);
+  transform: rotate(-12deg);
+}
+
+.pencil[aria-pressed="true"] svg g {
+  stroke: var(--paper);
+}
+
+.pencil[aria-pressed="true"] .pencilTip {
+  fill: var(--lilac);
+}
+
+.modePill {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 14px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* while the page is paused, a soft marigold frame marks the whole screen as the sketchbook */
+:global(html[data-sketch-mode]) body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 4px var(--marigold);
 }
 
 .tools {
@@ -222,9 +259,9 @@ html[data-capturing] .dock {
   white-space: nowrap;
 }
 
-/* drawing with a finger: the page stops scrolling under it */
-:global(html[data-touch-drawing]),
-:global(html[data-touch-drawing] *) {
+/* sketch mode: fingers draw, nothing scrolls */
+:global(html[data-sketch-mode]),
+:global(html[data-sketch-mode] *) {
   touch-action: none !important;
 }
 

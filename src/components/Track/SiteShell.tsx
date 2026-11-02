@@ -172,8 +172,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       };
       viewport.addEventListener("focusin", onFocus);
 
-      // Horizontal finger swipes: the track follows the finger from where the press started,
-      // then snaps onward. (A mouse drag draws with the pencil instead — see SketchLayer.)
+      // Mouse drag and horizontal swipes: the track follows the pointer from where the press
+      // started, then snaps onward. In sketch mode the page is locked and drags draw instead.
       let dragged = 0;
       let pressY = 0;
       const observer = Observer.create({
@@ -188,17 +188,18 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         },
         onDrag: (self) => {
           if (locked) return;
-          if ((self.event as PointerEvent).pointerType !== "touch") return; // mouse / pen draw
-          if (document.documentElement.hasAttribute("data-touch-drawing")) return; // finger draws
-          if (self.axis !== "x") return; // vertical swipes scroll natively
+          const mouse = (self.event as PointerEvent).pointerType === "mouse";
+          if (!mouse && self.axis !== "x") return; // vertical swipes scroll natively
+          if (mouse) track.classList.add(styles.dragging);
           const dx = self.x! - self.startX!;
           dragged = Math.abs(dx);
-          const y = gsap.utils.clamp(trigger.start, trigger.end, pressY - dx * 1.8);
+          const y = gsap.utils.clamp(trigger.start, trigger.end, pressY - dx * (mouse ? 1.4 : 1.8));
           if (lenis) lenis.scrollTo(y, { immediate: true });
           else window.scrollTo(0, y);
         },
         onDragEnd: (self) => {
-          if (dragged < 6) return;
+          track.classList.remove(styles.dragging);
+          if (dragged < 6 || locked) return;
           const direction = self.x! < self.startX! ? 1 : -1;
           const next = ScrollTrigger.snapDirectional(snapPoints)(targetProgress(), direction);
           scrollToX(next * distance());

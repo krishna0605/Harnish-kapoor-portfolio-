@@ -12,6 +12,12 @@ async function scribble(page: Page, x: number, y: number) {
   await page.waitForTimeout(150);
 }
 
+/** Turns sketch mode on with the pencil button. */
+async function sketchMode(page: Page) {
+  await page.getByRole("button", { name: "Sketch on the page" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-sketch-mode", "");
+}
+
 /** Highest alpha on the sketch canvas around a screen point. */
 function inkAt(page: Page, x: number, y: number) {
   return page.evaluate(
@@ -48,26 +54,51 @@ test("the cursor is a pencil, and a text cursor in fields", async ({ page }) => 
   expect(await page.evaluate(() => getComputedStyle(document.querySelector("#contact input")!).cursor)).toBe("text");
 });
 
-test("dragging draws; a plain click still clicks; dragging over a link does not follow it", async ({ page }) => {
+test("outside sketch mode a drag scrolls and nothing is drawn", async ({ page }) => {
+  await scribble(page, 230, 780);
   expect(await inkAt(page, 300, 780)).toBe(0);
+  await page.mouse.move(800, 450);
+  await page.mouse.down();
+  await page.mouse.move(400, 450, { steps: 10 });
+  await page.mouse.up();
+  await expect(page).toHaveURL(/#about$/, { timeout: 4000 });
+});
+
+test("sketch mode: the pencil lights up, dragging draws and the page is locked", async ({ page }) => {
+  await sketchMode(page);
+  const pencil = page.getByRole("button", { name: "Stop sketching" });
+  await expect(pencil).toHaveAttribute("aria-pressed", "true");
+  await page.waitForTimeout(400); // colour transition
+  expect(await pencil.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(42, 39, 51)");
+
   await scribble(page, 230, 780);
   expect(await inkAt(page, 300, 780)).toBeGreaterThan(60);
 
-  const link = page.locator('nav[aria-label="Main"] a[href="#about"]');
-  const box = (await link.boundingBox())!;
-  await page.mouse.move(box.x - 20, box.y + box.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width + 20, box.y + box.height / 2, { steps: 10 });
-  await page.mouse.up();
-  await page.waitForTimeout(600);
-  await expect(page).not.toHaveURL(/#about$/);
+  // nothing can move or change the page
+  await page.mouse.wheel(0, 900);
+  await page.keyboard.press("ArrowRight");
+  await page.locator('nav[aria-label="Main"] a[href="#about"]').click();
+  await page.locator("a[href='#projects'][class*=cta]").click();
+  await page.waitForTimeout(1200);
+  expect(await page.evaluate(() => scrollY)).toBe(0);
+  await expect(page).not.toHaveURL(/#(about|projects)$/);
 
-  await link.click();
+  // hover effects still play
+  await page.locator("a[href='#projects'][class*=cta]").hover();
+  await page.waitForTimeout(300);
+  expect(await page.locator("a[href='#projects'][class*=cta]").evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(220, 211, 242)");
+
+  // Esc leaves sketch mode and the site works again
+  await page.keyboard.press("Escape");
+  await expect(page.locator("html")).not.toHaveAttribute("data-sketch-mode", "");
+  await page.locator('nav[aria-label="Main"] a[href="#about"]').click();
   await expect(page).toHaveURL(/#about$/);
 });
 
 test("marks stay on the page they were drawn on", async ({ page }) => {
+  await sketchMode(page);
   await scribble(page, 230, 780);
+  await page.keyboard.press("Escape");
   await page.locator('nav[aria-label="Main"] a[href="#about"]').click();
   await page.waitForTimeout(1800);
   expect(await inkAt(page, 300, 780)).toBe(0); // Home slid away, and its marks with it
@@ -77,6 +108,7 @@ test("marks stay on the page they were drawn on", async ({ page }) => {
 });
 
 test("undo, clear (with confirm) and a refresh remove marks", async ({ page }) => {
+  await sketchMode(page);
   await scribble(page, 230, 780);
   await page.keyboard.press("Control+z");
   await page.waitForTimeout(200);
@@ -93,11 +125,13 @@ test("undo, clear (with confirm) and a refresh remove marks", async ({ page }) =
 
   await scribble(page, 230, 780);
   await page.reload();
+  // marks and sketch mode both end with the page view
   await page.waitForTimeout(2500);
   expect(await inkAt(page, 300, 780)).toBe(0);
 });
 
 test("save notes and save view download PNGs", async ({ page }) => {
+  await sketchMode(page);
   await scribble(page, 230, 780);
   for (const name of ["Save notes as PNG", "Save view as PNG"]) {
     const download = page.waitForEvent("download");
@@ -123,12 +157,11 @@ test("no drawing while a story envelope is open", async ({ page }) => {
 test.describe("phone", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
 
-  test("the pencil button switches finger swipes from scrolling to drawing", async ({ page }) => {
-    const pencil = page.getByRole("button", { name: "Draw with the pencil" });
-    await pencil.tap();
-    await expect(page.locator("html")).toHaveAttribute("data-touch-drawing", "");
-    await expect(page.getByRole("button", { name: "Stop drawing" })).toHaveAttribute("aria-pressed", "true");
-    await page.getByRole("button", { name: "Stop drawing" }).tap();
-    await expect(page.locator("html")).not.toHaveAttribute("data-touch-drawing", "");
+  test("the pencil button switches sketch mode on and off", async ({ page }) => {
+    await page.getByRole("button", { name: "Sketch on the page" }).tap();
+    await expect(page.locator("html")).toHaveAttribute("data-sketch-mode", "");
+    await expect(page.getByRole("button", { name: "Stop sketching" })).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("button", { name: "Stop sketching" }).tap();
+    await expect(page.locator("html")).not.toHaveAttribute("data-sketch-mode", "");
   });
 });

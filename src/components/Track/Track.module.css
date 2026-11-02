@@ -21,3 +21,8 @@
   background-blend-mode: multiply;
 }
 
+
+.dragging,
+.dragging * {
+  user-select: none;
+}

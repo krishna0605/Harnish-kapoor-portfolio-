@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useChapters } from "@/components/Track/ChapterContext";
 import { playSound } from "@/lib/sound";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { saveNotes, saveView } from "./exportSketch";
@@ -14,13 +15,20 @@ const SIZE_LABELS: Record<SketchSize, string> = { fine: "Fine", medium: "Medium"
 export function SketchDock() {
   const state = useSyncExternalStore(sketchStore.subscribe, sketchStore.get, sketchStore.get);
   const touch = useMediaQuery("(pointer: coarse)");
-  const [open, setOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
 
   const marks = state.strokes.filter((stroke) => stroke.points.length && stroke.layout === currentLayout()).length;
-  const expanded = open || marks > 0 || state.touchDrawing;
+  const drawing = state.drawing;
+  // tools show in sketch mode, and afterwards while there are marks to save or clear
+  const expanded = drawing || marks > 0;
+  const { lockScroll } = useChapters();
+
+  // sketch mode freezes the page: no scrolling, no keys, no drag (clicks are blocked in SketchLayer)
+  useEffect(() => {
+    lockScroll(drawing);
+  }, [drawing, lockScroll]);
 
   const say = (message: string) => {
     setToast(message);
@@ -37,20 +45,20 @@ export function SketchDock() {
         event.preventDefault();
         sketchStore.undo();
       }
-      if (event.key === "Escape") setConfirming(false);
+      if (event.key === "Escape") {
+        setConfirming(false);
+        sketchStore.setDrawing(false);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   const onPencil = () => {
-    if (touch) {
-      const on = !state.touchDrawing;
-      sketchStore.setTouchDrawing(on);
-      say(on ? "Drawing on — tap ✎ to scroll" : "Scrolling again");
-    } else {
-      setOpen((value) => !value);
-    }
+    const on = !drawing;
+    sketchStore.setDrawing(on);
+    playSound(on ? "quick" : "slide", { volume: 0.5 });
+    if (!on) say(touch ? "Scrolling again" : "Back to browsing");
   };
 
   const onClear = () => {
@@ -73,13 +81,18 @@ export function SketchDock() {
   };
 
   return (
-    <div className={styles.dock} data-sketch-ignore data-expanded={expanded || undefined}>
+    <div className={styles.dock} data-sketch-ignore data-expanded={expanded || undefined} data-drawing={drawing || undefined}>
+      {drawing && (
+        <div className={styles.modePill} role="status">
+          Sketch mode · page paused · {touch ? "tap the pencil to exit" : "Esc or the pencil to exit"}
+        </div>
+      )}
       <button
         type="button"
         className={styles.pencil}
-        aria-label={touch ? (state.touchDrawing ? "Stop drawing" : "Draw with the pencil") : "Pencil tools"}
-        aria-pressed={touch ? state.touchDrawing : expanded}
-        title={touch ? "Draw with your finger" : "Drag anywhere to draw"}
+        aria-label={drawing ? "Stop sketching" : "Sketch on the page"}
+        aria-pressed={drawing}
+        title={drawing ? "Stop sketching" : "Sketch on the page"}
         onClick={onPencil}
       >
         <svg viewBox="0 0 32 32" aria-hidden="true">
@@ -88,7 +101,7 @@ export function SketchDock() {
             <path d="M24.5 3.5 L26.6 1.4 Q27.6 0.5 28.6 1.4 L30.6 3.4 Q31.5 4.4 30.6 5.4 L28.5 7.5 Z" fill="#F5C9C6" />
             <path d="M7 21 L11 25 L4.5 27.6 Z" fill="#FFFDF6" />
           </g>
-          <path d="M4.6 27.5 L2 30 L3.4 26.4 Z" fill="#2A2733" />
+          <path className={styles.pencilTip} d="M4.6 27.5 L2 30 L3.4 26.4 Z" fill="#2A2733" />
         </svg>
       </button>
 

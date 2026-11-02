@@ -140,8 +140,7 @@ export function SketchLayer() {
     const canDraw = (event: PointerEvent) => {
       if (event.button !== 0 || document.querySelector("dialog[open]")) return false;
       if ((event.target as Element | null)?.closest?.(IGNORE)) return false;
-      if (event.pointerType === "touch") return sketchStore.get().touchDrawing;
-      return true; // mouse and pen always draw
+      return sketchStore.get().drawing; // only in sketch mode (the pencil button)
     };
 
     const toWorld = (event: PointerEvent) => {
@@ -217,9 +216,11 @@ export function SketchLayer() {
       setTimeout(() => (swallowClick = false), 0);
     };
 
-    // a press that turned into a stroke must not also click a link or a stamp
+    // a press that turned into a stroke must not also click a link or a stamp; and in
+    // sketch mode nothing may change the page — only the toolbar (and sound) still click
     const onClick = (event: MouseEvent) => {
-      if (!swallowClick) return;
+      const allowed = (event.target as Element | null)?.closest?.("[data-sketch-ignore], [data-sketch-allow]");
+      if (!swallowClick && (!sketchStore.get().drawing || allowed)) return;
       swallowClick = false;
       event.preventDefault();
       event.stopPropagation();

@@ -31,6 +31,7 @@ export function SoundToggle() {
         setMuted(!muted);
       }}
       data-reveal="header"
+      data-sketch-allow // muting still works in sketch mode
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 9.5 H8 L13 5 V19 L8 14.5 H4 Z" fill="#2A2733" />
