@@ -1,199 +1,713 @@
+/*
+ * Chapter 02 — About: "Frame by frame."
+ * Base styles = the sequence layout (phones, tablets, short or small landscape screens):
+ * a sideways row of screens. Inside the STORYBOARD media query below, the chapter becomes
+ * the design's 3840×1080 board, every value from the export in --u.
+ * Keep the query in sync with STORYBOARD_QUERY in src/lib/useMediaQuery.ts.
+ */
+
 .about {
-  width: calc(100vw - var(--spine));
+  position: relative;
+  flex-shrink: 0;
+  height: 100svh;
+  box-sizing: border-box;
+  padding: var(--header-h) 0 var(--footer-h);
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: calc(80 * var(--u));
+  align-items: stretch;
+  width: max-content;
+  font-family: var(--font-display);
+  color: var(--ink);
+  background-color: var(--marigold);
+  background-image: radial-gradient(
+    rgba(42, 39, 51, 0.12) max(1px, calc(1.3 * var(--u))),
+    transparent max(1.3px, calc(1.6 * var(--u)))
+  );
+  background-size: max(20px, calc(32 * var(--u))) max(20px, calc(32 * var(--u)));
 }
 
-.text {
-  flex: 1;
-  min-width: 0;
+.canvas {
+  display: contents;
+}
+
+.backStrip,
+.line,
+.endSnap {
+  display: none;
+}
+
+/* Frosted layer: blurs everything except the focused card */
+.frost {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(247, 221, 164, 0.32);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: opacity 240ms ease;
+}
+
+.about[data-focusing] .frost {
+  opacity: 1;
+}
+
+/* ---------- Intro screen ---------- */
+.intro {
+  position: relative;
+  flex-shrink: 0;
+  width: calc(100vw - var(--spine));
+  box-sizing: border-box;
+  padding: 0 var(--pad-x);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title title"
+    "bio bio"
+    "chips chips"
+    "hint stamp";
+  align-content: center;
+  align-items: end;
+  gap: 14px 16px;
+}
+
+.title {
+  grid-area: title;
+  margin: 0;
+  font-size: clamp(40px, min(15vw, 12svh), 120px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.012em;
+}
+
+.titleAccent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .bio {
-  margin-top: calc(40 * var(--u));
-  max-width: calc(780 * var(--u));
+  grid-area: bio;
+  margin: 0;
+  max-width: 620px;
+  font-size: clamp(14px, 2.4vw, 18px);
+  line-height: 1.5;
 }
 
-.actions {
-  margin-top: calc(40 * var(--u));
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: calc(28 * var(--u));
-}
-
-/* Marigold arch holding what she does */
-.frame {
-  width: calc(600 * var(--u));
-  height: calc(760 * var(--u));
-  flex-shrink: 0;
-  box-sizing: border-box;
-  border-radius: calc(300 * var(--u)) calc(300 * var(--u)) calc(32 * var(--u)) calc(32 * var(--u));
-  border: var(--stroke) solid var(--ink);
-  box-shadow: calc(10 * var(--u)) calc(10 * var(--u)) 0 var(--ink);
-  background: var(--marigold);
-  padding: calc(64 * var(--u)) calc(52 * var(--u)) calc(52 * var(--u));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.moon {
-  width: calc(150 * var(--u));
-  height: calc(150 * var(--u));
-  flex-shrink: 0;
-}
-
-.frameLabel {
-  margin: calc(16 * var(--u)) 0 calc(24 * var(--u));
-}
-
-.skills {
-  width: 100%;
+.chips {
+  grid-area: chips;
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
-  flex-direction: column;
-  gap: calc(14 * var(--u));
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.skill {
-  display: flex;
+.chip {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  height: max(32px, calc(60 * var(--u)));
+  height: 32px;
+  padding: 0 12px;
   box-sizing: border-box;
   border-radius: 999px;
   border: 2px solid var(--ink);
   background: var(--paper);
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-size: max(16px, calc(30 * var(--u)));
-  transition:
-    background-color 160ms ease,
-    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.skill:hover {
+.chipAccent {
   background: var(--lilac);
-  transform: rotate(-2deg) scale(1.03);
+}
+
+.hint {
+  grid-area: hint;
+  align-self: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hint svg {
+  width: 80px;
+  height: auto;
+}
+
+/* stamp portrait + postmark */
+.stampWrap {
+  grid-area: stamp;
+  position: relative;
+  width: clamp(120px, min(42vw, 26svh), 260px);
+  aspect-ratio: 1;
+}
+
+.stamp {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: rotate(4deg);
+  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stamp img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.stamp:hover,
+.stamp:focus-visible {
+  transform: rotate(1deg) translateY(-6px) scale(1.03);
+}
+
+.postmark {
+  position: absolute;
+  right: -26%;
+  top: -16%;
+  width: 48%;
+  height: auto;
+  transform: rotate(-10deg);
+  pointer-events: none;
+}
+
+/* ---------- Story: one screen per card, a dashed line running through ---------- */
+.storyRow {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+  background-image: linear-gradient(90deg, var(--ink) 0 10px, transparent 10px 19px);
+  background-size: 19px 2.5px;
+  background-repeat: repeat-x;
+  background-position: 0 50%;
+}
+
+.storyAnchor {
+  display: block;
+  width: 0;
+  height: 1px;
+  flex-shrink: 0;
+}
+
+.cell {
+  flex-shrink: 0;
+  width: calc(100vw - var(--spine));
+  box-sizing: border-box;
+  padding: 0 var(--pad-x);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Toolkit + closing ---------- */
+.endScreen {
+  flex-shrink: 0;
+  width: calc(100vw - var(--spine));
+  box-sizing: border-box;
+  padding: 0 var(--pad-x);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+}
+
+.toolkit {
+  box-sizing: border-box;
+  padding: 20px;
+  background: #fffdf9;
+  border: var(--stroke) solid var(--ink);
+  border-radius: 22px;
+  box-shadow: 6px 6px 0 var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toolkitTitle {
+  margin: 0;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.toolkitLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.toolkitLabel + .toolkitLabel,
+.tags + .toolkitLabel {
+  margin-top: 4px;
+}
+
+.tags {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 9px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tagSkill {
+  background: var(--marigold);
+}
+
+.closing {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.closingLine {
+  margin: 0;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 36px;
+  line-height: 1.02;
+}
+
+.closingActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.cv {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 24px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--lotus);
+  border: var(--stroke) solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ink);
+  white-space: nowrap;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.cv:hover {
+  background: var(--lilac);
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.cv svg {
+  width: 16px;
+  height: auto;
+}
+
+.hello {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skill {
+  .stamp,
+  .cv,
+  .frost {
     transition: none;
   }
 }
 
-/* ---------- Portrait tablets ---------- */
-@media (orientation: portrait) {
-  .about {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
-    gap: 28px;
+/* ---------- Sequence layout on landscape screens: two cards per screen ---------- */
+@media (orientation: landscape) {
+  .intro {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-areas:
+      "title stamp"
+      "bio stamp"
+      "chips stamp"
+      "hint stamp";
+    align-items: center;
+    gap: 12px 40px;
   }
 
-  .text {
-    flex: none;
+  .stampWrap {
+    justify-self: center;
+    width: clamp(120px, min(26vw, 46svh), 340px);
   }
 
-  .bio {
-    margin-top: 20px;
-    max-width: 640px;
+  .cell {
+    width: calc((100vw - var(--spine)) / 2);
   }
 
-  .actions {
-    margin-top: 20px;
-    gap: 16px;
-  }
-
-  .frame {
-    width: auto;
-    height: auto;
-    border-radius: 24px;
-    box-shadow: 6px 6px 0 var(--ink);
-    padding: 20px;
-    align-items: stretch;
-  }
-
-  .moon {
-    display: none;
-  }
-
-  .frameLabel {
-    margin: 0 0 12px;
-  }
-
-  .skills {
+  .endScreen {
     flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px;
+    align-items: center;
+    gap: 40px;
   }
 
-  .skill {
-    height: 38px;
-    padding: 0 16px;
-    font-size: 18px;
-  }
-}
-
-/* ---------- Phones ---------- */
-@media (orientation: portrait) and (max-width: 599px) {
-  .about {
-    gap: 18px;
+  .toolkit {
+    flex: 1.2;
   }
 
-  .bio {
-    margin-top: 14px;
-  }
-
-  .actions {
-    margin-top: 16px;
-  }
-
-  .frame {
-    padding: 14px;
-  }
-
-  .skill {
-    height: 32px;
-    padding: 0 12px;
-    font-size: 16px;
+  .closing {
+    flex: 1;
   }
 }
 
-/* ---------- Short landscape screens (phones held sideways) ---------- */
+/* short landscape screens (phones held sideways): a tighter intro, toolkit and closing */
 @media (orientation: landscape) and (max-height: 560px) {
+  .intro {
+    gap: 6px 32px;
+  }
+
+  .title {
+    font-size: clamp(30px, 10svh, 60px);
+  }
+
   .bio {
-    max-width: none;
+    font-size: 13px;
+    line-height: 1.4;
   }
 
-  .actions {
-    margin-top: 12px;
+  .chip {
+    height: 26px;
+    font-size: 10px;
   }
 
-  .frame {
-    height: auto;
-    max-height: 100%;
-    border-radius: 18px;
-    padding: 14px;
-  }
-
-  .moon {
+  .hint {
     display: none;
   }
 
-  .frameLabel {
-    margin: 0 0 8px;
+
+  .toolkit {
+    padding: 14px;
+    gap: 6px;
   }
 
-  .skills {
-    gap: 6px;
+  .toolkitTitle {
+    font-size: 24px;
+  }
+
+  .tag {
+    height: 21px;
+  }
+
+  .closingLine {
+    font-size: 28px;
+  }
+}
+
+/* =====================================================================
+   STORYBOARD — the design's 3840×1080 board (landscape, ≥ 1325×745)
+   ===================================================================== */
+@media (orientation: landscape) and (min-width: 1325px) and (min-height: 745px) {
+  .about {
+    display: block;
+    width: calc(3752 * var(--u));
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .canvas {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc((100svh - 1080 * var(--u)) / 2);
+    height: calc(1080 * var(--u));
+  }
+
+  .intro,
+  .storyRow,
+  .cell,
+  .endScreen {
+    display: contents;
+  }
+
+  /* previous chapter edge */
+  .backStrip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    width: calc(72 * var(--u));
+    height: 100%;
+    box-sizing: border-box;
+    background: var(--lotus);
+    border-right: var(--stroke) solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(44 * var(--u)) 0;
+    text-decoration: none;
+    color: var(--ink);
+    transition: filter 220ms ease;
+  }
+
+  .backStrip:hover {
+    filter: brightness(0.96);
+  }
+
+  .backNumber {
+    font-family: var(--font-mono);
+    font-size: max(11px, calc(14 * var(--u)));
+    letter-spacing: 0.08em;
+  }
+
+  .backLabel {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: calc(40 * var(--u));
+    white-space: nowrap;
+  }
+
+  .backStrip svg {
+    width: calc(32 * var(--u));
+    height: calc(32 * var(--u));
+    transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .backStrip:hover svg {
+    transform: translateX(-4px);
+  }
+
+  .line {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(3840 * var(--u));
+    height: calc(1080 * var(--u));
+    pointer-events: none;
+  }
+
+  .title {
+    position: absolute;
+    left: calc(144 * var(--u));
+    top: calc(176 * var(--u));
+    font-size: calc(208 * var(--u));
+  }
+
+  .bio {
+    position: absolute;
+    left: calc(144 * var(--u));
+    top: calc(600 * var(--u));
+    width: calc(590 * var(--u));
+    max-width: none;
+    font-size: max(14px, calc(22 * var(--u)));
+  }
+
+  .chips {
+    position: absolute;
+    left: calc(144 * var(--u));
+    top: calc(818 * var(--u));
+    width: calc(600 * var(--u));
+    gap: calc(10 * var(--u));
+  }
+
+  .chip {
+    height: calc(40 * var(--u));
+    padding: 0 calc(16 * var(--u));
+    font-size: max(10px, calc(13 * var(--u)));
+  }
+
+  .hint {
+    position: absolute;
+    left: calc(144 * var(--u));
+    top: calc(968 * var(--u));
+    gap: calc(18 * var(--u));
+    font-size: max(11px, calc(14 * var(--u)));
+  }
+
+  .hint svg {
+    width: calc(140 * var(--u));
+  }
+
+  .stampWrap {
+    position: static;
+    width: auto;
+  }
+
+  .stamp {
+    position: absolute;
+    inset: auto;
+    left: calc(790 * var(--u));
+    top: calc(470 * var(--u));
+    width: calc(394 * var(--u));
+    height: calc(394 * var(--u));
+    z-index: 1;
+  }
+
+  .postmark {
+    left: calc(1040 * var(--u));
+    top: calc(404 * var(--u));
+    right: auto;
+    width: calc(190 * var(--u));
+    z-index: 2;
+  }
+
+  .storyAnchor {
+    position: absolute;
+    left: calc(1180 * var(--u));
+    top: 0;
+    width: 1px;
+  }
+
+  .tags {
+    gap: calc(6 * var(--u));
+  }
+
+  .tag {
+    height: calc(26 * var(--u));
+    padding: 0 calc(10 * var(--u));
+    font-size: max(9px, calc(11 * var(--u)));
+  }
+
+  .toolkit {
+    position: absolute;
+    left: calc(3318 * var(--u));
+    top: calc(140 * var(--u));
+    width: calc(392 * var(--u));
+    padding: calc(26 * var(--u));
+    gap: calc(14 * var(--u));
+    border-radius: calc(22 * var(--u));
+    box-shadow: calc(6 * var(--u)) calc(6 * var(--u)) 0 var(--ink);
+  }
+
+  .toolkitTitle {
+    font-size: calc(46 * var(--u));
+  }
+
+  .toolkitLabel {
+    font-size: max(10px, calc(12 * var(--u)));
+  }
+
+  .tags + .toolkitLabel {
+    margin-top: calc(6 * var(--u));
+  }
+
+  .closing {
+    position: absolute;
+    left: calc(3318 * var(--u));
+    top: calc(688 * var(--u));
+    width: calc(392 * var(--u));
+    gap: calc(22 * var(--u));
+  }
+
+  .closingLine {
+    font-size: calc(50 * var(--u));
+  }
+
+  .closingActions {
+    gap: calc(22 * var(--u));
+  }
+
+  .cv {
+    height: calc(64 * var(--u));
+    padding: 0 calc(30 * var(--u));
+    gap: calc(12 * var(--u));
+    font-size: max(14px, calc(21 * var(--u)));
+    box-shadow: calc(6 * var(--u)) calc(6 * var(--u)) 0 var(--ink);
+  }
+
+  .cv svg {
+    width: calc(18 * var(--u));
+  }
+
+  .hello {
+    font-size: max(11px, calc(13 * var(--u)));
+  }
+
+  /* the end of the board, lined up with the right edge of the screen */
+  .endSnap {
+    display: block;
+    position: absolute;
+    left: calc(3752 * var(--u) - 100vw + var(--spine));
+    top: 0;
+    width: 1px;
+    height: 1px;
+  }
+}
+
+/* ---------- Story line markers (board layout) ---------- */
+.marker {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* while the line is being drawn by the scroll, markers wait for it */
+.line[data-wiping] .marker:not(.markerOn) {
+  transform: scale(0);
+}
+
+.halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .markerNow.markerOn .halo,
+  .line:not([data-wiping]) .markerNow .halo {
+    animation: now-pulse 1.8s ease-out infinite;
+  }
+}
+
+@keyframes now-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
   }
 }

@@ -5,13 +5,17 @@ import { HkMonogram } from "@/components/icons/HkMonogram";
 import { useChapters } from "@/components/Track/ChapterContext";
 import { CHAPTERS } from "@/content/site";
 import { gsap } from "@/lib/gsap";
-import { useReducedMotion } from "@/lib/useMediaQuery";
+import { useReducedMotion, useStoryboardLayout } from "@/lib/useMediaQuery";
 import styles from "./Header.module.css";
 import { MobileMenu } from "./MobileMenu";
+import { SoundToggle } from "./SoundToggle";
 
 export function Header() {
   const { active, goTo } = useChapters();
   const reduced = useReducedMotion();
+  const storyboard = useStoryboardLayout();
+  // About opens with a 72px "← Home" strip on its left edge; the logo steps aside for it
+  const besideStrip = storyboard && CHAPTERS[active]?.id === "about";
   const navRef = useRef<HTMLElement>(null);
   const markRef = useRef<HTMLSpanElement>(null);
   const [pill, setPill] = useState({ x: 0, width: 0 });
@@ -41,7 +45,7 @@ export function Header() {
   };
 
   return (
-    <header className={styles.header} data-header>
+    <header className={besideStrip ? `${styles.header} ${styles.besideStrip}` : styles.header} data-header>
       <a
         href="#home"
         className={styles.brand}
@@ -55,6 +59,7 @@ export function Header() {
         </span>
       </a>
 
+      <div className={styles.right}>
       <nav ref={navRef} aria-label="Main" className={styles.nav}>
         <span
           aria-hidden="true"
@@ -62,7 +67,7 @@ export function Header() {
           style={{
             width: pill.width,
             transform: `translateX(${pill.x}px)`,
-            backgroundColor: CHAPTERS[active].color,
+            backgroundColor: CHAPTERS[active].pill ?? CHAPTERS[active].color,
           }}
         />
         {CHAPTERS.map((chapter, index) => (
@@ -88,6 +93,8 @@ export function Header() {
       </nav>
 
       <MobileMenu active={active} onSelect={goTo} />
+      <SoundToggle />
+      </div>
     </header>
   );
 }

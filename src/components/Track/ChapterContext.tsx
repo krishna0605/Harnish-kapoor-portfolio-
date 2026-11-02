@@ -9,12 +9,15 @@ export type ChapterState = {
   goTo: (index: number, immediate?: boolean) => void;
   /** The horizontal scroll tween — chapters use it as containerAnimation for their reveals. */
   containerAnimation: gsap.core.Tween | null;
+  /** Freezes the sideways scroll (wheel, keys, drag) while a dialog is open. */
+  lockScroll: (locked: boolean) => void;
 };
 
 export const ChapterContext = createContext<ChapterState>({
   active: 0,
   goTo: () => {},
   containerAnimation: null,
+  lockScroll: () => {},
 });
 
 export const useChapters = () => useContext(ChapterContext);

@@ -32,6 +32,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   // filled in by the GSAP setup below; stable wrappers are handed to the context
   const scrollToChapter = useRef<(index: number, immediate?: boolean) => void>(() => {});
   const goTo = useCallback((index: number, immediate?: boolean) => scrollToChapter.current(index, immediate), []);
+  const setScrollLock = useRef<(locked: boolean) => void>(() => {});
+  const lockScroll = useCallback((locked: boolean) => setScrollLock.current(locked), []);
 
   useGSAP(
     () => {
@@ -64,6 +66,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         chapterX = chapters.map((el) => Math.min(leftOf(el), d));
         const points = gsap.utils
           .toArray<HTMLElement>("[data-snap]", track)
+          .filter((el) => el.getClientRects().length > 0)
           .map((el) => Math.min(1, Math.round((leftOf(el) / d) * 10000) / 10000));
         snapPoints = [...new Set([0, ...points, 1])].sort((a, b) => a - b);
       };
@@ -121,6 +124,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         return gsap.utils.clamp(0, 1, (y - trigger.start) / (trigger.end - trigger.start || 1));
       };
 
+      // While a dialog is open the page underneath must not move
+      let locked = false;
+      setScrollLock.current = (on) => {
+        locked = on;
+        if (on) lenis?.stop();
+        else lenis?.start();
+        document.documentElement.style.overflow = on ? "hidden" : "";
+      };
+
       scrollToChapter.current = (index, immediate) => {
         measure();
         scrollToX(chapterX[index] ?? 0, immediate);
@@ -128,6 +140,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
       // ← → keys move between snap points
       const onKey = (event: KeyboardEvent) => {
+        if (locked) return;
         if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
         if ((event.target as Element | null)?.closest?.(EDITABLE)) return;
         event.preventDefault();
@@ -139,6 +152,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         if (next !== undefined) scrollToX(next * distance());
       };
       window.addEventListener("keydown", onKey);
+
+      // in-page hash links (#about, #experience, …) scroll to their chapter
+      const onHash = () => {
+        const index = CHAPTERS.findIndex((c) => `#${c.id}` === window.location.hash);
+        if (index >= 0) scrollToChapter.current(index);
+      };
+      window.addEventListener("hashchange", onHash);
 
       // Tabbing into something off-screen brings it into view
       const onFocus = (event: FocusEvent) => {
@@ -165,6 +185,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           destination = null;
         },
         onDrag: (self) => {
+          if (locked) return;
           const mouse = (self.event as PointerEvent).pointerType === "mouse";
           if (!mouse && self.axis !== "x") return; // vertical swipes scroll natively
           if (mouse) track.classList.add(styles.dragging);
@@ -209,6 +230,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       return () => {
         alive = false;
         window.removeEventListener("keydown", onKey);
+        window.removeEventListener("hashchange", onHash);
         viewport.removeEventListener("focusin", onFocus);
         viewport.removeEventListener("click", blockClickAfterDrag, true);
         observer.kill();
@@ -229,7 +251,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     if (url !== window.location.pathname + window.location.hash) history.replaceState(null, "", url);
   }, [active, openingHash]);
 
-  const value = useMemo(() => ({ active, goTo, containerAnimation }), [active, goTo, containerAnimation]);
+  const value = useMemo(() => ({ active, goTo, containerAnimation, lockScroll }), [active, goTo, containerAnimation, lockScroll]);
 
   return (
     <ChapterContext.Provider value={value}>

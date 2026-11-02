@@ -1,0 +1,11 @@
+/* Storyboard illustrations, printed still on the stamps. */
+.art {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 324 / 170;
+}
+
+.label {
+  font-family: var(--font-mono);
+}
