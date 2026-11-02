@@ -241,17 +241,10 @@ export function Home() {
           </p>
 
           <div className={styles.actions} data-reveal="actions">
-            <a
-              href="#projects"
-              className={styles.cta}
-              onClick={(event) => {
-                event.preventDefault();
-                goTo(chapterIndex("projects"));
-              }}
-            >
+            <button type="button" data-go="projects" className={styles.cta} onClick={() => goTo(chapterIndex("projects"))}>
               {HOME.cta}
               <ArrowRight />
-            </a>
+            </button>
             <p className={styles.tagline}>{HOME.tagline}</p>
           </div>
         </div>

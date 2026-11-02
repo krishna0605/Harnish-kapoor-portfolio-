@@ -166,19 +166,20 @@ export const ABOUT = {
   closing: {
     line: ["The next frame", "is yours."],
     cv: "Download CV",
-    cvHref: "#", // TODO: link the CV file (media CDN)
+    cvHref: "", // TODO: link the CV file (media CDN); until then the button links nowhere
     hello: "Say hello →",
   },
 };
 
 export type Motif = "moon" | "lotus" | "sparkle" | "arch";
 
-// TODO: replace with real projects (title, description, tags, media from the media CDN)
+// TODO: replace with real projects (title, description, tags, media from the media CDN).
+// An empty href renders the card without a link (never "#", which would show in the address bar).
 export const PROJECTS: { title: string; subtitle: string; tags: string[]; motif: Motif; href: string }[] = [
-  { title: "Festival short film", subtitle: "A hand-drawn story, frame by frame", tags: ["Animation", "Film"], motif: "moon", href: "#" },
-  { title: "Brand explainer series", subtitle: "Complex ideas, told simply", tags: ["Motion", "Explainer"], motif: "lotus", href: "#" },
-  { title: "Identity system", subtitle: "A brand that moves on every screen", tags: ["Brand", "Motion"], motif: "sparkle", href: "#" },
-  { title: "Illustration set", subtitle: "Pastel worlds in ink", tags: ["Illustration"], motif: "arch", href: "#" },
+  { title: "Festival short film", subtitle: "A hand-drawn story, frame by frame", tags: ["Animation", "Film"], motif: "moon", href: "" },
+  { title: "Brand explainer series", subtitle: "Complex ideas, told simply", tags: ["Motion", "Explainer"], motif: "lotus", href: "" },
+  { title: "Identity system", subtitle: "A brand that moves on every screen", tags: ["Brand", "Motion"], motif: "sparkle", href: "" },
+  { title: "Illustration set", subtitle: "Pastel worlds in ink", tags: ["Illustration"], motif: "arch", href: "" },
 ];
 
 export const PROJECTS_INTRO = {

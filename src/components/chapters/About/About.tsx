@@ -193,22 +193,14 @@ export function About() {
       data-snap
       data-focusing={focused !== null || undefined}
     >
-      <a
-        href="#home"
-        className={styles.backStrip}
-        aria-label="Previous chapter: Home"
-        onClick={(event) => {
-          event.preventDefault();
-          goTo(0);
-        }}
-      >
+      <button type="button" data-go="home" className={styles.backStrip} aria-label="Previous chapter: Home" onClick={() => goTo(0)}>
         <span className={styles.backNumber}>01</span>
         <span className={styles.backLabel}>← Home</span>
         <svg viewBox="0 0 36 36" aria-hidden="true">
           <circle cx="18" cy="18" r="16" fill="#F7F3EC" stroke="#2A2733" strokeWidth="2" />
           <path d="M25 18 H12 M17 13 L11 18 L17 23" fill="none" stroke="#2A2733" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-      </a>
+      </button>
 
       <div className={styles.frost} aria-hidden="true" />
 
@@ -340,22 +332,15 @@ export function About() {
               {ABOUT.closing.line[1]}
             </p>
             <div className={styles.closingActions} data-reveal="closing">
-              <a href={ABOUT.closing.cvHref} className={styles.cv}>
+              <a href={ABOUT.closing.cvHref || undefined} className={styles.cv}>
                 {ABOUT.closing.cv}
                 <svg viewBox="0 0 18 22" aria-hidden="true">
                   <path d="M9 2 V17 M3 11 L9 18 L15 11 M2 20.5 H16" fill="none" stroke="#2A2733" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
-              <a
-                href="#contact"
-                className={styles.hello}
-                onClick={(event) => {
-                  event.preventDefault();
-                  goTo(chapterIndex("contact"));
-                }}
-              >
+              <button type="button" data-go="contact" className={styles.hello} onClick={() => goTo(chapterIndex("contact"))}>
                 {ABOUT.closing.hello}
-              </a>
+              </button>
             </div>
           </div>
         </div>

@@ -11,19 +11,17 @@ export function Spine({ index }: { index: number }) {
   const chapter = CHAPTERS[index];
 
   return (
-    <a
-      href={`#${chapter.id}`}
+    <button
+      type="button"
+      data-go={chapter.id}
       aria-label={`Chapter ${chapter.number}: ${chapter.label}`}
       className={styles.spine}
       style={{ background: chapter.color }}
-      onClick={(event) => {
-        event.preventDefault();
-        goTo(index);
-      }}
+      onClick={() => goTo(index)}
     >
       <span className={styles.number}>{chapter.number}</span>
       <span className={styles.title}>{chapter.spine}</span>
       <PeekArrow className={styles.arrow} />
-    </a>
+    </button>
   );
 }

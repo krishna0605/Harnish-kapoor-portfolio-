@@ -50,7 +50,7 @@ test("the background is collage paper, not dots", async ({ page }) => {
 
 test("the cursor is a pencil, and a text cursor in fields", async ({ page }) => {
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).cursor)).toContain("pencil.svg");
-  expect(await page.evaluate(() => getComputedStyle(document.querySelector("nav a")!).cursor)).toContain("pencil-link.svg");
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector("nav button")!).cursor)).toContain("pencil-link.svg");
   expect(await page.evaluate(() => getComputedStyle(document.querySelector("#contact input")!).cursor)).toBe("text");
 });
 
@@ -61,7 +61,7 @@ test("outside sketch mode a drag scrolls and nothing is drawn", async ({ page })
   await page.mouse.down();
   await page.mouse.move(400, 450, { steps: 10 });
   await page.mouse.up();
-  await expect(page).toHaveURL(/#about$/, { timeout: 4000 });
+  await expect(page.locator('nav[aria-label="Main"] [aria-current="page"]')).toHaveAttribute("data-go", "about", { timeout: 4000 });
 });
 
 test("sketch mode: the pencil lights up, dragging draws and the page is locked", async ({ page }) => {
@@ -77,32 +77,32 @@ test("sketch mode: the pencil lights up, dragging draws and the page is locked",
   // nothing can move or change the page
   await page.mouse.wheel(0, 900);
   await page.keyboard.press("ArrowRight");
-  await page.locator('nav[aria-label="Main"] a[href="#about"]').click();
-  await page.locator("a[href='#projects'][class*=cta]").click();
+  await page.locator('nav[aria-label="Main"] [data-go="about"]').click();
+  await page.locator("[data-go='projects'][class*=cta]").click();
   await page.waitForTimeout(1200);
   expect(await page.evaluate(() => scrollY)).toBe(0);
-  await expect(page).not.toHaveURL(/#(about|projects)$/);
+  await expect(page.locator('nav[aria-label="Main"] [aria-current="page"]')).toHaveAttribute("data-go", "home");
 
   // hover effects still play
-  await page.locator("a[href='#projects'][class*=cta]").hover();
+  await page.locator("[data-go='projects'][class*=cta]").hover();
   await page.waitForTimeout(300);
-  expect(await page.locator("a[href='#projects'][class*=cta]").evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(220, 211, 242)");
+  expect(await page.locator("[data-go='projects'][class*=cta]").evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(220, 211, 242)");
 
   // Esc leaves sketch mode and the site works again
   await page.keyboard.press("Escape");
   await expect(page.locator("html")).not.toHaveAttribute("data-sketch-mode", "");
-  await page.locator('nav[aria-label="Main"] a[href="#about"]').click();
-  await expect(page).toHaveURL(/#about$/);
+  await page.locator('nav[aria-label="Main"] [data-go="about"]').click();
+  await expect(page.locator('nav[aria-label="Main"] [aria-current="page"]')).toHaveAttribute("data-go", "about");
 });
 
 test("marks stay on the page they were drawn on", async ({ page }) => {
   await sketchMode(page);
   await scribble(page, 230, 780);
   await page.keyboard.press("Escape");
-  await page.locator('nav[aria-label="Main"] a[href="#about"]').click();
+  await page.locator('nav[aria-label="Main"] [data-go="about"]').click();
   await page.waitForTimeout(1800);
   expect(await inkAt(page, 300, 780)).toBe(0); // Home slid away, and its marks with it
-  await page.locator('nav[aria-label="Main"] a[href="#home"]').click();
+  await page.locator('nav[aria-label="Main"] [data-go="home"]').click();
   await page.waitForTimeout(1800);
   expect(await inkAt(page, 300, 780)).toBeGreaterThan(60);
 });
@@ -168,7 +168,7 @@ test("downloads hold only the pencil marks and the logo, never the page", async 
       return Math.round(min);
     };
     const name = document.querySelector("[data-name]")!.getBoundingClientRect();
-    const logo = document.querySelector("[data-header] a[aria-label^='Harnish Kapoor'] span")!.getBoundingClientRect();
+    const logo = document.querySelector("[data-header] [aria-label^='Harnish Kapoor'] span")!.getBoundingClientRect();
     return {
       headline: darkest(name.left, name.top, name.width, name.height * 0.4), // the big ink name on the page
       marks: darkest(230, 750, 160, 60),
