@@ -1,4 +1,11 @@
 import { expect, test } from "@playwright/test";
+import { CONTACT } from "../src/content/site";
+
+// built from the same parts as the site, so the whole address and number appear nowhere in the repo
+const [user, domain, tld] = CONTACT.emailParts;
+const EMAIL = [user, `${domain}.${tld}`].join("@");
+const PHONE = CONTACT.phoneParts.join(" ");
+const PHONE_DIGITS = CONTACT.phoneParts.join("").slice(3);
 
 test.use({ viewport: { width: 1440, height: 900 } });
 
@@ -12,10 +19,10 @@ test("real email, phone and social links", async ({ page }) => {
   await page.goto("/#contact");
   await page.waitForTimeout(2000);
   const contact = page.locator("#contact");
-  await expect(contact.locator('[data-contact="email"]')).toHaveAttribute("href", "mailto:harnish.kapoor03@gmail.com");
-  await expect(contact.locator('[data-contact="email"]')).toHaveText("harnish.kapoor03@gmail.com");
-  await expect(contact.locator('[data-contact="phone"]')).toHaveAttribute("href", "tel:+918160504042");
-  await expect(contact.locator('[data-contact="phone"]')).toHaveText("+91 81605 04042");
+  await expect(contact.locator('[data-contact="email"]')).toHaveAttribute("href", `mailto:${EMAIL}`);
+  await expect(contact.locator('[data-contact="email"]')).toHaveText(EMAIL);
+  await expect(contact.locator('[data-contact="phone"]')).toHaveAttribute("href", `tel:+91${PHONE_DIGITS}`);
+  await expect(contact.locator('[data-contact="phone"]')).toHaveText(PHONE);
   for (const [name, href] of Object.entries(SOCIALS)) {
     const link = contact.getByRole("link", { name: `Harnish on ${name} (opens in a new tab)` });
     await expect(link).toHaveAttribute("href", href);
@@ -26,8 +33,8 @@ test("real email, phone and social links", async ({ page }) => {
 
 test("the page HTML never contains the whole email or phone number", async ({ request }) => {
   const html = await (await request.get("/")).text();
-  expect(html).not.toContain("harnish.kapoor03@gmail.com");
-  expect(html).not.toContain("8160504042");
+  expect(html).not.toContain(EMAIL);
+  expect(html).not.toContain(PHONE_DIGITS);
 });
 
 test("copy puts the email on the clipboard", async ({ page, context }) => {
@@ -36,7 +43,7 @@ test("copy puts the email on the clipboard", async ({ page, context }) => {
   await page.waitForTimeout(2000);
   await page.getByRole("button", { name: "Copy email address" }).click();
   await expect(page.getByRole("button", { name: "Copy email address" })).toHaveText("Copied ✓");
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("harnish.kapoor03@gmail.com");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(EMAIL);
 });
 
 test.describe("phone", () => {
@@ -88,7 +95,7 @@ test("Send opens the email app with the message ready; an empty form doesn't sen
   await send.click();
 
   const expected =
-    "mailto:harnish.kapoor03@gmail.com?subject=" +
+    `mailto:${EMAIL}?subject=` +
     encodeURIComponent("Hello from your portfolio — Asha Rao") +
     "&body=" +
     encodeURIComponent("Loved the film — can we talk about a reel? 50% & more\n\n— Asha Rao\nasha@example.com");
