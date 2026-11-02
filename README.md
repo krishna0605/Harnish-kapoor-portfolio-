@@ -104,9 +104,13 @@ Large artwork and video should go to a media CDN (for example Cloudinary or Mux)
 
 ## Deployment
 
-The site is deployed on **Vercel** from this repository:
-1. Import the repo in Vercel. It detects Next.js; keep the default settings. No environment variables are needed.
-2. Every push to `main` deploys to production, and every pull request gets a preview URL.
+The repository is connected to the existing [Vercel project](https://vercel.com/krishna0605s-projects/harnish-kapoor-portfolio).
+
+The assigned production address is [harnish-kapoor-portfolio.vercel.app](https://harnish-kapoor-portfolio.vercel.app). **Current status: deployed on the free Hobby plan, with Vercel sign-in required for all deployments at the owner's request.** No paid upgrade or add-ons have been purchased. Public commercial launch is deferred.
+
+Use a pull request for changes. Once the required CI check passes, merging into `main` triggers a production deployment; other branches receive preview deployments. No application environment variables are required.
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the verified settings, first-launch checklist, deployment records, and rollback runbook.
 
 GitHub Actions (`.github/workflows/ci.yml`) runs lint, type check, build and the end-to-end tests on every push and pull request.
 
