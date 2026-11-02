@@ -59,13 +59,17 @@ Test results and screenshots are attached to the run as the `playwright-results`
 
 ## 5. Vercel
 
-1. Sign in at https://vercel.com with GitHub.
-2. **Add New → Project →** import the repository. Vercel detects Next.js; leave every setting at its default. No environment variables are needed.
-3. Deploy. From then on:
-   - every pull request gets its own preview URL;
-   - every push to `main` goes to production.
+The repository already has a connected [Vercel project](https://vercel.com/krishna0605s-projects/harnish-kapoor-portfolio). Reuse it rather than importing another copy.
 
-**Plan:** Vercel's free Hobby plan is for personal, non-commercial use only. A site for a client is likely to count as commercial use, so plan for Pro.
+- Framework: Next.js; repository root; Node.js **22.x**.
+- Install: `npm ci`; build: `npm run build`; output: framework default.
+- No application environment variables are required. Leave `NEXT_PUBLIC_MEDIA_BASE_URL` unset to serve the committed assets from `public/`.
+- Open pull requests for changes; wait for the `check` CI job and inspect the Vercel preview before merging into `main`.
+- The production address is [harnish-kapoor-portfolio.vercel.app](https://harnish-kapoor-portfolio.vercel.app). It remains protected until the initial commercial launch is completed.
+
+Follow [DEPLOYMENT.md](DEPLOYMENT.md) for first-launch status, settings, verification, and recovery.
+
+**Plan:** This portfolio promotes paid services, so the public launch requires Pro or another commercial-compatible plan. The team was on Hobby when setup began. A billing upgrade is a separate, explicit purchase; do not enable paid add-ons or change team spending controls as part of deployment.
 
 ## 6. Heavy media (for the Projects chapter onward)
 
