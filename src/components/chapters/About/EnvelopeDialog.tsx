@@ -131,7 +131,8 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
       .to(letter, { y: risenY, clipPath: below(risenY), duration: 0.35 }, 0.3)
       .set(letter, { zIndex: 25 }, 0.65) // above the stamp once it comes forward
       .to(letter, { y: 0, scale: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.35 }, 0.65)
-      .to([...parts(), cancelRef.current, flyerRef.current], { y: `+=${innerHeight * 0.55}`, autoAlpha: 0, duration: 0.3 }, 0.68);
+      .to([...parts(), flyerRef.current], { y: `+=${innerHeight * 0.6}`, duration: 0.3, ease: "power1.in" }, 0.68)
+      .set([...parts(), flyerRef.current], { autoAlpha: 0 }, 0.98);
   };
 
   const scrubTo = (value: number, duration = 0.7) => {
@@ -170,7 +171,7 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
     }
 
     gsap.set(flyer, { x: 0, y: 0, scale: 1, rotation: tilt, "--shadow": 6 });
-    gsap.set(parts(), { y: innerHeight * 0.45, autoAlpha: 0 });
+    gsap.set(parts(), { y: innerHeight, autoAlpha: 0 });
     gsap.set([cancelRef.current, hintRef.current, controlsRef.current], { autoAlpha: 0 });
     gsap.set(tapes, { scaleX: 0 });
     buildOpening(); // tucks the letter inside the envelope before it is ever seen
@@ -192,8 +193,9 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
       // 1. zoom in toward the viewer (the stamp is always drawn above the envelope)
       .to(flyer, { ...zoomedIn(), "--shadow": 14, duration: 0.6, ease: "power3.out" }, 0)
       // 2. behind the big stamp, the whole envelope rises as one piece — flap closed
-      .to([...parts()], { y: 0, autoAlpha: 1, duration: 0.75, ease: "power3.out" }, 0.4)
-      .set(letterRef.current, { autoAlpha: 1 }, 0.5)
+      .set([...parts()], { autoAlpha: 1 }, 0.4)
+      .to([...parts()], { y: 0, duration: 0.75, ease: "power3.out" }, 0.4)
+      .set(letterRef.current, { autoAlpha: 1 }, 1.2) // only once the envelope is in place
       // 3. zoom back out and land in the stamp slot
       .add(() => playSound("slide"), 1.0)
       .to(flyer, { ...stuck.current, "--shadow": 2, duration: 0.6, ease: "power3.inOut" }, 1.0)
@@ -225,22 +227,24 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
     anchorTo(source);
     if (source) gsap.set(source, { autoAlpha: 0 });
     const flyer = flyerRef.current!;
-    const offset = direction * innerWidth * 0.6;
-    gsap.set(flyer, { ...stuck.current, x: stuck.current.x + offset, autoAlpha: 0 });
-    gsap.set([...parts(), cancelRef.current], { x: offset, y: 0, autoAlpha: 0 });
+    const offset = direction * innerWidth; // arrives from fully off screen
+    gsap.set(flyer, { ...stuck.current, x: stuck.current.x + offset, autoAlpha: 1 });
+    gsap.set([...parts()], { x: offset, y: 0, autoAlpha: 1 });
     gsap.set(flapRef.current, { rotationX: 0, zIndex: 5 });
     buildOpening();
+    gsap.set(letterRef.current, { autoAlpha: 0 }); // tucked in, and hidden until the envelope lands
     target.current = 0;
     heard.current = 0;
     gsap
       .timeline({
         onComplete: () => {
+          gsap.set(letterRef.current, { autoAlpha: 1 });
           phase.current = "ready";
           if (closeRequested.current) closeRef.current();
         },
       })
-      .to([...parts(), cancelRef.current], { x: 0, autoAlpha: 1, duration: reduced ? 0 : 0.45, ease: "power3.out", stagger: 0.02 })
-      .to(flyer, { x: stuck.current.x, autoAlpha: 1, duration: reduced ? 0 : 0.45, ease: "power3.out" }, 0)
+      .to([...parts()], { x: 0, duration: reduced ? 0 : 0.5, ease: "power3.out" })
+      .to(flyer, { x: stuck.current.x, duration: reduced ? 0 : 0.5, ease: "power3.out" }, 0)
       .fromTo(hintRef.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.3);
     if (reduced) {
       progress.current!.progress(1);
@@ -281,8 +285,11 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
       .add(() => playSound("tape", { duration: 0.4 }))
       .to(flyer.querySelectorAll("[data-stick-tape]"), { scaleX: 0, duration: 0.18 })
       .addLabel("peeled")
-      // the envelope (flap included) sinks away out from under the stamp
-      .to([...parts(), cancelRef.current, letterRef.current], { y: innerHeight * 0.45, autoAlpha: 0, duration: 0.5, ease: "power2.in" }, "peeled")
+      // the letter is tucked in by now: hide it, then the envelope (flap included) sinks
+      // away solid from under the stamp and only disappears once it is off screen
+      .set(letterRef.current, { autoAlpha: 0 }, "peeled")
+      .to([...parts()], { y: innerHeight, duration: 0.55, ease: "power2.in" }, "peeled")
+      .set([...parts()], { autoAlpha: 0 })
       .add(() => playSound("whoosh"), "peeled+=0.1")
       .to(flyer, { ...lifted, scale: lifted.scale * 0.7, "--shadow": 12, duration: 0.5, ease: "power3.out" }, "peeled+=0.1")
       .to(flyer, { x: 0, y: 0, scale: 1, rotation: tilt, "--shadow": 6, duration: 0.55, ease: "power3.inOut" })
@@ -297,16 +304,23 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
     switchDirection.current = direction;
     const previous = getSource(index);
     playSound("turn");
-    const open = progress.current?.progress() ?? 0;
+    const letterOut = (progress.current?.progress() ?? 0) >= 0.65; // in front of the envelope
+    const leaving = [...parts(), flyerRef.current, letterRef.current];
+    // a tucked-in letter must never show: it goes now, before anything moves
+    if (!letterOut) gsap.set(letterRef.current, { autoAlpha: 0 });
     gsap
       .timeline({
         onComplete: () => {
           if (previous) gsap.set(previous, { autoAlpha: 1 });
+          // reset the opening while everything is off screen and invisible
+          progress.current?.progress(0);
+          gsap.set(leaving, { autoAlpha: 0 });
           onIndexChange(next);
         },
       })
-      .to(progress.current, { progress: 0, duration: reduced ? 0 : open * 0.5 })
-      .to([...parts(), cancelRef.current, flyerRef.current], { x: `-=${direction * innerWidth * 0.6}`, autoAlpha: 0, duration: reduced ? 0 : 0.35, ease: "power2.in" });
+      // the whole envelope slides away as one solid piece, then disappears
+      .to(leaving, { x: `-=${direction * innerWidth}`, duration: reduced ? 0 : 0.45, ease: "power2.in" })
+      .set(leaving, { autoAlpha: 0 });
   };
 
   // ---------- scrolling / swiping / keys open and close the envelope ----------

@@ -161,8 +161,10 @@
   height: 100%;
 }
 
+/* the flap's inside: the same triangle facing backwards (mirrored sideways, not upside
+   down), so when the flap swings up around the top edge it stays attached there */
 .flapInside {
-  transform: rotateX(180deg);
+  transform: rotateY(180deg);
 }
 
 /* ---------- Letter: laid out at reading size, scaled down inside the envelope ---------- */
