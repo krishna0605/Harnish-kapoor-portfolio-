@@ -147,3 +147,44 @@ export function playSound(name: SoundName, options: { volume?: number; duration?
   source.connect(gain).connect(context.destination);
   source.start(0, 0, options.duration);
 }
+
+// ---------- pencil scratch: continuous while drawing, following the pencil's speed ----------
+let scratch: { source: AudioBufferSourceNode; band: BiquadFilterNode; gain: GainNode } | null = null;
+
+export function startScratch() {
+  if (!context || isMuted() || scratch) return;
+  const ctx = context;
+  const noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+  const samples = noise.getChannelData(0);
+  for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+  const source = ctx.createBufferSource();
+  source.buffer = noise;
+  source.loop = true;
+  const band = ctx.createBiquadFilter();
+  band.type = "bandpass";
+  band.frequency.value = 2600;
+  band.Q.value = 1.4;
+  const gain = ctx.createGain();
+  gain.gain.value = 0;
+  source.connect(band).connect(gain).connect(ctx.destination);
+  source.start();
+  scratch = { source, band, gain };
+}
+
+/** speed in px per ms: faster strokes scratch louder and a little higher */
+export function updateScratch(speed: number) {
+  if (!context || !scratch) return;
+  const now = context.currentTime;
+  const level = Math.min(0.09, 0.015 + speed * 0.05);
+  scratch.gain.gain.setTargetAtTime(level, now, 0.03);
+  scratch.gain.gain.setTargetAtTime(0, now + 0.08, 0.05); // fades if the pencil stops
+  scratch.band.frequency.setTargetAtTime(2200 + Math.min(speed, 3) * 600, now, 0.05);
+}
+
+export function stopScratch() {
+  if (!context || !scratch) return;
+  const { source, gain } = scratch;
+  scratch = null;
+  gain.gain.setTargetAtTime(0, context.currentTime, 0.03);
+  source.stop(context.currentTime + 0.2);
+}

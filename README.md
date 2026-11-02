@@ -17,6 +17,12 @@ A pastel sketchbook that scrolls sideways: five chapters (Home, About, Experienc
   - Home keeps the design export's values: at 1920×1080 it measures exactly as the export.
 - `src/components/ui/Typewriter.tsx` — type / hold / delete loop. It reserves space, so nothing moves, and pauses while off-screen.
 - `src/content/site.ts` — all text, links and project entries. Items marked `TODO` are placeholders.
+- `src/components/Sketch` — the charcoal pencil.
+  - With a mouse, dragging anywhere draws (a plain click still clicks); the wheel, trackpad and arrow keys scroll. On touch screens, the pencil button switches swipes to drawing.
+  - Marks are painted into 1024-px tiles in track coordinates, so they move with the page, and composited onto one fixed canvas. They last until the page is refreshed.
+  - The dock (bottom right): pencil size, undo (Ctrl/Cmd+Z), clear (with confirm), **Save view** (the page as seen, via modern-screenshot) and **Save notes** (just the marks on paper).
+- `public/textures/paper-grain.png` — the background paper, cut from the collage's cream scrap by `npm run texture` and multiplied onto each chapter colour.
+- `public/cursors` — the pencil cursors.
 - `src/app/fonts.css` + `public/fonts` — self-hosted copies of the Google Font files the design uses (`npm run fonts`).
 
 ## Responsive

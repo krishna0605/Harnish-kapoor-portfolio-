@@ -39,7 +39,7 @@
   position: relative;
   width: var(--w);
   height: calc(var(--w) * 0.62);
-  cursor: pointer;
+  cursor: var(--cursor-link, pointer);
 }
 
 .back,
@@ -184,7 +184,7 @@
   background-color: #fffdf6;
   /* faint ruled lines, like letter paper */
   background-image: repeating-linear-gradient(180deg, transparent 0 31px, rgba(103, 99, 111, 0.12) 31px 32px);
-  cursor: default;
+  cursor: var(--cursor-pencil, default);
 }
 
 /* a light paper grain over the letter */

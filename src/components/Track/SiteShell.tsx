@@ -3,6 +3,8 @@
 import Lenis from "lenis";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Header } from "@/components/Header/Header";
+import { SketchDock } from "@/components/Sketch/SketchDock";
+import { SketchLayer } from "@/components/Sketch/SketchLayer";
 import { CHAPTERS } from "@/content/site";
 import { gsap, Observer, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useReducedMotion } from "@/lib/useMediaQuery";
@@ -170,8 +172,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       };
       viewport.addEventListener("focusin", onFocus);
 
-      // Mouse drag and horizontal swipes: the track follows the pointer from where the
-      // press started, then snaps onward in the direction of the drag
+      // Horizontal finger swipes: the track follows the finger from where the press started,
+      // then snaps onward. (A mouse drag draws with the pencil instead — see SketchLayer.)
       let dragged = 0;
       let pressY = 0;
       const observer = Observer.create({
@@ -186,17 +188,16 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         },
         onDrag: (self) => {
           if (locked) return;
-          const mouse = (self.event as PointerEvent).pointerType === "mouse";
-          if (!mouse && self.axis !== "x") return; // vertical swipes scroll natively
-          if (mouse) track.classList.add(styles.dragging);
+          if ((self.event as PointerEvent).pointerType !== "touch") return; // mouse / pen draw
+          if (document.documentElement.hasAttribute("data-touch-drawing")) return; // finger draws
+          if (self.axis !== "x") return; // vertical swipes scroll natively
           const dx = self.x! - self.startX!;
           dragged = Math.abs(dx);
-          const y = gsap.utils.clamp(trigger.start, trigger.end, pressY - dx * (mouse ? 1.4 : 1.8));
+          const y = gsap.utils.clamp(trigger.start, trigger.end, pressY - dx * 1.8);
           if (lenis) lenis.scrollTo(y, { immediate: true });
           else window.scrollTo(0, y);
         },
         onDragEnd: (self) => {
-          track.classList.remove(styles.dragging);
           if (dragged < 6) return;
           const direction = self.x! < self.startX! ? 1 : -1;
           const next = ScrollTrigger.snapDirectional(snapPoints)(targetProgress(), direction);
@@ -258,11 +259,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <Header />
       <main>
         <div ref={viewportRef} className={styles.viewport}>
-          <div ref={trackRef} className={styles.track}>
+          <div ref={trackRef} className={styles.track} data-track>
             {children}
           </div>
         </div>
       </main>
+      <SketchLayer />
+      <SketchDock />
     </ChapterContext.Provider>
   );
 }

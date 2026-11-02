@@ -14,16 +14,10 @@
   width: max-content;
   height: 100svh;
   will-change: transform;
-  /* the export's dot grid, carried along with the chapters */
+  /* paper texture from the Home collage scraps, carried along with the chapters */
   background-color: var(--paper);
-  background-image: radial-gradient(
-    rgba(42, 39, 51, 0.1) max(1px, calc(1.3 * var(--u))),
-    transparent max(1.3px, calc(1.6 * var(--u)))
-  );
-  background-size: max(20px, calc(32 * var(--u))) max(20px, calc(32 * var(--u)));
+  background-image: var(--paper-texture);
+  background-size: var(--paper-size);
+  background-blend-mode: multiply;
 }
 
-.dragging,
-.dragging * {
-  user-select: none;
-}

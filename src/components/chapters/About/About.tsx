@@ -282,7 +282,7 @@ export function About() {
               data-reveal="stamp"
               onClick={() => setStampOpen(true)}
             >
-              <Image src={mediaUrl("/images/portrait-stamp.png")} alt={ABOUT.stampAlt} width={394} height={394} draggable={false} unoptimized />
+              <Image src={mediaUrl("/images/portrait-stamp.png")} alt={ABOUT.stampAlt} width={394} height={394} draggable={false} unoptimized loading="eager" />
             </button>
             <Postmark id="aboutPostmark" text={ABOUT.postmark} className={styles.postmark} />
           </div>

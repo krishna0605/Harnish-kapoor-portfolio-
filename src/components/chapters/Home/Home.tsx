@@ -263,7 +263,7 @@ export function Home() {
 
       <footer className={styles.footer} data-reveal="footer">
         <div className={styles.scrollHint}>
-          <span className={styles.pointerOnly}>Scroll or drag</span>
+          <span className={styles.pointerOnly}>Scroll · drag to draw</span>
           <span className={styles.touchOnly}>Swipe</span>
           <ArrowLong />
         </div>

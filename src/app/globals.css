@@ -12,6 +12,12 @@
   /* Paper grain: ink-coloured fractal noise, generated in CSS (no image file) */
   --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.15 0 0 0 0 0.2 0 0 0 0.9 -0.25'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 
+  /* Paper texture: a seamless tile cut from the Home collage scraps (scripts/make-paper-texture.mjs).
+     Grey speckle on white, multiplied onto any chapter colour (background-blend-mode: multiply).
+     The scraps show at half size in the collage, so the 300px tile is shown at 150 design px. */
+  --paper-texture: url("/textures/paper-grain.png");
+  --paper-size: max(110px, calc(150 * var(--u))) max(110px, calc(150 * var(--u)));
+
   /* finer, softer grain for printed art and envelopes */
   --grain-fine: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.15 0 0 0 0 0.2 0 0 0 0.55 -0.1'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 
@@ -56,13 +62,16 @@
 
 html {
   background-color: var(--paper);
+  background-image: var(--paper-texture);
+  background-size: var(--paper-size);
+  background-blend-mode: multiply;
 }
 
 body {
   margin: 0;
   overflow-x: clip;
   color: var(--ink);
-  background-color: var(--paper);
+  background: transparent;
 }
 
 a {
@@ -110,4 +119,35 @@ html.lenis body {
 
 .lenis.lenis-smooth [data-lenis-prevent] {
   overscroll-behavior: contain;
+}
+
+/* ---------- Charcoal pencil cursor (mouse / trackpad) ---------- */
+@media (pointer: fine) {
+  :root {
+    --cursor-pencil: url("/cursors/pencil.svg") 2 30, crosshair;
+    --cursor-link: url("/cursors/pencil-link.svg") 2 30, pointer;
+  }
+
+  html {
+    cursor: var(--cursor-pencil);
+  }
+
+  a,
+  button,
+  [role="button"],
+  label,
+  summary {
+    cursor: var(--cursor-link);
+  }
+
+  input,
+  textarea,
+  [contenteditable="true"] {
+    cursor: text;
+  }
+
+  html[data-sketching],
+  html[data-sketching] * {
+    cursor: url("/cursors/pencil-active.svg") 2 30, crosshair !important;
+  }
 }

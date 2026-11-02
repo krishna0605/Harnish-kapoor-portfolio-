@@ -25,7 +25,7 @@
   background: rgba(247, 221, 164, 0.42);
   -webkit-backdrop-filter: blur(10px) saturate(0.9);
   backdrop-filter: blur(10px) saturate(0.9);
-  cursor: zoom-out;
+  cursor: var(--cursor-link, zoom-out);
 }
 
 .stage {
@@ -55,7 +55,7 @@
   color: var(--ink);
   font-size: 22px;
   line-height: 1;
-  cursor: pointer;
+  cursor: var(--cursor-link, pointer);
   box-shadow: 3px 3px 0 var(--ink);
   transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -91,12 +91,12 @@
   background: rgba(247, 243, 236, 0.12);
   color: var(--paper);
   font-size: 16px;
-  cursor: pointer;
+  cursor: var(--cursor-link, pointer);
 }
 
 .pager button:disabled {
   opacity: 0.3;
-  cursor: default;
+  cursor: var(--cursor-pencil, default);
 }
 
 .pager button:not(:disabled):hover {
