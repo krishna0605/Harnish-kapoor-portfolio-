@@ -11,7 +11,7 @@ const PRELOAD_FONTS = [
 
 export const metadata: Metadata = {
   title: "Harnish Kapoor — Graphic & Motion Designer",
-  description: "Harnish Kapoor — Graphic Designer & Motion Graphic Designer. Stories drawn by hand and set in motion.",
+  description: "Harnish Kapoor — Graphic Designer & Motion Graphic Designer. Turning ideas into visuals, with curiosity in every detail.",
 };
 
 export const viewport: Viewport = {

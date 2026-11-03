@@ -39,7 +39,7 @@ test.describe("desk 1920×1080", () => {
         base: box(document.querySelector("[data-drawer-base]")),
       };
     });
-    expect(m.title).toBe("132px");
+    expect(m.title).toBe("96px"); // three lines: "A little / bit of / everything."
     expect(m.chip).toEqual({ x: 144, y: 196, w: 221, h: 44 });
     expect(m.open).toEqual({ x: 630, y: 207, w: 439, h: 759 }); // 420 × 748, turned −1.5°
     expect(m.cover).toEqual({ x: 656, y: 232, w: 374, h: 262 });
@@ -101,7 +101,7 @@ test.describe("desk 1920×1080", () => {
     await expect(page.locator('[data-filter="branding"]')).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator('[data-filter="all"]')).toHaveAttribute("aria-pressed", "false");
     await expect(open(page)).toHaveAttribute("data-open-folder", "fold-labs"); // 01 isn't branding
-    expect(await page.locator("[data-folder]:not([disabled])").evaluateAll((els) => els.map((el) => (el as HTMLElement).dataset.folder))).toEqual(["era-and-canvas"]);
+    expect(await page.locator("[data-folder]:not([disabled])").evaluateAll((els) => els.map((el) => (el as HTMLElement).dataset.folder))).toEqual(["era-and-canvas", "pathquest-motion"]);
     await page.locator('[data-filter="all"]').click();
     await page.waitForTimeout(800);
     await expect(page.locator("[data-folder][disabled]")).toHaveCount(0);

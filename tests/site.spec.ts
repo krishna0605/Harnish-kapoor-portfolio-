@@ -142,11 +142,11 @@ test.describe("1920×1080 matches the design exports", () => {
       };
     });
     expect(Math.abs(m.aboutLeft)).toBe(0);
-    expect(m.titleSize).toBe("208px");
+    expect(m.titleSize).toBe("104px");
     expect(m.title).toEqual({ x: 144, y: 176 });
     expect(m.stamp).toEqual({ x: 790, y: 470, w: 394 });
     expect(m.firstCard).toMatchObject({ x: 1260, w: 360 });
-    expect(m.toolkit).toEqual({ x: 3318, y: 140, w: 392 });
+    expect(m.toolkit).toEqual({ x: 3978, y: 140, w: 392 }); // eight stories: the end screen moved 660 along
   });
 });
 
@@ -157,7 +157,7 @@ test.describe("motion and interaction", () => {
     await page.goto("/");
     await expect(page.locator("#home p [class*=typeText]")).toHaveText("Graphic Designer &Motion Graphic Designer", { timeout: 8000 });
     await page.goto("/#about");
-    await expect(page.locator("#about-title [class*=typeText]")).toHaveText("Frame byframe.", { timeout: 8000 });
+    await expect(page.locator("#about-title [class*=typeText]")).toHaveText("Ideas intovisuals.Stories intoexperiences.", { timeout: 8000 });
   });
 
   test("hovering a story stamp brings it forward and blurs the rest; its art stays still", async ({ page }) => {
@@ -183,7 +183,7 @@ test.describe("motion and interaction", () => {
     await page.waitForTimeout(3000);
     await page.locator('[data-card="1"] button').click();
     const dialog = page.locator("dialog[open]");
-    await expect(dialog).toHaveAttribute("aria-label", "SC 02: Learning to make things move");
+    await expect(dialog).toHaveAttribute("aria-label", "SC 02: One foundation, a world of possibilities.");
     await page.waitForTimeout(2300);
 
     // the stamp sits in the envelope's stamp slot
@@ -203,13 +203,13 @@ test.describe("motion and interaction", () => {
     await page.waitForTimeout(900);
     const letter = await page.evaluate(() => document.querySelector("dialog[open] [class*=letter]")!.getBoundingClientRect().width);
     expect(letter).toBeGreaterThan(600);
-    await expect(dialog.locator("h2")).toHaveText("Learning to make things move");
+    await expect(dialog.locator("h2")).toHaveText("One foundation, a world of possibilities.");
 
     const sounds = await page.evaluate(() => (window as unknown as { __sounds: string[] }).__sounds);
     for (const sound of ["whoosh", "slide", "thunk", "tape", "turn", "crinkle"]) expect(sounds).toContain(sound);
 
     await page.keyboard.press("ArrowRight");
-    await expect(dialog).toHaveAttribute("aria-label", "SC 03: First studio days");
+    await expect(dialog).toHaveAttribute("aria-label", "SC 03: Learning the art behind the movement.");
     await page.keyboard.press("Escape");
     await expect(page.locator("dialog[open]")).toHaveCount(0, { timeout: 6000 });
     await expect(page.locator('[data-card="2"]')).toBeVisible();
@@ -305,7 +305,7 @@ test.describe("motion and interaction", () => {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
     await page.goto("/");
     await expect(page.locator("#home p [class*=typeText]")).toHaveText("Graphic Designer &Motion Graphic Designer");
-    await expect(page.locator("#about-title [class*=typeText]")).toHaveText("Frame byframe.");
+    await expect(page.locator("#about-title [class*=typeText]")).toHaveText("Ideas intovisuals.Stories intoexperiences.");
     await expect(page.locator("[data-letter]").first()).toBeVisible();
     await page.goto("/#experience");
     await page.waitForTimeout(1500);
@@ -328,6 +328,6 @@ test.describe("phone", () => {
     await expect(page.locator('[data-card="0"]')).toHaveAttribute("data-focused", "true");
     await expect(page.locator("dialog[open]")).toHaveCount(0);
     await card.tap();
-    await expect(page.locator("dialog[open]")).toHaveAttribute("aria-label", "SC 01: Where it started");
+    await expect(page.locator("dialog[open]")).toHaveAttribute("aria-label", "SC 01: It all started with stories.");
   });
 });

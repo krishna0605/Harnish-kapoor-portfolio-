@@ -329,7 +329,7 @@ export const ABOUT = {
 };
 
 /* ---------------------------------------------------------------------------
-   04 · Projects — "Open a folder". Each project is a file in the drawer; its
+   04 · Projects — "A little bit of everything." Each project is a file in the drawer; its
    sections are the sheets of its case file (the inner page).
 
    Images and videos: put the path in `src` (served through mediaUrl(), see
