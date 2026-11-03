@@ -13,7 +13,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "fonts": "node scripts/fetch-fonts.mjs",
     "test:e2e": "playwright test",
-    "texture": "node scripts/make-paper-texture.mjs"
+    "texture": "node scripts/make-paper-texture.mjs",
+    "portrait": "node scripts/replace-portrait.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
