@@ -19,6 +19,12 @@
   - A 3840-px storyboard: six story **stamps** with perforated edges and paper grain, taped along a dashed story line.
   - Hover a stamp and the rest of the page blurs. Click it, and it zooms in, then sticks onto an **envelope**; scroll and the envelope opens to a letter with the story.
   - ← / → move between the stories.
+- **Projects — "Open a folder."**
+  - A drawer of eight project files standing on end, plus one file pulled out and lying open, with its cover, a clipped brief and **Open project**.
+  - Hover a file and it lifts out of the drawer while its neighbours lean away; an OPEN bubble trails the pencil.
+  - Click a file and it flies out to the open position while the open one drops back into its place in the drawer.
+  - Filters sink the files that don’t match.
+  - **Open project** turns the folder into a full-screen **case file**: the cover swings open and the sheets fan out sideways (cover, brief, process, drafts, final frame, credits). Wheel, drag, swipe or ← / → move between sheets; **Next file** goes on to the next project. The address bar never changes.
 - **Sketch mode:** turn on the pencil (bottom right) and the page locks in place.
   - Draw anywhere with a charcoal pencil; marks stay with the page as you scroll.
   - Undo, Clear, and **Save view** / **Save notes**: PNG downloads that contain only the pencil marks and the HK logo, never the page itself.
@@ -92,13 +98,24 @@ Almost everything you'd want to change lives in **`src/content/site.ts`**:
 - Home text;
 - the About stories: each story's text, plus the "What I did" and "Highlights" lists;
 - the toolkit;
-- the projects;
+- the projects (`ARCHIVE` — see below);
 - contact links.
 
 Items marked `TODO` are placeholders waiting for real content:
 - the About "What I did" / "Highlights" lists;
-- the Projects entries;
+- the Projects summaries and every case-file sheet;
 - the CV link.
+
+### Adding or changing a project
+
+Each project in `ARCHIVE.projects` is one file in the drawer:
+- **On the folder:** `number`, `title`, `tab`, `type`, `years`, `context` and `color`.
+- **On the open folder:** `summary` and `tags`.
+- **Filters:** `filters` (one or more of `film`, `branding`, `illustration`, `motion`).
+- **Cover:** `cover`. Set `src` to show a real image; until then the drawn placeholder `art` shows.
+- **Inner page:** `sections`, the sheets of its case file. Each is one of `brief`, `process`, `drafts`, `final` (an image, or a `video` with a `poster`) or `credits`. Leave a sheet out and it simply isn’t shown.
+
+The counts ("08 files", "All · 08") and the drawer update by themselves, so a ninth project just works.
 
 Large artwork and video should go to a media CDN (for example Cloudinary or Mux), not into this repo. See `src/lib/media.ts` and [SETUP.md](SETUP.md).
 
