@@ -184,8 +184,9 @@ export function Projects() {
       .fromTo(noteParts, { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: "power3.out", stagger: 0.05, clearProps: "transform" }, trip ? 0.6 : 0.1)
       .add(() => playSound("crinkle", { volume: 0.8 }), trip ? 0.7 : 0.1);
 
-    // on the smaller layouts the open file is the next stop: bring it into view
-    if (!desk) openEl.querySelector<HTMLElement>("#open-folder-title")?.focus({ preventScroll: true });
+    // on the smaller layouts the open file is the next stop: focusing it brings it into view
+    // (the folder itself: its contents are still hidden while they spill out)
+    if (!desk) openEl.focus({ preventScroll: true });
   }, [openId, reduced, desk]);
 
   // ---------- hover: the folder lifts, its neighbours lean away ----------

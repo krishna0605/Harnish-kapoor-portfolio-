@@ -21,6 +21,7 @@ export const OpenFolder = forwardRef<HTMLElement, Props>(function OpenFolder({ p
       className={styles.open}
       style={{ "--folder": project.color } as React.CSSProperties}
       aria-labelledby="open-folder-title"
+      tabIndex={-1}
       data-open-folder={project.id}
       onPointerMove={onPointerMove}
       onPointerEnter={onPointerEnter}
@@ -56,7 +57,7 @@ export const OpenFolder = forwardRef<HTMLElement, Props>(function OpenFolder({ p
           <span>{meta}</span>
           <span>{project.format}</span>
         </div>
-        <h3 id="open-folder-title" className={styles.noteTitle} tabIndex={-1} data-note-part>
+        <h3 id="open-folder-title" className={styles.noteTitle} data-note-part>
           {project.title}
         </h3>
         <p className={styles.noteText} data-note-part>

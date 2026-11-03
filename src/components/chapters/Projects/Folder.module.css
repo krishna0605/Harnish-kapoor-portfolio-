@@ -136,6 +136,11 @@
   transform: rotate(-1.5deg);
 }
 
+/* focused by script when a swap brings it into view; the swap itself is the cue */
+.open:focus {
+  outline: none;
+}
+
 .openTab {
   position: absolute;
   left: calc(-1 * var(--stroke));
@@ -265,10 +270,6 @@
   font-size: calc(40 * var(--u));
   line-height: 1;
   letter-spacing: -0.01em;
-}
-
-.noteTitle:focus {
-  outline: none;
 }
 
 .noteText {
