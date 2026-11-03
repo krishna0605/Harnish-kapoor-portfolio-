@@ -8,11 +8,12 @@ type Props = {
   project: ProjectFile;
   onOpenCase: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onPointerMove?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerEnter?: () => void;
   onPointerLeave?: () => void;
 };
 
 /** The file pulled out of the drawer: its cover in a frame, the clipped brief note, and "Open project". */
-export const OpenFolder = forwardRef<HTMLElement, Props>(function OpenFolder({ project, onOpenCase, onPointerMove, onPointerLeave }, ref) {
+export const OpenFolder = forwardRef<HTMLElement, Props>(function OpenFolder({ project, onOpenCase, onPointerMove, onPointerEnter, onPointerLeave }, ref) {
   const meta = [project.years, project.context].filter(Boolean).join(" · ");
   return (
     <article
@@ -22,6 +23,7 @@ export const OpenFolder = forwardRef<HTMLElement, Props>(function OpenFolder({ p
       aria-labelledby="open-folder-title"
       data-open-folder={project.id}
       onPointerMove={onPointerMove}
+      onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
     >
       <span className={styles.openTab}>

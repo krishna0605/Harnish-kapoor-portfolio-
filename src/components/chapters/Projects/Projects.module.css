@@ -317,3 +317,33 @@
     font-size: max(9.5px, calc(12 * var(--u)));
   }
 }
+
+/* ---------- the trailing "OPEN" bubble (rendered into <body>) ---------- */
+
+.bubble {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  width: max(56px, calc(76 * var(--u)));
+  height: max(56px, calc(76 * var(--u)));
+  border-radius: 999px;
+  background: var(--lilac);
+  border: 2px solid var(--ink);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: max(10px, calc(12 * var(--u)));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  pointer-events: none;
+  visibility: hidden;
+  transform: scale(0);
+}
+
+:global(html[data-sketch-mode]) .bubble {
+  display: none;
+}

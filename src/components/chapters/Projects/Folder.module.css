@@ -29,9 +29,21 @@
   transform-origin: 50% 100%;
 }
 
+.folder {
+  transition: box-shadow 260ms ease;
+}
+
+.folder[data-lifted] {
+  box-shadow: 8px 10px 0 var(--ink);
+}
+
+/* filtered out: solid (no see-through overlaps), greyed and dimmed */
 .folder[data-sunk] {
-  filter: saturate(0.4);
-  opacity: 0.55;
+  filter: grayscale(0.85) brightness(0.93);
+}
+
+.folder[data-sunk] > span:not(.folderTab) {
+  opacity: 0.45;
 }
 
 .folderTab {
@@ -319,6 +331,10 @@
   .folder {
     border-radius: 0 calc(16 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u));
     box-shadow: calc(6 * var(--u)) calc(var(--shadow-y) * var(--u)) 0 var(--ink);
+  }
+
+  .folder[data-lifted] {
+    box-shadow: calc(10 * var(--u)) calc(14 * var(--u)) 0 var(--ink);
   }
 
   .folderTab {
