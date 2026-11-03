@@ -1,151 +1,319 @@
-/* Wider than the screen: the track keeps moving sideways through the cards */
+/*
+ * Chapter 04 — Projects: "Open a folder."
+ * Base styles = the two-stop layout (phones, tablets, small or short landscape screens):
+ * stop 1 is the intro and the drawer, stop 2 the open file. Inside the DESK media query
+ * below, the chapter becomes the design's 1920×1080 frame, every value from the export in --u.
+ * Keep the query in sync with STORYBOARD_QUERY in src/lib/useMediaQuery.ts.
+ */
+
 .projects {
+  position: relative;
+  flex-shrink: 0;
+  height: 100svh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
   width: max-content;
+  overflow: hidden;
+  font-family: var(--font-display);
+  color: var(--ink);
+  background-color: var(--pond);
+  background-image: var(--paper-texture);
+  background-size: var(--paper-size);
+  background-blend-mode: multiply;
+}
+
+.backStrip {
+  display: none;
+}
+
+.canvas {
+  display: contents;
+}
+
+/* ---------- intro ---------- */
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(44px, 9vw, 96px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.012em;
+}
+
+.titleAccent {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.text {
+  margin: 0;
+  max-width: 34em;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  margin: 0;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.filter:hover {
+  background: var(--lilac);
+  transform: translateY(-2px);
+}
+
+.filter[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* "All · 08" shows its count; the others say theirs to screen readers only */
+.filterCount {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.filterCountAll {
+  white-space: pre;
+}
+
+.hint {
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-
-.intro {
-  width: calc(560 * var(--u));
-  flex-shrink: 0;
-}
-
-.count {
-  display: block;
-  margin-top: calc(28 * var(--u));
-  color: var(--graphite);
-}
-
-/* one cell per card; its left padding is the gap, so snapping lands with breathing room */
-.cell {
-  flex-shrink: 0;
-  padding-left: calc(56 * var(--u));
-}
-
-.cell:first-of-type {
-  padding-left: calc(96 * var(--u));
-}
-
-.card {
-  width: calc(520 * var(--u));
-  display: flex;
-  flex-direction: column;
-  gap: calc(18 * var(--u));
-  text-decoration: none;
-  color: var(--ink);
-}
-
-.media {
-  /* 560 at 1920×1080; never taller than the space left under the header and above the text */
-  height: min(calc(560 * var(--u)), calc(100svh - var(--header-h) - var(--footer-h) - 150px));
-  box-sizing: border-box;
-  border-radius: calc(28 * var(--u));
-  border: var(--stroke) solid var(--ink);
-  background: var(--pond);
-  box-shadow: calc(6 * var(--u)) calc(6 * var(--u)) 0 var(--ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  transition:
-    transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 260ms ease;
-}
-
-.art {
-  width: 58%;
-  height: auto;
-  max-height: 80%;
-  transition: transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.art [data-motif-twinkle] {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.card:hover .media,
-.card:focus-visible .media {
-  transform: translate(calc(-4 * var(--u)), calc(-4 * var(--u)));
-  box-shadow: calc(10 * var(--u)) calc(10 * var(--u)) 0 var(--ink);
-}
-
-.card:hover .art {
-  transform: rotate(-6deg) scale(1.06);
-}
-
-.card:hover .art [data-motif-twinkle] {
-  transform: rotate(90deg) scale(1.3);
-}
-
-.cardTitle {
-  margin: calc(6 * var(--u)) 0 0;
-  font-size: max(18px, calc(34 * var(--u)));
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.cardSubtitle {
+  gap: 12px;
   margin: 0;
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-size: max(16px, calc(26 * var(--u)));
-  line-height: 1.1;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.cardTags {
-  margin-top: calc(4 * var(--u));
+.hint svg {
+  width: 90px;
+  height: auto;
+  overflow: visible;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .media,
-  .art,
-  .art [data-motif-twinkle] {
-    transition: none;
-  }
+/* ---------- drawer ---------- */
+
+.drawer {
+  position: relative;
 }
 
-/* ---------- Portrait (tablets and phones) ---------- */
-@media (orientation: portrait) {
+.drawerBase {
+  position: absolute;
+  box-sizing: border-box;
+  background: var(--paper);
+  border: var(--stroke) solid var(--ink);
+  border-radius: 8px 8px 0 0;
+}
+
+.folders {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.drawerLabel {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* =====================================================================
+   DESK — the design's 1920×1080 frame (landscape, ≥ 1325×745)
+   ===================================================================== */
+@media (orientation: landscape) and (min-width: 1325px) and (min-height: 745px) {
   .projects {
-    align-items: stretch;
-    padding-top: calc(var(--header-h) + 8px);
+    display: block;
+    width: max(calc(100vw - var(--spine)), calc(1832 * var(--u)));
+  }
+
+  /* previous chapter edge (as on About) */
+  .backStrip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    width: calc(72 * var(--u));
+    height: 100%;
+    box-sizing: border-box;
+    background: var(--marigold);
+    border-right: var(--stroke) solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(44 * var(--u)) 0;
+    transition: filter 220ms ease;
+  }
+
+  .backStrip:hover {
+    filter: brightness(0.96);
+  }
+
+  .backNumber {
+    font-family: var(--font-mono);
+    font-size: max(11px, calc(14 * var(--u)));
+    letter-spacing: 0.08em;
+  }
+
+  .backLabel {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: calc(40 * var(--u));
+    white-space: nowrap;
+  }
+
+  .backStrip svg {
+    width: calc(32 * var(--u));
+    height: calc(32 * var(--u));
+    transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .backStrip:hover svg {
+    transform: translateX(-4px);
+  }
+
+  .canvas {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: calc((100svh - 1080 * var(--u)) / 2);
+    width: calc(1832 * var(--u));
+    height: calc(1080 * var(--u));
+  }
+
+  .stopDrawer,
+  .stopFolder {
+    display: contents;
   }
 
   .intro {
-    width: calc(100vw - var(--spine) - 2 * var(--pad-x));
-    align-self: center;
+    position: absolute;
+    left: calc(144 * var(--u));
+    top: calc(196 * var(--u));
+    width: calc(470 * var(--u));
+    gap: calc(28 * var(--u));
   }
 
-  .count {
-    margin-top: 16px;
+  /* the export adds the 2px border to each pill: 40 + 4, 44 + 4 */
+  .chip {
+    height: calc(44 * var(--u));
+    padding: 0 calc(16 * var(--u));
+    font-size: max(10px, calc(13 * var(--u)));
   }
 
-  .cell,
-  .cell:first-of-type {
-    padding-left: var(--pad-x);
-    display: flex;
+  .title {
+    font-size: calc(132 * var(--u));
   }
 
-  .card {
-    width: calc(100vw - var(--spine) - 2 * var(--pad-x));
-    gap: 10px;
+  .text {
+    font-size: max(14px, calc(21 * var(--u)));
   }
 
-  .media {
-    flex: 1;
-    min-height: 0;
-    height: auto;
-    border-radius: 22px;
-    box-shadow: 5px 5px 0 var(--ink);
+  .filters {
+    gap: calc(8 * var(--u));
   }
-}
 
-@media (orientation: portrait) and (min-width: 600px) {
-  .card {
-    width: min(62vw, 560px);
+  .filter {
+    height: calc(48 * var(--u));
+    padding: 0 calc(18 * var(--u));
+    font-size: max(10px, calc(13 * var(--u)));
+  }
+
+  .hint {
+    position: absolute;
+    left: calc(144 * var(--u));
+    top: calc(968 * var(--u));
+    gap: calc(18 * var(--u));
+    font-size: max(10.5px, calc(14 * var(--u)));
+  }
+
+  .hint svg {
+    width: calc(140 * var(--u));
+  }
+
+  .drawer {
+    display: contents;
+  }
+
+  .drawerBase {
+    left: calc(1080 * var(--u));
+    top: calc(948 * var(--u));
+    width: calc(742 * var(--u));
+    height: calc(40 * var(--u));
+    border-radius: calc(8 * var(--u)) calc(8 * var(--u)) 0 0;
+  }
+
+  .folders {
+    position: absolute;
+    left: calc(1100 * var(--u));
+    top: 0;
+    width: calc(742 * var(--u));
+    height: 100%;
+  }
+
+  .drawerLabel {
+    left: calc(1100 * var(--u));
+    top: calc(1000 * var(--u));
+    font-size: max(9.5px, calc(12 * var(--u)));
   }
 }

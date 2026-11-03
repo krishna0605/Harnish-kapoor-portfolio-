@@ -193,20 +193,6 @@ export const ABOUT = {
   },
 };
 
-export type Motif = "moon" | "lotus" | "sparkle" | "arch";
-
-export const PROJECTS: { title: string; subtitle: string; tags: string[]; motif: Motif; href: string }[] = [
-  { title: "Festival short film", subtitle: "A hand-drawn story, frame by frame", tags: ["Animation", "Film"], motif: "moon", href: "" },
-  { title: "Brand explainer series", subtitle: "Complex ideas, told simply", tags: ["Motion", "Explainer"], motif: "lotus", href: "" },
-  { title: "Identity system", subtitle: "A brand that moves on every screen", tags: ["Brand", "Motion"], motif: "sparkle", href: "" },
-  { title: "Illustration set", subtitle: "Pastel worlds in ink", tags: ["Illustration"], motif: "arch", href: "" },
-];
-
-export const PROJECTS_INTRO = {
-  title: ["Selected", "work"],
-  subtitle: "Brands, explainers and a short film.",
-};
-
 /* ---------------------------------------------------------------------------
    04 · Projects — "Open a folder". Each project is a file in the drawer; its
    sections are the sheets of its case file (the inner page).

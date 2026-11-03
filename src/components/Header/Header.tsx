@@ -14,8 +14,8 @@ export function Header() {
   const { active, goTo } = useChapters();
   const reduced = useReducedMotion();
   const storyboard = useStoryboardLayout();
-  // About opens with a 72px "← Home" strip on its left edge; the logo steps aside for it
-  const besideStrip = storyboard && CHAPTERS[active]?.id === "about";
+  // About and Projects open with a 72px strip back to the chapter before; the logo steps aside for it
+  const besideStrip = storyboard && (CHAPTERS[active]?.id === "about" || CHAPTERS[active]?.id === "projects");
   const navRef = useRef<HTMLElement>(null);
   const markRef = useRef<HTMLSpanElement>(null);
   const [pill, setPill] = useState({ x: 0, width: 0 });
