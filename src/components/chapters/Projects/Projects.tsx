@@ -9,6 +9,7 @@ import { playSound } from "@/lib/sound";
 import { useFinePointer, useMediaQuery, useReducedMotion, useStoryboardLayout } from "@/lib/useMediaQuery";
 import shared from "../chapter.module.css";
 import { useChapterReveal } from "../useChapterReveal";
+import { CaseFile } from "./CaseFile";
 import { FolderTab, SLOTS } from "./FolderTab";
 import { OpenBubble } from "./OpenBubble";
 import { OpenFolder } from "./OpenFolder";
@@ -55,6 +56,7 @@ export function Projects() {
   const [announce, setAnnounce] = useState("");
   const [hovered, setHovered] = useState<string | null>(null);
   const [armed, setArmed] = useState<string | null>(null);
+  const [caseOpen, setCaseOpen] = useState(false);
   useChapterReveal(ref);
 
   const flight = useRef<Flight | null>(null);
@@ -63,8 +65,11 @@ export function Projects() {
   const swapped = useRef(false);
   const lastPointer = useRef("mouse");
   const pullRef = useRef<(project: ProjectFile) => void>(() => {});
+  // "Next file" in a case file: once the next file is out of the drawer, open its case file too
+  const reopenCase = useRef(false);
 
   const open = PROJECTS.find((project) => project.id === openId)!;
+  const nextFile = PROJECTS[(PROJECTS.indexOf(open) + 1) % PROJECTS.length];
   const closed = PROJECTS.filter((project) => project.id !== openId);
   const step = closed.length > SLOTS.length ? (96 * SLOTS.length) / closed.length : 96;
 
@@ -111,6 +116,11 @@ export function Projects() {
     const noteParts = openEl.querySelectorAll("[data-note-part], [data-clip]");
     const finish = () => {
       busy.current = false;
+      if (reopenCase.current) {
+        reopenCase.current = false;
+        setCaseOpen(true);
+        return;
+      }
       const next = queued.current;
       queued.current = null;
       if (next) pullRef.current(next);
@@ -387,11 +397,32 @@ export function Projects() {
 
         {/* stop 2 on smaller screens: the open file */}
         <div className={styles.stopFolder} data-snap>
-          <OpenFolder ref={openRef} key={open.id} project={open} onOpenCase={() => {}} onPointerMove={tiltCover} onPointerEnter={greetCover} onPointerLeave={settleCover} />
+          <OpenFolder ref={openRef} key={open.id} project={open} onOpenCase={() => {
+              playSound("quick", { volume: 0.7 });
+              setCaseOpen(true);
+            }} onPointerMove={tiltCover} onPointerEnter={greetCover} onPointerLeave={settleCover} />
         </div>
       </div>
 
       {fine && !reduced && <OpenBubble active={hovered !== null} />}
+
+      {caseOpen && (
+        <CaseFile
+          key={open.id}
+          project={open}
+          next={nextFile}
+          getSource={() => openRef.current}
+          onClosed={(next) => {
+            setCaseOpen(false);
+            if (next) {
+              reopenCase.current = true;
+              pullRef.current(next);
+            } else {
+              openRef.current?.querySelector<HTMLElement>("[data-open-case]")?.focus({ preventScroll: true });
+            }
+          }}
+        />
+      )}
 
       <p className="sr-only" aria-live="polite">
         {announce}
