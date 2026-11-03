@@ -11,7 +11,6 @@ import shared from "../chapter.module.css";
 import { useChapterReveal } from "../useChapterReveal";
 import { CaseFile } from "./CaseFile";
 import { FolderTab, SLOTS } from "./FolderTab";
-import { OpenBubble } from "./OpenBubble";
 import { OpenFolder } from "./OpenFolder";
 import styles from "./Projects.module.css";
 
@@ -223,6 +222,15 @@ export function Projects() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- lift reads the DOM only
   }, [hovered, armed, reduced, desk, portrait]);
 
+  // scrolling moves the drawer out from under a pointer that hasn't moved, and the browser then
+  // reports no pointerleave: let the lifted folder settle as soon as the page scrolls
+  useEffect(() => {
+    if (!hovered) return;
+    const settle = () => setHovered(null);
+    window.addEventListener("scroll", settle, { passive: true, once: true });
+    return () => window.removeEventListener("scroll", settle);
+  }, [hovered]);
+
   // a tap anywhere outside the armed folder lets it go
   useEffect(() => {
     if (!armed) return;
@@ -425,7 +433,6 @@ export function Projects() {
         </div>
       </div>
 
-      {fine && !reduced && <OpenBubble active={hovered !== null} />}
 
       {caseOpen && (
         <CaseFile

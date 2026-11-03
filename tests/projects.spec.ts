@@ -80,7 +80,7 @@ test.describe("desk 1920×1080", () => {
     expect(errors).toEqual([]);
   });
 
-  test("hovering a folder lifts it and shows the OPEN bubble", async ({ page }) => {
+  test("hovering a folder lifts it; nothing follows the pointer or stays behind after a scroll", async ({ page }) => {
     await openProjects(page);
     const folder = page.locator('[data-folder="mvac-handbook"]');
     const before = (await folder.boundingBox())!;
@@ -88,10 +88,11 @@ test.describe("desk 1920×1080", () => {
     await page.waitForTimeout(700);
     await expect(folder).toHaveAttribute("data-lifted", "");
     expect((await folder.boundingBox())!.y).toBeLessThan(before.y - 15);
-    expect(await page.locator("[data-open-bubble]").evaluate((el) => getComputedStyle(el).visibility)).toBe("visible");
-    await page.mouse.move(300, 900);
-    await page.waitForTimeout(700);
-    expect(await page.locator("[data-open-bubble]").evaluate((el) => getComputedStyle(el).visibility)).toBe("hidden");
+    await expect(page.locator("body > [aria-hidden]:has-text('Open')")).toHaveCount(0);
+    // scroll on to Contact without moving the pointer: the lift must not stay behind
+    await page.mouse.wheel(0, 2500);
+    await page.waitForTimeout(1500);
+    await expect(folder).not.toHaveAttribute("data-lifted", "");
   });
 
   test("filters sink the files that don't match and swap the open one if needed", async ({ page }) => {

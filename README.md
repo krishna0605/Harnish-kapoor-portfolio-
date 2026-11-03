@@ -21,7 +21,7 @@
   - ← / → move between the stories.
 - **Projects — "Open a folder."**
   - A drawer of eight project files standing on end, plus one file pulled out and lying open, with its cover, a clipped brief and **Open project**.
-  - Hover a file and it lifts out of the drawer while its neighbours lean away; an OPEN bubble trails the pencil.
+  - Hover a file and it lifts out of the drawer while its neighbours lean away.
   - Click a file and it flies out to the open position while the open one drops back into its place in the drawer.
   - Filters sink the files that don’t match.
   - **Open project** turns the folder into a full-screen **case file**: the cover swings open and the sheets fan out sideways (cover, brief, process, drafts, final frame, credits). Wheel, drag, swipe or ← / → move between sheets; **Next file** goes on to the next project. The address bar never changes.
