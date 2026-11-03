@@ -372,18 +372,16 @@ export type ProjectFile = {
   sections: CaseSection[];
 };
 
-/** Placeholder sheets for a project whose case file isn't written yet. TODO (Harnish): replace per project. */
-const draftSections = (art: CoverArtId, what: string): CaseSection[] => [
-  {
-    kind: "brief",
-    heading: "The brief",
-    text: `TODO (Harnish): the idea behind ${what}, and what it had to do.`,
-    facts: [
-      { label: "Role", value: "TODO" },
-      { label: "Team", value: "TODO" },
-      { label: "Tools", value: "TODO" },
-    ],
-  },
+/**
+ * A project's case-file sheets: the brief and credits from the experience notes; the process,
+ * drafts and final frame wait for images. TODO (Harnish): add images and the missing roles.
+ */
+const fileSections = (
+  art: CoverArtId,
+  what: string,
+  file: { brief: string; facts: { label: string; value: string }[]; credits?: { role: string; name: string }[]; results: string[] },
+): CaseSection[] => [
+  { kind: "brief", heading: "The brief", text: file.brief, facts: file.facts },
   {
     kind: "process",
     heading: "Process",
@@ -406,13 +404,19 @@ const draftSections = (art: CoverArtId, what: string): CaseSection[] => [
     ],
   },
   { kind: "final", heading: "The final frame", media: { alt: `The finished ${what}`, caption: "TODO: the finished piece", art } },
-  { kind: "credits", heading: "Credits", credits: [{ role: "TODO", name: "TODO" }], results: ["TODO (Harnish): results, screenings or reach"] },
+  {
+    kind: "credits",
+    heading: "Credits",
+    credits: file.credits ?? [{ role: "TODO (Harnish): your role", name: "Harnish Kapoor" }],
+    results: file.results,
+  },
 ];
 
 export const ARCHIVE = {
   intro: {
-    title: ["Open a", "folder."],
-    text: "Films, brands, books and motion. Every project is filed with its sketches, drafts and the final frame.",
+    // typed as lines: the first two in bold, the last in the italic accent
+    title: { lead: ["A little", "bit of"], accent: ["everything."] },
+    text: "Brand identities, visual stories and ideas brought to life.",
     hint: "Pull a tab to open a file",
     drawerLabel: "The archive",
     since: "2021 → now",
@@ -434,30 +438,21 @@ export const ARCHIVE = {
       years: "2021",
       context: "Collaborative",
       format: "2D visual film",
-      summary: "Made with friends during COVID-19: isolation, uncertainty and the feelings in between, turned into visual sequences and poetry.",
-      tags: ["2D Animation", "Visual poetry", "Art direction"],
+      summary: "Created with friends during COVID-19, exploring isolation, uncertainty and the emotions of the pandemic through visual sequences and poetry.",
+      tags: ["2D Animation", "Visual Poetry", "Art Direction"],
       filters: ["film"],
       color: "var(--lotus)",
       cover: { alt: "Film still: a small insect under a full moon over green hills", caption: "Film still / poster", art: "insect" },
-      sections: [
-        {
-          kind: "brief",
-          heading: "The brief",
-          text: "Made with friends during COVID-19: isolation, uncertainty and the feelings in between, turned into visual sequences and poetry. TODO (Harnish): a few more lines on the idea.",
-          facts: [
-            { label: "Format", value: "2D visual film" },
-            { label: "Made", value: "2021, collaborative" },
-            { label: "Role", value: "TODO" },
-          ],
-        },
-        ...draftSections("insect", "the film").slice(1, 4),
-        {
-          kind: "credits",
-          heading: "Credits & festivals",
-          credits: [{ role: "TODO (Harnish): your role", name: "Harnish Kapoor" }],
-          results: ["7 official festival selections", "TODO (Harnish): festival names"],
-        },
-      ],
+      sections: fileSections("insect", "film", {
+        brief:
+          "Created with friends during COVID-19, exploring isolation, uncertainty and the emotional struggles experienced during the pandemic. Collective emotions were translated into visual sequences and poetry, capturing the human experience through an abstract, poetic lens.",
+        facts: [
+          { label: "Format", value: "Collaborative 2D visual film" },
+          { label: "Made", value: "2021, with friends" },
+          { label: "Role", value: "TODO" },
+        ],
+        results: ["Multiple film festival selections", "TODO (Harnish): festival names"],
+      }),
     },
     {
       id: "aham-brahmasmi",
@@ -467,13 +462,22 @@ export const ARCHIVE = {
       type: "Mood film",
       years: "",
       context: "Academic",
-      format: "Mood film",
-      summary: "An academic mood film. TODO (Harnish): the story in one or two lines.",
-      tags: ["Mood film", "Animation"],
+      format: "Research-led mood film",
+      summary: "An independent, research-led mood film interpreting Hindu mythology and ideas of birth, death, rebirth and reincarnation.",
+      tags: ["Visual Research", "Symbolism", "Storyboarding", "Concept Development"],
       filters: ["film"],
       color: "var(--lilac)",
       cover: { alt: "Placeholder: a sun rising over a still horizon", caption: "Film still", art: "mood" },
-      sections: draftSections("mood", "the mood film"),
+      sections: fileSections("mood", "mood film", {
+        brief:
+          "Extensive research into Hindu mythology, symbolism and philosophical ideas surrounding birth, death, rebirth and reincarnation, interpreted through visual research, symbolic imagery, graphic exploration, composition and storyboarding to establish a distinctive visual language. The research and visual concepts come together in an experimental mood film: an abstract journey through imagery, symbolism and visual storytelling.",
+        facts: [
+          { label: "Format", value: "Independent, research-led mood film" },
+          { label: "Made", value: "Academic project" },
+          { label: "Approach", value: "Visual research · symbolic imagery · storyboarding" },
+        ],
+        results: ["TODO (Harnish): screenings or results"],
+      }),
     },
     {
       id: "fold-labs",
@@ -483,13 +487,21 @@ export const ARCHIVE = {
       type: "Explainers · Brand",
       years: "2021–23",
       context: "Freelance",
-      format: "Explainers · Brand",
-      summary: "Explainer films and brand pieces for Foldlabs. TODO (Harnish): what they explained and how.",
-      tags: ["Explainers", "Brand", "Motion"],
+      format: "Creative collaborations",
+      summary: "Around eight projects together: 2D educational videos, branding, web and graphic design, brochures, illustrations and storyboarding.",
+      tags: ["2D Educational Videos", "Branding", "Web & Graphic Design", "Storyboarding"],
       filters: ["branding", "motion"],
       color: "var(--marigold)",
       cover: { alt: "Placeholder: a folded paper shape unfolding", caption: "Explainer frame", art: "fold" },
-      sections: draftSections("fold", "the Foldlabs explainers"),
+      sections: fileSections("fold", "Fold Labs work", {
+        brief: "Collaborated on approximately eight projects, spanning 2D educational videos, branding, web and graphic design, brochures, illustrations and storyboarding.",
+        facts: [
+          { label: "Projects", value: "About eight" },
+          { label: "Work", value: "Educational videos · branding · web · brochures" },
+          { label: "Role", value: "TODO" },
+        ],
+        results: ["TODO (Harnish): results or reach"],
+      }),
     },
     {
       id: "era-and-canvas",
@@ -499,13 +511,22 @@ export const ARCHIVE = {
       type: "Brand · Posters",
       years: "2021–23",
       context: "Freelance",
-      format: "Brand · Posters",
-      summary: "A brand and its posters. TODO (Harnish): the brand, the idea and the poster series.",
-      tags: ["Branding", "Posters"],
-      filters: ["branding"],
+      format: "Visual storytelling & branding",
+      summary: "Branding, social media creatives, illustrations and promotional posters, including posters for Ahmedabad Metro displayed across its stations.",
+      tags: ["Branding", "Illustration", "Posters", "Social Media"],
+      filters: ["branding", "illustration"],
       color: "var(--sage)",
       cover: { alt: "Placeholder: two posters pinned side by side", caption: "Poster", art: "posters" },
-      sections: draftSections("posters", "the posters"),
+      sections: fileSections("posters", "posters", {
+        brief:
+          "Created branding, social media creatives, illustrations and promotional posters. Translated a founder’s personal journey into an illustrated visual narrative, and designed posters for Ahmedabad Metro, displayed across stations.",
+        facts: [
+          { label: "Work", value: "Branding · social media · illustration · posters" },
+          { label: "Story", value: "A founder’s journey, illustrated" },
+          { label: "Role", value: "TODO" },
+        ],
+        results: ["Posters displayed across Ahmedabad Metro stations"],
+      }),
     },
     {
       id: "mvac-handbook",
@@ -515,13 +536,21 @@ export const ARCHIVE = {
       type: "Illustration",
       years: "2021–23",
       context: "Freelance",
-      format: "Illustrated handbook",
-      summary: "Illustrations for the MVAC handbook. TODO (Harnish): who it was for and what it covered.",
-      tags: ["Illustration", "Editorial"],
+      format: "Design & illustration",
+      summary: "About a year of monthly social media creatives, and a designed and illustrated handbook.",
+      tags: ["Illustration", "Social Media", "Editorial"],
       filters: ["illustration"],
       color: "#fffdf9",
       cover: { alt: "Placeholder: an open handbook with an illustrated page", caption: "Spread", art: "handbook" },
-      sections: draftSections("handbook", "the handbook"),
+      sections: fileSections("handbook", "handbook", {
+        brief: "Collaborated over approximately one year, creating monthly social media creatives, and designed and illustrated a handbook.",
+        facts: [
+          { label: "Duration", value: "About one year" },
+          { label: "Work", value: "Monthly social media creatives · handbook" },
+          { label: "Role", value: "TODO" },
+        ],
+        results: ["TODO (Harnish): results or reach"],
+      }),
     },
     {
       id: "safety-troop-books",
@@ -532,12 +561,22 @@ export const ARCHIVE = {
       years: "2023–24",
       context: "Safety Troop",
       format: "Books · Comics",
-      summary: "Books and comics made as Illustrator & Animator at Safety Troop. TODO (Harnish): the series and its readers.",
-      tags: ["Books", "Comics", "Illustration"],
+      summary: "Published educational books for Standards 1–10, made with a team of psychologists: characters, comics, puzzles and activities.",
+      tags: ["Illustration", "Editorial Design", "Character Design", "Comics"],
       filters: ["illustration"],
       color: "var(--lotus)",
       cover: { alt: "Placeholder: a comic page with three panels", caption: "Comic page", art: "books" },
-      sections: draftSections("books", "the books"),
+      sections: fileSections("books", "books", {
+        brief:
+          "Designed and illustrated complete book layouts, creating characters, comic strips, puzzles and interactive activities for children, translating a team of psychologists’ research into engaging learning. Contributed to a series of published educational books for Standards 1–10, taking individual pages from concept to finished layouts.",
+        facts: [
+          { label: "Role", value: "Illustrator & Animator" },
+          { label: "With", value: "A team of psychologists" },
+          { label: "When", value: "May 2023 – May 2024" },
+        ],
+        credits: [{ role: "Illustrator & Animator", name: "Harnish Kapoor" }],
+        results: ["A series of published educational books for Standards 1–10"],
+      }),
     },
     {
       id: "pathquest-motion",
@@ -548,12 +587,22 @@ export const ARCHIVE = {
       years: "2024–25",
       context: "PathQuest",
       format: "Motion graphics",
-      summary: "Motion graphics made as Motion Graphic Designer at PathQuest. TODO (Harnish): the pieces and what they did.",
-      tags: ["Motion graphics", "After Effects"],
-      filters: ["motion"],
+      summary: "Social media creatives, motion graphics, product demos and branded videos for the brand’s digital presence.",
+      tags: ["Motion Graphics", "Social Media", "Product Demos", "Branding"],
+      filters: ["motion", "branding"],
       color: "var(--lilac)",
       cover: { alt: "Placeholder: shapes moving along a curved path", caption: "Motion frame", art: "motion" },
-      sections: draftSections("motion", "the motion pieces"),
+      sections: fileSections("motion", "motion pieces", {
+        brief:
+          "Created social media creatives, motion graphics, product demos and branded videos, and contributed to branding, logo explorations and campaign ideation alongside the content team.",
+        facts: [
+          { label: "Role", value: "Motion Graphics Designer" },
+          { label: "With", value: "Content writers and the creative team" },
+          { label: "When", value: "June 2024 – Feb 2025" },
+        ],
+        credits: [{ role: "Motion Graphics Designer", name: "Harnish Kapoor" }],
+        results: ["Regular static and animated posts for the brand’s social media channels"],
+      }),
     },
     {
       id: "feature-storyboards",
@@ -564,12 +613,21 @@ export const ARCHIVE = {
       years: "2021–23",
       context: "Freelance",
       format: "Storyboards · Animatics",
-      summary: "Storyboards and animatics for a Dag Compeau feature. TODO (Harnish): the film and the boards.",
-      tags: ["Storyboards", "Animatics", "Film"],
+      summary: "Storyboards and animatics for a six-month feature film, plus three independent short films through storyboarding, animatics and 2D animation.",
+      tags: ["Storyboards", "Animatics", "2D Animation"],
       filters: ["film"],
       color: "var(--marigold)",
       cover: { alt: "Placeholder: a strip of storyboard panels", caption: "Board", art: "boards" },
-      sections: draftSections("boards", "the storyboards"),
+      sections: fileSections("boards", "storyboards", {
+        brief:
+          "Collaborated on a six-month feature-film project through Upwork, developing storyboards and animatics, and contributed to three independent short films through storyboarding, animatics and 2D animation.",
+        facts: [
+          { label: "Feature", value: "Six months, through Upwork" },
+          { label: "Shorts", value: "Three independent films" },
+          { label: "Work", value: "Storyboards · animatics · 2D animation" },
+        ],
+        results: ["TODO (Harnish): the films and where they showed"],
+      }),
     },
   ] satisfies ProjectFile[],
 };

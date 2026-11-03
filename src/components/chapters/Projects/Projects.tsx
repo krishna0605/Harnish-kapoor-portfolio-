@@ -36,7 +36,7 @@ function rangeLabel(numbers: number[]) {
 }
 
 /**
- * Chapter 04 — Projects: "Open a folder." A drawer of project files; one is pulled out
+ * Chapter 04 — Projects: "A little bit of everything." A drawer of project files; one is pulled out
  * and lies open with its cover and brief. Pulling another tab swaps them: the new file
  * flies out of the drawer into the open position while the old one drops back into its
  * place in the drawer (GSAP Flip).
@@ -341,12 +341,16 @@ export function Projects() {
               {pad(PROJECTS.length)} files · {ARCHIVE.intro.since}
             </span>
             <h2 id="projects-title" className={styles.title}>
-              <span className={shared.titleLine}>
-                <SplitLetters text={ARCHIVE.intro.title[0]} reveal="title" />
-              </span>
-              <span className={`${shared.titleLine} ${styles.titleAccent}`}>
-                <SplitLetters text={ARCHIVE.intro.title[1]} reveal="title" />
-              </span>
+              {ARCHIVE.intro.title.lead.map((line) => (
+                <span key={line} className={shared.titleLine}>
+                  <SplitLetters text={line} reveal="title" />
+                </span>
+              ))}
+              {ARCHIVE.intro.title.accent.map((line) => (
+                <span key={line} className={`${shared.titleLine} ${styles.titleAccent}`}>
+                  <SplitLetters text={line} reveal="title" />
+                </span>
+              ))}
             </h2>
             <p className={styles.text} data-reveal="block">
               {ARCHIVE.intro.text}

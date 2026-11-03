@@ -1,5 +1,5 @@
 /*
- * Chapter 04 — Projects: "Open a folder."
+ * Chapter 04 — Projects: "A little bit of everything."
  * Base styles = the two-stop layout (phones, tablets, small or short landscape screens):
  * stop 1 is the intro and the drawer, stop 2 the open file. Inside the DESK media query
  * below, the chapter becomes the design's 1920×1080 frame, every value from the export in --u.
@@ -479,8 +479,9 @@
     font-size: max(10px, calc(13 * var(--u)));
   }
 
+  /* three lines: "A little / bit of / everything." (the export's two-line title was 132) */
   .title {
-    font-size: calc(132 * var(--u));
+    font-size: calc(96 * var(--u));
   }
 
   .text {
