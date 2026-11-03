@@ -127,12 +127,54 @@ function Studios() {
   );
 }
 
+// an open book with a comic strip on one page and a puzzle piece beside it
+function Books() {
+  return (
+    <>
+      <path d="M30 146 H294" stroke={INK} strokeWidth="2" />
+      <path d="M162 46 C 136 36 104 36 78 46 V 138 C 104 128 136 128 162 138 Z" fill={PAPER} stroke={INK} strokeWidth="2" strokeLinejoin="round" />
+      <path d="M162 46 C 188 36 220 36 246 46 V 138 C 220 128 188 128 162 138 Z" fill={PAPER} stroke={INK} strokeWidth="2" strokeLinejoin="round" />
+      <rect x="90" y="56" width="30" height="30" fill={PINK} stroke={INK} strokeWidth="1.6" />
+      <rect x="124" y="56" width="28" height="30" fill={MARIGOLD} stroke={INK} strokeWidth="1.6" />
+      <rect x="90" y="92" width="62" height="30" fill={LILAC} stroke={INK} strokeWidth="1.6" />
+      <circle cx="105" cy="71" r="6" fill={PAPER} stroke={INK} strokeWidth="1.4" />
+      <path d="M178 60 H232 M178 74 H232 M178 88 H222 M178 102 H232 M178 116 H210" stroke={INK} strokeWidth="1.4" opacity="0.35" />
+      <path
+        d="M262 92 h12 a7 7 0 1 1 12 0 h12 v12 a7 7 0 1 0 0 12 v12 h-36 z"
+        fill={MARIGOLD}
+        stroke={INK}
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M52 34 L56 46 L68 50 L56 54 L52 66 L48 54 L36 50 L48 46 Z" fill={PAPER} stroke={INK} strokeWidth="1.8" strokeLinejoin="round" />
+    </>
+  );
+}
+
+// a screen with a play button, and shapes travelling along a motion path
+function Motion() {
+  return (
+    <>
+      <rect x="54" y="34" width="132" height="92" rx="8" fill={PAPER} stroke={INK} strokeWidth="2" />
+      <path d="M102 146 H138 M120 126 V146" stroke={INK} strokeWidth="2" strokeLinecap="round" />
+      <circle cx="120" cy="80" r="24" fill={PINK} stroke={INK} strokeWidth="2" />
+      <path d="M113 68 L131 80 L113 92 Z" fill={PAPER} stroke={INK} strokeWidth="2" strokeLinejoin="round" />
+      <path d="M196 126 C 222 70, 254 52, 292 44" fill="none" stroke={INK} strokeWidth="1.6" strokeDasharray="4 6" />
+      <circle cx="206" cy="108" r="8" fill={MARIGOLD} stroke={INK} strokeWidth="2" opacity="0.35" />
+      <circle cx="232" cy="76" r="9" fill={MARIGOLD} stroke={INK} strokeWidth="2" opacity="0.6" />
+      <rect x="258" y="42" width="22" height="22" rx="4" transform="rotate(18 269 53)" fill={LILAC} stroke={INK} strokeWidth="2" />
+    </>
+  );
+}
+
 const ART: Record<SceneArtId, () => React.JSX.Element> = {
   school: School,
   bounce: Bounce,
   storyboard: Storyboard,
   clapper: Clapper,
   freelance: Freelance,
+  books: Books,
+  motion: Motion,
   studios: Studios,
 };
 

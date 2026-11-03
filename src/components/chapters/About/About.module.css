@@ -2,7 +2,7 @@
  * Chapter 02 — About: "Frame by frame."
  * Base styles = the sequence layout (phones, tablets, short or small landscape screens):
  * a sideways row of screens. Inside the STORYBOARD media query below, the chapter becomes
- * the design's 3840×1080 board, every value from the export in --u.
+ * the design's board (3840×1080 in the export; 4500 wide with eight stories), every value in --u.
  * Keep the query in sync with STORYBOARD_QUERY in src/lib/useMediaQuery.ts.
  */
 
@@ -497,12 +497,12 @@
 }
 
 /* =====================================================================
-   STORYBOARD — the design's 3840×1080 board (landscape, ≥ 1325×745)
+   STORYBOARD — the design's board, 4500×1080 with eight stories (landscape, ≥ 1325×745)
    ===================================================================== */
 @media (orientation: landscape) and (min-width: 1325px) and (min-height: 745px) {
   .about {
     display: block;
-    width: calc(3752 * var(--u));
+    width: calc(4412 * var(--u)); /* BOARD_WIDTH in About.tsx */
     padding: 0;
     overflow: hidden;
   }
@@ -578,7 +578,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: calc(3840 * var(--u));
+    width: calc(4500 * var(--u));
     height: calc(1080 * var(--u));
     pointer-events: none;
   }
@@ -667,7 +667,7 @@
 
   .toolkit {
     position: absolute;
-    left: calc(3318 * var(--u));
+    left: calc(3978 * var(--u));
     top: calc(140 * var(--u));
     width: calc(392 * var(--u));
     padding: calc(26 * var(--u));
@@ -690,7 +690,7 @@
 
   .closing {
     position: absolute;
-    left: calc(3318 * var(--u));
+    left: calc(3978 * var(--u));
     top: calc(688 * var(--u));
     width: calc(392 * var(--u));
     gap: calc(22 * var(--u));
@@ -724,7 +724,7 @@
   .endSnap {
     display: block;
     position: absolute;
-    left: calc(3752 * var(--u) - 100vw + var(--spine));
+    left: calc(4412 * var(--u) - 100vw + var(--spine));
     top: 0;
     width: 1px;
     height: 1px;

@@ -401,21 +401,11 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
           <div ref={letterRef} className={styles.letter} onClick={(event) => event.stopPropagation()}>
             <div ref={letterBodyRef} className={styles.letterBody} data-lenis-prevent>
               <p className={styles.period}>
-                {scene.number} · {scene.kicker}
+                {scene.number} · {scene.period ?? scene.kicker}
               </p>
               <h2 className={styles.title}>{scene.title}</h2>
               <span className={styles.rule} style={{ background: scene.color }} />
-              {scene.text && <p className={styles.text}>{scene.text}</p>}
-              {scene.roles && (
-                <ul className={styles.roles}>
-                  {scene.roles.map((role) => (
-                    <li key={role.role}>
-                      <span>{role.role}</span>
-                      <span>{role.company}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <p className={styles.text}>{scene.text}</p>
               <div className={styles.columns}>
                 <div>
                   <h3 className={styles.columnTitle}>What I did</h3>
@@ -427,11 +417,16 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
                 </div>
                 <div>
                   <h3 className={styles.columnTitle}>Highlights</h3>
-                  <ul className={styles.columnList}>
-                    {scene.highlights.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
+                  {scene.highlights.map((group, g) => (
+                    <div key={group.title ?? g} className={styles.highlightGroup}>
+                      {group.title && <h4 className={styles.groupTitle}>{group.title}</h4>}
+                      <ul className={styles.columnList}>
+                        {group.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
               </div>
               <ul className={styles.tags}>

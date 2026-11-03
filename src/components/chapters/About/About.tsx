@@ -19,21 +19,25 @@ import { StoryCard } from "./StoryCard";
 const ABOUT_INDEX = chapterIndex("about");
 const STORY_INDEX = chapterIndex("experience");
 
-// story line on the 3840×1080 board — the export's dashed wave and its markers
+// story line on the board — the export's dashed wave and its markers, one 330-unit swing per story
 const LINE =
-  "M1236 578 C 1307 532 1369 624 1440 578 C 1556 624 1654 532 1770 578 C 1886 532 1984 624 2100 578 C 2216 624 2314 532 2430 578 C 2546 532 2644 624 2760 578 C 2876 624 2974 532 3090 578 C 3160 532 3220 624 3290 578";
+  "M1236 578 C 1307 532 1369 624 1440 578 C 1556 624 1654 532 1770 578 C 1886 532 1984 624 2100 578 C 2216 624 2314 532 2430 578 C 2546 532 2644 624 2760 578 C 2876 624 2974 532 3090 578 C 3206 532 3304 624 3420 578 C 3536 624 3634 532 3750 578 C 3820 532 3880 624 3950 578";
 const MARKERS = [
   { x: 1440, up: true },
   { x: 1770, up: false },
   { x: 2100, up: true },
   { x: 2430, up: false },
   { x: 2760, up: true },
-  { x: 3090, up: false, now: true },
+  { x: 3090, up: false },
+  { x: 3420, up: true },
+  { x: 3750, up: false, now: true },
 ];
 const LINE_START = 1236;
-const LINE_LENGTH = 2080;
+const LINE_LENGTH = 2740;
+/** board width in design units: the export's 3752 for six stories, plus two more at 330 each */
+const BOARD_WIDTH = 4412;
 
-/** Chapter 02 — About: "Frame by frame." The storyboard is also "03 Experience" in the nav. */
+/** Chapter 02 — About: "Ideas into visuals." The storyboard is also "03 Experience" in the nav. */
 export function About() {
   const ref = useRef<HTMLElement>(null);
   const { active, containerAnimation, goTo } = useChapters();
@@ -169,8 +173,8 @@ export function About() {
           start: "left right",
           end: "right right",
           onUpdate: (self) => {
-            // right edge of the screen, in board units (the board is 3752 units wide)
-            const viewRight = (self.progress * width) / (width / 3752);
+            // right edge of the screen, in board units
+            const viewRight = (self.progress * width) / (width / BOARD_WIDTH);
             const drawn = gsap.utils.clamp(0, LINE_LENGTH, viewRight - 120 - LINE_START);
             wipe.setAttribute("width", String(drawn + 20));
             markers.forEach((marker) => marker.classList.toggle(styles.markerOn, LINE_START + drawn >= Number(marker.dataset.x)));
@@ -205,7 +209,7 @@ export function About() {
       <div className={styles.frost} aria-hidden="true" />
 
       <div className={styles.canvas}>
-        <svg className={styles.line} viewBox="0 0 3840 1080" aria-hidden="true" data-line>
+        <svg className={styles.line} viewBox="0 0 4500 1080" aria-hidden="true" data-line>
           <defs>
             <clipPath id="aboutLineWipe">
               <rect data-line-wipe x={LINE_START - 20} y="0" width={LINE_LENGTH + 40} height="1080" />
@@ -214,7 +218,7 @@ export function About() {
           <g clipPath="url(#aboutLineWipe)">
             <path d={LINE} fill="none" stroke="#2A2733" strokeWidth="2.5" strokeDasharray="10 9" strokeLinecap="round" />
             <circle cx="1236" cy="578" r="7" fill="#2A2733" />
-            <path d="M3290 569 L3306 578 L3290 587 Z" fill="#2A2733" />
+            <path d="M3950 569 L3966 578 L3950 587 Z" fill="#2A2733" />
           </g>
           {MARKERS.map((marker) => (
             <g key={marker.x} className={marker.now ? `${styles.marker} ${styles.markerNow}` : styles.marker} data-marker data-x={marker.x}>

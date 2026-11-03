@@ -30,122 +30,256 @@ export const HOME = {
   badge: "GRAPHIC DESIGNER · MOTION GRAPHIC DESIGNER ·",
 };
 
-// About chapter — text from the design "04 · About — the story so far"
-export type SceneArtId = "school" | "bounce" | "storyboard" | "clapper" | "freelance" | "studios";
+// About chapter — the story so far: one stamp per chapter of the story, its letter in the envelope
+export type SceneArtId = "school" | "bounce" | "storyboard" | "clapper" | "freelance" | "books" | "motion" | "studios";
 
 export type Scene = {
   id: string;
   number: string;
+  /** short line on the stamp */
   kicker: string;
+  /** full line at the top of the letter (defaults to the kicker) */
+  period?: string;
   title: string;
-  text?: string;
-  roles?: { role: string; company: string }[];
+  /** the story paragraph, in the letter */
+  text: string;
+  /** the stamp shows the first three */
   tags: { label: string; accent?: boolean }[];
   art: SceneArtId;
   color: string;
-  /** position on the 3840×1080 board: x, row above or below the story line, tilt */
+  /** position on the board: x, row above or below the story line, tilt */
   x: number;
   row: "top" | "bottom";
   tilt: number;
-  // TODO: real details — shown when the scene is opened
   did: string[];
-  highlights: string[];
+  /** grouped under a project name where the story covers several */
+  highlights: { title?: string; items: string[] }[];
 };
+
+const tagsOf = (labels: string) => labels.split(" · ").map((label) => ({ label }));
 
 const SCENES: Scene[] = [
   {
     id: "sc-01",
     number: "SC 01",
     kicker: "School years",
-    title: "Where it started",
-    text: "Aga Khan Primary, then Vedant International (Science) — with drawing, poetry and photography always on the side.",
-    tags: [{ label: "Science" }, { label: "Sketchbooks" }],
+    title: "It all started with stories.",
+    text: "Long before design became a career, it was a little corner of curiosity. Between books, poetry, art and hours spent on Wattpad, I found myself exploring stories, connecting with creative communities and discovering new ways to express ideas.",
+    tags: tagsOf("Storytelling · Book Covers · Digital Creativity · Visual Design"),
     art: "school",
     color: "#C3DAEC",
     x: 1260,
     row: "top",
     tilt: -1.4,
-    did: ["TODO: what she did in these years", "TODO: a second point"],
-    highlights: ["TODO: a highlight", "TODO: another highlight"],
+    did: [
+      "Designed book covers and graphics for authors in online creative communities.",
+      "Played around with basic HTML formatting to add a little visual flair to Wattpad threads and comments.",
+    ],
+    highlights: [
+      {
+        items: [
+          "Turned a love for storytelling into my first hands-on design experiences.",
+          "Discovered how writing, photography and art could come together through visual design.",
+        ],
+      },
+    ],
   },
   {
     id: "sc-02",
     number: "SC 02",
-    kicker: "2017 – 2021",
-    title: "Learning to make things move",
-    text: "Bachelor in Animation Design at GLS Institute of Design: 2D animation, stop motion and character design.",
-    tags: [{ label: "B.Des" }, { label: "GLS" }],
+    kicker: "The design years",
+    title: "One foundation, a world of possibilities.",
+    text: "A four-year Bachelor of Design in Communication Design, specialising in Animation, at GLS Institute of Design became my gateway to the world of visual creativity. College introduced me to the many facets of design, showing me how different disciplines connect, overlap and inspire one another.",
+    tags: tagsOf("Communication Design · Animation · Visual Storytelling · Illustration · Branding · Motion Graphics"),
     art: "bounce",
     color: "#F5C9C6",
     x: 1590,
     row: "bottom",
     tilt: 1.2,
-    did: ["TODO: courses and projects", "TODO: a second point"],
-    highlights: ["TODO: a highlight", "TODO: another highlight"],
+    did: [
+      "Explored branding, typography, illustration, composition and visual communication.",
+      "Learned the fundamentals of Design and 2D animation, motion graphics and visual storytelling.",
+    ],
+    highlights: [
+      {
+        items: [
+          "Built a multidisciplinary design foundation, learning to translate ideas across different visual mediums.",
+          "Discovered the joy of experimenting beyond a single discipline and finding my own creative direction.",
+        ],
+      },
+    ],
   },
   {
     id: "sc-03",
     number: "SC 03",
-    kicker: "Internships",
-    title: "First studio days",
-    text: "Four months at Vaanarsena Studio and two at Arthat Studio — real pipelines, real deadlines, real feedback.",
-    tags: [{ label: "Vaanarsena" }, { label: "Arthat" }],
+    kicker: "Internships & training",
+    title: "Learning the art behind the movement.",
+    text: "This was where I began looking beyond the final frame and understanding the craft behind it. Through my internship at Arthaat Studio and six months of training with Vaanarsena Studios, I explored 3D modelling, human anatomy and the principles that bring animation to life.",
+    tags: tagsOf("3D Modelling · Autodesk Maya · Human Anatomy · Figure Drawing · Animation Fundamentals · Visual Development"),
     art: "storyboard",
     color: "#DCD3F2",
     x: 1920,
     row: "top",
     tilt: -1,
-    did: ["TODO: work at Vaanarsena Studio", "TODO: work at Arthat Studio"],
-    highlights: ["TODO: a highlight", "TODO: another highlight"],
+    did: [
+      "Explored 3D product modelling and visual effects using Autodesk Maya at Arthaat Animation.",
+      "Studied human anatomy, muscle structure, proportions and the fundamentals of figure drawing at Vaanarsena.",
+    ],
+    highlights: [
+      {
+        items: [
+          "Developed a deeper understanding of timing, spacing, placement and framing in animation.",
+          "Built a stronger foundation in observing form, understanding movement and translating it into visuals.",
+        ],
+      },
+    ],
   },
   {
     id: "sc-04",
     number: "SC 04",
-    kicker: "2021",
-    title: "A film that travelled",
-    text: "Co-created the short film There Is an Insect Inside Me, which earned 7 official festival selections.",
-    tags: [{ label: "Short film" }, { label: "7 selections" }],
+    kicker: "Academic projects",
+    title: "Research, imagination and a little storytelling magic.",
+    text: "Some stories are imagined, while others are waiting to be discovered. During my academic journey, two projects pushed me to explore storytelling from different perspectives — one rooted in shared human experiences, the other in mythology, symbolism and visual interpretation.",
+    tags: tagsOf("Visual Design · 2D Animation · Visual Poetry · Art Direction · Symbolism · Visual Research · Concept Development · Storyboarding"),
     art: "clapper",
     color: "#CFE0C3",
     x: 2250,
     row: "bottom",
     tilt: 1.5,
-    did: ["TODO: her role on the film", "TODO: a second point"],
-    highlights: ["TODO: festival names", "TODO: another highlight"],
+    did: [
+      "Collaborated on a 2D visual film, translating human emotions and shared experiences into poetic imagery.",
+      "Developed a research-led visual concept, transforming mythology, symbolism and philosophical ideas into a cohesive visual narrative.",
+    ],
+    highlights: [
+      {
+        title: "There Is an Insect Inside of Me · Collaborative 2D Visual Film",
+        items: [
+          "Created with friends during COVID-19, exploring isolation, uncertainty and the emotional struggles experienced during the pandemic.",
+          "Translated collective emotions into visual sequences and poetry, capturing the human experience through an abstract, poetic lens.",
+          "Received multiple film festival selections.",
+        ],
+      },
+      {
+        title: "Aham Brahmasmi · Independent Research-led Mood Film",
+        items: [
+          "Undertook extensive research into Hindu mythology, symbolism and philosophical ideas surrounding birth, death, rebirth and reincarnation.",
+          "Interpreted these concepts through visual research, symbolic imagery, graphic exploration, composition and storyboarding to establish a distinctive visual language.",
+          "Brought the research and visual concepts together in an experimental mood film, capturing an abstract journey through imagery, symbolism and visual storytelling.",
+        ],
+      },
+    ],
   },
   {
     id: "sc-05",
     number: "SC 05",
-    kicker: "2021 – 2024",
-    title: "Going freelance",
-    text: "Storyboards and animatics for a Dag Compeau feature, explainers for Foldlabs, title sequences, invites and reels.",
-    tags: [{ label: "Films" }, { label: "Brands" }, { label: "Reels" }],
+    kicker: "Freelance · 2021 – 2023",
+    period: "The freelance years · 2021–2023",
+    title: "Different briefs, different ideas, endless possibilities.",
+    text: "After graduation, I stepped into freelancing, where every new client brought a different creative challenge. From building visual identities and illustrating stories to creating animations and designing for brands, I explored the many facets of visual communication. It was a time of experimentation, collaboration and learning to turn ideas into meaningful visual experiences.",
+    tags: tagsOf("Graphic Design · Branding · 2D Animation · Visual Storytelling · Illustration · Storyboarding · Animatics · Social Media Design"),
     art: "freelance",
     color: "#C3DAEC",
     x: 2580,
     row: "top",
     tilt: -1.2,
-    did: ["TODO: storyboards and animatics", "TODO: explainers and reels"],
-    highlights: ["TODO: a highlight", "TODO: another highlight"],
+    did: [
+      "Worked across branding, graphic design, social media creatives, brochures, illustrations and 2D animation.",
+      "Developed storyboards, animatics, animated videos, visual presentations and illustrated narratives for diverse clients.",
+    ],
+    highlights: [
+      {
+        title: "Fold Labs · Creative Collaborations",
+        items: ["Collaborated on approximately eight projects, spanning 2D educational videos, branding, web and graphic design, brochures, illustrations and storyboarding."],
+      },
+      {
+        title: "Era and Canvas · Visual Storytelling & Branding",
+        items: [
+          "Created branding, social media creatives, illustrations and promotional posters.",
+          "Translated a founder’s personal journey into an illustrated visual narrative.",
+          "Designed posters for Ahmedabad Metro, displayed across stations.",
+        ],
+      },
+      {
+        title: "MVAC · Design & Illustration",
+        items: ["Collaborated over approximately one year, creating monthly social media creatives.", "Designed and illustrated a handbook."],
+      },
+      {
+        title: "Independent Film & Animation Projects",
+        items: [
+          "Contributed to three independent short films through storyboarding, animatics and 2D animation.",
+          "Collaborated on a six-month feature-film project through Upwork, developing storyboards and animatics.",
+        ],
+      },
+    ],
   },
   {
     id: "sc-06",
     number: "SC 06",
-    kicker: "2023 → now",
-    title: "Into the studio world",
-    roles: [
-      { role: "Illustrator & Animator", company: "Safety Troop" },
-      { role: "Motion Graphic Designer", company: "PathQuest" },
-      { role: "Graphic Designer", company: "Accenture · now" },
-    ],
-    tags: [{ label: "Now at Accenture", accent: true }],
-    art: "studios",
+    kicker: "Safety Troop · 2023 – 24",
+    period: "The professional years – Safety Troop · May 2023 – May 2024",
+    title: "Turning ideas into engaging visual experiences.",
+    text: "My first professional role was as an Illustrator and Animator at Safety Troop, collaborating with a team of psychologists to bring educational content to life. I translated their research and concepts into illustrations, activities and comics designed to make learning engaging for children.",
+    tags: tagsOf("Illustration · Editorial Design · Character Design · Educational Content · Comics · Motion Graphics"),
+    art: "books",
     color: "#F5C9C6",
     x: 2910,
     row: "bottom",
     tilt: 1,
-    did: ["TODO: work at Safety Troop and PathQuest", "TODO: work at Accenture"],
-    highlights: ["TODO: a highlight", "TODO: another highlight"],
+    did: [
+      "Designed and illustrated complete book layouts, creating characters, comic strips, puzzles and interactive activities for children.",
+      "Created social media creatives and short motion graphics for the brand.",
+    ],
+    highlights: [{ items: ["Contributed to a series of published educational books for Standards 1–10, taking individual pages from concept to finished layouts."] }],
+  },
+  {
+    id: "sc-07",
+    number: "SC 07",
+    kicker: "PathQuest · 2024 – 25",
+    period: "PathQuest · June 2024 – Feb 2025",
+    title: "Bringing brands and ideas into motion.",
+    text: "At PathQuest, I worked as a Motion Graphics Designer, creating visual content that helped shape the brand’s digital presence. From everyday social media creatives to product demos, I collaborated with content writers and the creative team to brainstorm ideas and bring them to life.",
+    tags: tagsOf("Motion Graphics · Social Media Design · Branding · Campaign Ideation · Video Editing · Graphic Design"),
+    art: "motion",
+    color: "#DCD3F2",
+    x: 3240,
+    row: "top",
+    tilt: -1.3,
+    did: [
+      "Created social media creatives, motion graphics, product demos and branded videos.",
+      "Contributed to branding, logo explorations and campaign ideation alongside the content team.",
+    ],
+    highlights: [{ items: ["Created regular static graphic posts and animated motion graphic posts for the brand’s social media channels."] }],
+  },
+  {
+    id: "sc-08",
+    number: "SC 08",
+    kicker: "Accenture · 2025 → now",
+    period: "Accenture · March 2025 – present",
+    title: "Designing visuals that make ideas click.",
+    text: "At Accenture, I work as a Graphic Designer, translating complex information and content into clear, engaging visual experiences. My work spans graphic design, branding, motion graphics, visual communication and digital learning, with a strong focus on maintaining brand consistency across different projects and deliverables.",
+    tags: [
+      { label: "Now at Accenture", accent: true },
+      ...tagsOf("Graphic Design · Branding · Visual Communication · Motion Graphics · E-learning Design · Articulate Storyline · Articulate Rise · PowerPoint · Infographics"),
+    ],
+    art: "studios",
+    color: "#CFE0C3",
+    x: 3570,
+    row: "bottom",
+    tilt: 1,
+    did: [
+      "Designed PowerPoint pitch decks, infographics, icons and visual assets to communicate ideas effectively while following established brand guidelines.",
+      "Created overview videos, system videos and motion graphics, translating information into engaging visual narratives.",
+      "Designed and developed e-learning experiences using Articulate Storyline and Rise, creating visual templates, layouts and interactive slide structures for e-learning modules, microlearning, job aids and instructor-led training decks.",
+    ],
+    highlights: [
+      {
+        items: [
+          "Translated content-heavy information into clear visual narratives across decks, videos and interactive learning experiences.",
+          "Applied brand guidelines consistently across project deliverables, ensuring a cohesive visual identity and design language.",
+          "Developed visual templates, graphics and layouts to maintain consistency across different learning formats.",
+        ],
+      },
+    ],
   },
 ];
 

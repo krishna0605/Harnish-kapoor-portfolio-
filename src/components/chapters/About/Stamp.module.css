@@ -106,45 +106,6 @@
   letter-spacing: -0.01em;
 }
 
-.text {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.roles {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.roles li {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 10px;
-  padding-bottom: 5px;
-  border-bottom: 1.5px dashed rgba(42, 39, 51, 0.25);
-}
-
-.roleName {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.roleCompany {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--graphite);
-  white-space: nowrap;
-}
-
 .tags {
   margin: 0;
   padding: 0;
@@ -305,8 +266,6 @@
 
 /* short landscape screens: headline only on the board, the full story is in the letter */
 @media (orientation: landscape) and (max-height: 560px) {
-  .text,
-  .roles,
   .card .tags {
     display: none;
   }
@@ -322,7 +281,7 @@
 }
 
 /* =====================================================================
-   STORYBOARD — the design's 3840×1080 board
+   STORYBOARD — the design's board
    ===================================================================== */
 @media (orientation: landscape) and (min-width: 1325px) and (min-height: 745px) {
   .stamp {
@@ -341,16 +300,6 @@
     font-size: calc(32 * var(--u));
   }
 
-  .text,
-  .roleName {
-    font-size: max(11px, calc(14.5 * var(--u)));
-  }
-
-  .roleCompany {
-    font-size: max(9px, calc(11 * var(--u)));
-  }
-
-  .roles,
   .tags {
     gap: calc(6 * var(--u));
   }

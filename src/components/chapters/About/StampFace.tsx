@@ -15,19 +15,9 @@ export function StampFace({ scene, className }: { scene: Scene; className?: stri
           <SceneArt art={scene.art} color={scene.color} />
         </div>
         <h3 className={styles.title}>{scene.title}</h3>
-        {scene.text && <p className={styles.text}>{scene.text}</p>}
-        {scene.roles && (
-          <ul className={styles.roles}>
-            {scene.roles.map((role) => (
-              <li key={role.role}>
-                <span className={styles.roleName}>{role.role}</span>
-                <span className={styles.roleCompany}>{role.company}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        {/* the story itself is in the letter; the stamp keeps the heading and the first tags */}
         <ul className={styles.tags}>
-          {scene.tags.map((tag) => (
+          {scene.tags.slice(0, 3).map((tag) => (
             <li key={tag.label} className={tag.accent ? `${styles.tag} ${styles.tagAccent}` : styles.tag}>
               {tag.label}
             </li>
