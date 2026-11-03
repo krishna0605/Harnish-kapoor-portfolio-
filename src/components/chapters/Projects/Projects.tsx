@@ -73,6 +73,14 @@ export function Projects() {
   const closed = PROJECTS.filter((project) => project.id !== openId);
   const step = closed.length > SLOTS.length ? (96 * SLOTS.length) / closed.length : 96;
 
+  // px per design px for the drawer: the page unit on the desk, the drawer box on smaller landscape screens
+  const unit = () => {
+    if (desk) return designUnit();
+    const drawer = drawerRef.current;
+    if (portrait || !drawer) return 0.6;
+    return Math.min(drawer.clientWidth / 742, drawer.clientHeight / 900);
+  };
+
   const folderButtons = () => [...(drawerRef.current?.querySelectorAll<HTMLButtonElement>("[data-folder]") ?? [])];
 
   // ---------- pulling a file out of the drawer ----------
@@ -186,7 +194,7 @@ export function Projects() {
     if (reduced) return;
     const buttons = folderButtons();
     const index = buttons.findIndex((button) => button.dataset.folder === id);
-    const k = desk ? designUnit() : 0.6;
+    const k = unit();
     // files that match a filter rest a little proud of the drawer
     const rest = filter === "all" || portrait ? 0 : -12 * k;
     buttons.forEach((button, i) => {
@@ -248,7 +256,7 @@ export function Projects() {
 
   useLayoutEffect(() => {
     if (reduced) return;
-    const k = desk ? designUnit() : 0.6;
+    const k = unit();
     const buttons = folderButtons();
     const sinking = buttons.filter((button) => button.dataset.sunk);
     const rising = buttons.filter((button) => !button.dataset.sunk);
@@ -397,6 +405,14 @@ export function Projects() {
 
         {/* stop 2 on smaller screens: the open file */}
         <div className={styles.stopFolder} data-snap>
+          <div className={styles.aside}>
+            <span className={styles.asideCount}>
+              File {open.number} of {pad(PROJECTS.length)}
+            </span>
+            <button type="button" className={styles.asideBack} onClick={() => goTo(chapterIndex("projects"))}>
+              ← All files
+            </button>
+          </div>
           <OpenFolder ref={openRef} key={open.id} project={open} onOpenCase={() => {
               playSound("quick", { volume: 0.7 });
               setCaseOpen(true);
