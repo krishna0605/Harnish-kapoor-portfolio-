@@ -133,12 +133,13 @@
   box-sizing: border-box;
   transform: rotate(-3deg);
   color: var(--ink);
-  font-size: max(7px, calc(16 * var(--cu)));
+  /* 13.5 (export: 16) so the longer intro still sits inside the green ground */
+  font-size: max(7px, calc(13.5 * var(--cu)));
   line-height: 1.42;
   font-weight: 500;
 }
 
-/* too small to read comfortably: the sentence is on the About chapter too */
+/* too small to read comfortably on small cards: the line is left out */
 @container arch (max-width: 420px) {
   .experience {
     display: none;

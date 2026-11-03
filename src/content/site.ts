@@ -21,13 +21,13 @@ export const HOME = {
   lastName: "Kapoor",
   role: [["Graphic Designer ", "&"], ["Motion Graphic Designer"]] as const,
   cta: "Explore my work",
-  tagline: "Stories drawn by hand and set in motion.",
+  tagline: "Turning ideas into visuals, with curiosity in every detail.",
   status: ["Currently ", "working as"] as const, // the first word is dropped on very small cards
   currentRole: "Graphic Designer",
   currentCompany: "at Accenture",
   experience:
-    "3+ years drawing brands, explainers and a festival-selected short film — every still designed as if it’s about to move.",
-  badge: "ANIMATION · ILLUSTRATION · MOTION ·",
+    "Part storyteller, part visual thinker, always curious. I turn ideas into thoughtful designs, playful illustrations and visual experiences that make people look twice.",
+  badge: "GRAPHIC DESIGNER · MOTION GRAPHIC DESIGNER ·",
 };
 
 // About chapter — text from the design "04 · About — the story so far"
@@ -445,8 +445,8 @@ export const ARCHIVE = {
  * small hurdle for address-harvesting bots. Visitors see and use them normally.
  */
 export const CONTACT = {
-  title: ["Let’s make", "it move"],
-  subtitle: "Commissions, collaborations or just a hello.",
+  title: ["Let’s create", "something", "meaningful."],
+  subtitle: "Whether it’s a new project, a creative collaboration or a quick hello, let’s get talking.",
   emailParts: ["harnish.kapoor03", "gmail", "com"],
   phoneParts: ["+91", "81605", "04042"],
   links: [

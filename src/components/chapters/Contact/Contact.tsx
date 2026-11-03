@@ -45,7 +45,7 @@ export function Contact() {
       data-snap
     >
       <div className={styles.text}>
-        <h2 id="contact-title" className={shared.title}>
+        <h2 id="contact-title" className={`${shared.title} ${styles.title}`}>
           {CONTACT.title.map((line) => (
             <span key={line} className={shared.titleLine}>
               <SplitLetters text={line} reveal="title" />

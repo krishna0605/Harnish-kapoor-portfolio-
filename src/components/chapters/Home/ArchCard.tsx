@@ -56,8 +56,11 @@ export function ArchCard({ paused }: { paused: boolean }) {
             <defs>
               <path id="hkBadgeCircle" d="M90,90 m-62,0 a62,62 0 1,1 124,0 a62,62 0 1,1 -124,0" />
             </defs>
-            <text className={styles.badgeText} fontSize="14" letterSpacing="3.2" fill="#2A2733">
-              <textPath href="#hkBadgeCircle">{HOME.badge}</textPath>
+            {/* textLength = the ring's circumference (2π·62): the words wrap it exactly once */}
+            <text className={styles.badgeText} fontSize="11.5" fill="#2A2733">
+              <textPath href="#hkBadgeCircle" textLength="389" lengthAdjust="spacing">
+                {HOME.badge}
+              </textPath>
             </text>
             <path
               d="M90 66 L96 84 L114 90 L96 96 L90 114 L84 96 L66 90 L84 84 Z"
