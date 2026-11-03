@@ -73,7 +73,8 @@
 .title {
   grid-area: title;
   margin: 0;
-  font-size: clamp(40px, min(15vw, 12svh), 120px);
+  /* four lines: "Ideas into / visuals. / Stories into / experiences." */
+  font-size: clamp(32px, min(10.5vw, 7.4svh), 96px);
   font-weight: 800;
   line-height: 0.92;
   letter-spacing: -0.012em;
@@ -406,7 +407,7 @@
   }
 
   .title {
-    font-size: clamp(30px, 10svh, 60px);
+    font-size: clamp(24px, 6.4svh, 48px);
   }
 
   .bio {
@@ -466,6 +467,16 @@
 
 /* short portrait phones: a tighter toolkit, so it and the closing line share one screen */
 @media (orientation: portrait) and (max-height: 700px) {
+  /* the four-line title and longer bio still share the first screen */
+  .title {
+    font-size: 30px;
+  }
+
+  .bio {
+    font-size: 13.5px;
+    line-height: 1.42;
+  }
+
   .toolkit {
     padding: 14px 12px;
     gap: 6px;
@@ -576,14 +587,14 @@
     position: absolute;
     left: calc(144 * var(--u));
     top: calc(176 * var(--u));
-    font-size: calc(208 * var(--u));
+    font-size: calc(104 * var(--u));
   }
 
   .bio {
     position: absolute;
     left: calc(144 * var(--u));
-    top: calc(600 * var(--u));
-    width: calc(590 * var(--u));
+    top: calc(592 * var(--u));
+    width: calc(630 * var(--u));
     max-width: none;
     font-size: max(14px, calc(22 * var(--u)));
   }
@@ -591,7 +602,7 @@
   .chips {
     position: absolute;
     left: calc(144 * var(--u));
-    top: calc(818 * var(--u));
+    top: calc(842 * var(--u));
     width: calc(600 * var(--u));
     gap: calc(10 * var(--u));
   }

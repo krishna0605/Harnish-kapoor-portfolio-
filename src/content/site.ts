@@ -150,8 +150,9 @@ const SCENES: Scene[] = [
 ];
 
 export const ABOUT = {
-  title: ["Frame by", "frame."] as const,
-  bio: "I’m Harnish — an animator, illustrator and designer with over three years across 2D animation, motion graphics, storyboarding, brand design and character creation. I love breathing life into characters and telling visual stories, one frame at a time.",
+  // typed line by line: the first two in bold, the last two in the italic accent
+  title: { lead: ["Ideas into", "visuals."], accent: ["Stories into", "experiences."] },
+  bio: "I’m Harnish — a graphic designer, illustrator and visual storyteller with 3+ years of experience exploring the many sides of visual communication. From building brand identities and illustrating characters to crafting motion graphics and thoughtful designs, I enjoy turning ideas into visuals that connect, communicate and leave an impression.",
   chips: [{ label: "B.Des Animation · GLS" }, { label: "3+ years" }, { label: "Films · Brands · Reels", accent: true }],
   hint: "Press play on the story",
   stampAlt: "Portrait of Harnish Kapoor as a postage stamp",

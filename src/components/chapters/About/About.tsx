@@ -244,7 +244,7 @@ export function About() {
         <div className={styles.intro}>
           <h2 id="about-title" className={styles.title}>
             <Typewriter
-              lines={[[{ text: ABOUT.title[0] }], [{ text: ABOUT.title[1], className: styles.titleAccent }]]}
+              lines={[...ABOUT.title.lead.map((text) => [{ text }]), ...ABOUT.title.accent.map((text) => [{ text, className: styles.titleAccent }])]}
               startDelay={400}
               holdMs={12000}
               paused={!inView}
