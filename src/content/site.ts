@@ -195,8 +195,6 @@ export const ABOUT = {
 
 export type Motif = "moon" | "lotus" | "sparkle" | "arch";
 
-// TODO: replace with real projects (title, description, tags, media from the media CDN).
-// An empty href renders the card without a link (never "#", which would show in the address bar).
 export const PROJECTS: { title: string; subtitle: string; tags: string[]; motif: Motif; href: string }[] = [
   { title: "Festival short film", subtitle: "A hand-drawn story, frame by frame", tags: ["Animation", "Film"], motif: "moon", href: "" },
   { title: "Brand explainer series", subtitle: "Complex ideas, told simply", tags: ["Motion", "Explainer"], motif: "lotus", href: "" },
@@ -207,6 +205,252 @@ export const PROJECTS: { title: string; subtitle: string; tags: string[]; motif:
 export const PROJECTS_INTRO = {
   title: ["Selected", "work"],
   subtitle: "Brands, explainers and a short film.",
+};
+
+/* ---------------------------------------------------------------------------
+   04 · Projects — "Open a folder". Each project is a file in the drawer; its
+   sections are the sheets of its case file (the inner page).
+
+   Images and videos: put the path in `src` (served through mediaUrl(), see
+   src/lib/media.ts). Until a `src` is set, the drawn placeholder `art` shows.
+   If media moves to a CDN, allow its host in next.config.ts (images.remotePatterns
+   and the Content-Security-Policy img-src / media-src).
+   --------------------------------------------------------------------------- */
+
+export type ProjectFilter = "film" | "branding" | "illustration" | "motion";
+
+export type CoverArtId = "insect" | "mood" | "fold" | "posters" | "handbook" | "books" | "motion" | "boards";
+
+export type Figure = { src?: string; alt: string; caption: string; art?: CoverArtId };
+
+export type CaseSection =
+  | { kind: "brief"; heading: string; text: string; facts: { label: string; value: string }[] }
+  | { kind: "process"; heading: string; note?: string; items: Figure[] }
+  | { kind: "drafts"; heading: string; note?: string; frames: Figure[] }
+  | { kind: "final"; heading: string; media: Figure & { video?: string; poster?: string } }
+  | { kind: "credits"; heading: string; credits: { role: string; name: string }[]; results: string[] };
+
+export type ProjectFile = {
+  /** test hook only; never shown in the URL */
+  id: string;
+  number: string;
+  title: string;
+  /** label on the open folder's tab: "01 · Short film" */
+  tab: string;
+  /** vertical label on the folder in the drawer */
+  type: string;
+  /** foot of the folder in the drawer, and the meta row of the open folder */
+  years: string;
+  context: string;
+  format: string;
+  summary: string;
+  tags: string[];
+  filters: ProjectFilter[];
+  color: string;
+  cover: Figure & { art: CoverArtId };
+  sections: CaseSection[];
+};
+
+/** Placeholder sheets for a project whose case file isn't written yet. TODO (Harnish): replace per project. */
+const draftSections = (art: CoverArtId, what: string): CaseSection[] => [
+  {
+    kind: "brief",
+    heading: "The brief",
+    text: `TODO (Harnish): the idea behind ${what}, and what it had to do.`,
+    facts: [
+      { label: "Role", value: "TODO" },
+      { label: "Team", value: "TODO" },
+      { label: "Tools", value: "TODO" },
+    ],
+  },
+  {
+    kind: "process",
+    heading: "Process",
+    note: "TODO (Harnish): sketches, boards and references.",
+    items: [
+      { alt: "Early sketch", caption: "TODO: first sketches", art },
+      { alt: "Moodboard", caption: "TODO: moodboard", art },
+      { alt: "Storyboard", caption: "TODO: storyboard", art },
+    ],
+  },
+  {
+    kind: "drafts",
+    heading: "Drafts",
+    note: "TODO (Harnish): how it changed along the way.",
+    frames: [
+      { alt: "Draft one", caption: "v1", art },
+      { alt: "Draft two", caption: "v2", art },
+      { alt: "Draft three", caption: "v3", art },
+      { alt: "Final draft", caption: "final", art },
+    ],
+  },
+  { kind: "final", heading: "The final frame", media: { alt: `The finished ${what}`, caption: "TODO: the finished piece", art } },
+  { kind: "credits", heading: "Credits", credits: [{ role: "TODO", name: "TODO" }], results: ["TODO (Harnish): results, screenings or reach"] },
+];
+
+export const ARCHIVE = {
+  intro: {
+    title: ["Open a", "folder."],
+    text: "Films, brands, books and motion. Every project is filed with its sketches, drafts and the final frame.",
+    hint: "Pull a tab to open a file",
+    drawerLabel: "The archive",
+    since: "2021 → now",
+  },
+  filters: [
+    { id: "all", label: "All" },
+    { id: "film", label: "Film & Animation" },
+    { id: "branding", label: "Branding" },
+    { id: "illustration", label: "Illustration" },
+    { id: "motion", label: "Motion" },
+  ] as { id: "all" | ProjectFilter; label: string }[],
+  projects: [
+    {
+      id: "insect",
+      number: "01",
+      title: "There Is an Insect Inside of Me",
+      tab: "Short film",
+      type: "Short film",
+      years: "2021",
+      context: "Collaborative",
+      format: "2D visual film",
+      summary: "Made with friends during COVID-19: isolation, uncertainty and the feelings in between, turned into visual sequences and poetry.",
+      tags: ["2D Animation", "Visual poetry", "Art direction"],
+      filters: ["film"],
+      color: "var(--lotus)",
+      cover: { alt: "Film still: a small insect under a full moon over green hills", caption: "Film still / poster", art: "insect" },
+      sections: [
+        {
+          kind: "brief",
+          heading: "The brief",
+          text: "Made with friends during COVID-19: isolation, uncertainty and the feelings in between, turned into visual sequences and poetry. TODO (Harnish): a few more lines on the idea.",
+          facts: [
+            { label: "Format", value: "2D visual film" },
+            { label: "Made", value: "2021, collaborative" },
+            { label: "Role", value: "TODO" },
+          ],
+        },
+        ...draftSections("insect", "the film").slice(1, 4),
+        {
+          kind: "credits",
+          heading: "Credits & festivals",
+          credits: [{ role: "TODO (Harnish): your role", name: "Harnish Kapoor" }],
+          results: ["7 official festival selections", "TODO (Harnish): festival names"],
+        },
+      ],
+    },
+    {
+      id: "aham-brahmasmi",
+      number: "02",
+      title: "Aham Brahmasmi",
+      tab: "Mood film",
+      type: "Mood film",
+      years: "",
+      context: "Academic",
+      format: "Mood film",
+      summary: "An academic mood film. TODO (Harnish): the story in one or two lines.",
+      tags: ["Mood film", "Animation"],
+      filters: ["film"],
+      color: "var(--lilac)",
+      cover: { alt: "Placeholder: a sun rising over a still horizon", caption: "Film still", art: "mood" },
+      sections: draftSections("mood", "the mood film"),
+    },
+    {
+      id: "fold-labs",
+      number: "03",
+      title: "Fold Labs",
+      tab: "Explainers",
+      type: "Explainers · Brand",
+      years: "2021–23",
+      context: "Freelance",
+      format: "Explainers · Brand",
+      summary: "Explainer films and brand pieces for Foldlabs. TODO (Harnish): what they explained and how.",
+      tags: ["Explainers", "Brand", "Motion"],
+      filters: ["branding", "motion"],
+      color: "var(--marigold)",
+      cover: { alt: "Placeholder: a folded paper shape unfolding", caption: "Explainer frame", art: "fold" },
+      sections: draftSections("fold", "the Foldlabs explainers"),
+    },
+    {
+      id: "era-and-canvas",
+      number: "04",
+      title: "Era and Canvas",
+      tab: "Brand",
+      type: "Brand · Posters",
+      years: "2021–23",
+      context: "Freelance",
+      format: "Brand · Posters",
+      summary: "A brand and its posters. TODO (Harnish): the brand, the idea and the poster series.",
+      tags: ["Branding", "Posters"],
+      filters: ["branding"],
+      color: "var(--sage)",
+      cover: { alt: "Placeholder: two posters pinned side by side", caption: "Poster", art: "posters" },
+      sections: draftSections("posters", "the posters"),
+    },
+    {
+      id: "mvac-handbook",
+      number: "05",
+      title: "MVAC Handbook",
+      tab: "Illustration",
+      type: "Illustration",
+      years: "2021–23",
+      context: "Freelance",
+      format: "Illustrated handbook",
+      summary: "Illustrations for the MVAC handbook. TODO (Harnish): who it was for and what it covered.",
+      tags: ["Illustration", "Editorial"],
+      filters: ["illustration"],
+      color: "#fffdf9",
+      cover: { alt: "Placeholder: an open handbook with an illustrated page", caption: "Spread", art: "handbook" },
+      sections: draftSections("handbook", "the handbook"),
+    },
+    {
+      id: "safety-troop-books",
+      number: "06",
+      title: "Safety Troop Books",
+      tab: "Books",
+      type: "Books · Comics",
+      years: "2023–24",
+      context: "Safety Troop",
+      format: "Books · Comics",
+      summary: "Books and comics made as Illustrator & Animator at Safety Troop. TODO (Harnish): the series and its readers.",
+      tags: ["Books", "Comics", "Illustration"],
+      filters: ["illustration"],
+      color: "var(--lotus)",
+      cover: { alt: "Placeholder: a comic page with three panels", caption: "Comic page", art: "books" },
+      sections: draftSections("books", "the books"),
+    },
+    {
+      id: "pathquest-motion",
+      number: "07",
+      title: "PathQuest Motion",
+      tab: "Motion",
+      type: "Motion graphics",
+      years: "2024–25",
+      context: "PathQuest",
+      format: "Motion graphics",
+      summary: "Motion graphics made as Motion Graphic Designer at PathQuest. TODO (Harnish): the pieces and what they did.",
+      tags: ["Motion graphics", "After Effects"],
+      filters: ["motion"],
+      color: "var(--lilac)",
+      cover: { alt: "Placeholder: shapes moving along a curved path", caption: "Motion frame", art: "motion" },
+      sections: draftSections("motion", "the motion pieces"),
+    },
+    {
+      id: "feature-storyboards",
+      number: "08",
+      title: "Feature Storyboards",
+      tab: "Storyboards",
+      type: "Storyboards",
+      years: "2021–23",
+      context: "Freelance",
+      format: "Storyboards · Animatics",
+      summary: "Storyboards and animatics for a Dag Compeau feature. TODO (Harnish): the film and the boards.",
+      tags: ["Storyboards", "Animatics", "Film"],
+      filters: ["film"],
+      color: "var(--marigold)",
+      cover: { alt: "Placeholder: a strip of storyboard panels", caption: "Board", art: "boards" },
+      sections: draftSections("boards", "the storyboards"),
+    },
+  ] satisfies ProjectFile[],
 };
 
 /**
