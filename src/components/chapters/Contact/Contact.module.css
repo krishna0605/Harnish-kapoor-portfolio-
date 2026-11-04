@@ -83,26 +83,150 @@
   background: var(--lilac);
 }
 
+/* ---------- Social links: scraps of torn paper, like the Send tab ---------- */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: max(12px, calc(18 * var(--u))) max(14px, calc(22 * var(--u)));
+  margin: calc(40 * var(--u)) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* stuck down at a slight angle; on hover it lifts off the page and straightens */
+.socialItem {
+  transform: rotate(var(--tilt));
+  transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.socialItem:hover,
+.socialItem:focus-within {
+  transform: translateY(-4px) rotate(0deg);
+}
+
+.socialItem:active {
+  transform: translateY(1px) rotate(0deg);
+}
+
 .social {
-  gap: max(6px, calc(8 * var(--u)));
+  display: inline-flex;
+  align-items: center;
+  gap: max(10px, calc(12 * var(--u)));
+  height: max(48px, calc(64 * var(--u)));
+  padding: 0 max(20px, calc(30 * var(--u))) 0 max(16px, calc(24 * var(--u)));
+  color: var(--ink);
+  /* set like the Send tab */
+  font-family: var(--font-display);
+  font-size: max(15px, calc(20 * var(--u)));
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.social:focus-visible {
+  outline: 2.5px solid var(--ink);
+  outline-offset: 4px;
 }
 
 .socialIcon {
-  width: max(14px, calc(18 * var(--u)));
-  height: max(14px, calc(18 * var(--u)));
+  width: max(24px, calc(32 * var(--u)));
+  height: max(24px, calc(32 * var(--u)));
+  flex-shrink: 0;
+  overflow: visible;
 }
 
-.links {
-  margin-top: calc(32 * var(--u));
+/* the logo animates itself: its lines are redrawn like a pencil sketch, then one part moves */
+.socialIcon [data-part] {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
 }
 
-.links a {
-  text-decoration: none;
-  transition: background-color 160ms ease;
+@media (prefers-reduced-motion: no-preference) {
+  .socialItem:hover .socialIcon [data-draw],
+  .socialItem:focus-within .socialIcon [data-draw] {
+    animation: socialRedraw 700ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+
+  /* Behance: the "e" hops */
+  .socialItem:hover [data-part="e"],
+  .socialItem:focus-within [data-part="e"] {
+    transform-origin: 50% 100%;
+    animation: socialHop 560ms cubic-bezier(0.34, 1.56, 0.64, 1) 420ms both;
+  }
+
+  /* Instagram: the lens clicks like a shutter, the flash winks */
+  .socialItem:hover [data-part="lens"],
+  .socialItem:focus-within [data-part="lens"] {
+    animation: socialShutter 520ms ease-in-out 420ms both;
+  }
+
+  .socialItem:hover [data-part="flash"],
+  .socialItem:focus-within [data-part="flash"] {
+    animation: socialFlash 520ms ease-out 640ms both;
+  }
+
+  /* LinkedIn: the dot on the "i" pops up and lands */
+  .socialItem:hover [data-part="dot"],
+  .socialItem:focus-within [data-part="dot"] {
+    animation: socialPop 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 420ms both;
+  }
 }
 
-.links a:hover {
-  background: var(--lilac);
+@keyframes socialRedraw {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes socialHop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  35% {
+    transform: translateY(-3px) scale(0.94, 1.08);
+  }
+  70% {
+    transform: translateY(0) scale(1.06, 0.92);
+  }
+}
+
+@keyframes socialShutter {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.55);
+  }
+  75% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes socialFlash {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(2.4);
+  }
+}
+
+@keyframes socialPop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-4px) scale(1.5);
+  }
 }
 
 /* ---------- The form: a white sheet torn from paper, taped to the page ---------- */
@@ -354,6 +478,24 @@
 
 /* ---------- Short landscape screens (phones held sideways) ---------- */
 @media (orientation: landscape) and (max-height: 560px) {
+  /* smaller paper scraps so the column still fits the short screen */
+  .links {
+    margin-top: 10px;
+    gap: 10px 12px;
+  }
+
+  .social {
+    height: 40px;
+    padding: 0 16px 0 12px;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .socialIcon {
+    width: 20px;
+    height: 20px;
+  }
+
   .sheet {
     padding: 14px 18px;
   }

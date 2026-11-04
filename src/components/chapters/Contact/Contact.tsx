@@ -12,6 +12,10 @@ import shared from "../chapter.module.css";
 import { useChapterReveal } from "../useChapterReveal";
 import styles from "./Contact.module.css";
 
+// the social scraps: pastels from the palette (Pond, Lotus, Lune), each stuck down at its own angle
+const SOCIAL_COLORS = ["#C3DAEC", "#F5C9C6", "#DCD3F2"];
+const SOCIAL_TILT = [-1.6, 1.2, -0.8];
+
 /**
  * Chapter 05 — Contact. Send opens the visitor's own email app with the message ready,
  * addressed to Harnish: the site itself sends nothing and needs no server.
@@ -69,19 +73,23 @@ export function Contact() {
             {details?.phone ?? " "}
           </a>
         </div>
-        <ul className={`${shared.tags} ${styles.links}`} data-reveal="block">
-          {CONTACT.links.map((link) => (
-            <li key={link.label}>
-              <a
-                href={link.href}
-                className={`${shared.tag} ${styles.social}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Harnish on ${link.label} (opens in a new tab)`}
-              >
-                <SocialIcon name={link.label} className={styles.socialIcon} />
-                {link.label}
-              </a>
+        {/* each link is a scrap of torn paper, like the form's Send tab */}
+        <ul className={styles.links} data-reveal="block">
+          {CONTACT.links.map((link, i) => (
+            <li key={link.label} className={styles.socialItem} style={{ "--tilt": `${SOCIAL_TILT[i % SOCIAL_TILT.length]}deg` } as React.CSSProperties}>
+              <TornPaper color={SOCIAL_COLORS[i % SOCIAL_COLORS.length]} seed={91 + i * 10} roughness={1.2} className={styles.socialTab}>
+                <a
+                  href={link.href}
+                  className={styles.social}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Harnish on ${link.label} (opens in a new tab)`}
+                  onPointerEnter={(event) => event.pointerType === "mouse" && playSound("quick", { throttle: 120, volume: 0.6 })}
+                >
+                  <SocialIcon name={link.label} className={styles.socialIcon} />
+                  {link.label}
+                </a>
+              </TornPaper>
             </li>
           ))}
         </ul>

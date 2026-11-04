@@ -105,3 +105,18 @@ test("Send opens the email app with the message ready; an empty form doesn't sen
   // the form keeps what was written
   await expect(form.locator("input[name=name]")).toHaveValue("Asha Rao");
 });
+
+test("the social links are torn-paper scraps; hovering one animates its logo", async ({ page }) => {
+  await page.goto("/#contact");
+  await page.waitForTimeout(2000);
+  const items = page.locator("#contact ul[class*=links] > li");
+  await expect(items).toHaveCount(3);
+  for (let i = 0; i < 3; i++) await expect(items.nth(i).locator("svg[data-torn]")).toHaveCount(1);
+  const instagram = page.getByRole("link", { name: "Harnish on Instagram (opens in a new tab)" });
+  const animating = () =>
+    instagram.evaluate((el) => [...el.querySelectorAll("[data-draw], [data-part]")].filter((part) => getComputedStyle(part).animationName !== "none").length);
+  expect(await animating()).toBe(0);
+  await instagram.hover();
+  await page.waitForTimeout(200);
+  expect(await animating()).toBeGreaterThan(0);
+});
