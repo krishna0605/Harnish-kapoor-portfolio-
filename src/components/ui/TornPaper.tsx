@@ -78,7 +78,8 @@ export function TornPaper({ color, seed, edges, roughness = 1, className, style,
       className={className ? `${styles.paper} ${className}` : styles.paper}
       style={{ "--paper-face": color, ...style } as React.CSSProperties}
     >
-      {size && (
+      {/* nothing to tear while hidden (0×0): an empty outline would be an invalid path */}
+      {size && size.w > 0 && size.h > 0 && (
         <svg
           className={styles.shape}
           width={size.w + BLEED * 2}
