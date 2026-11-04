@@ -202,3 +202,20 @@ test.describe("phone", () => {
     await expect(page.locator("html")).not.toHaveAttribute("data-sketch-mode", "");
   });
 });
+
+test("the tools fold into the pencil when sketch mode ends, even with marks on the page", async ({ page }) => {
+  const tools = page.locator("[data-sketch-ignore] [class*=tools]");
+  await sketchMode(page);
+  await expect(tools).toHaveJSProperty("inert", false);
+  await scribble(page, 230, 780);
+  await page.getByRole("button", { name: "Stop sketching" }).click();
+  await page.waitForTimeout(400);
+  await expect(tools).toHaveJSProperty("inert", true);
+  expect(await tools.evaluate((el) => getComputedStyle(el).opacity)).toBe("0");
+  expect(await inkAt(page, 300, 780)).toBeGreaterThan(60); // the marks stay
+  // back into sketch mode: the tools return, with the marks still there to save
+  await sketchMode(page);
+  await expect(tools).toHaveJSProperty("inert", false);
+  await expect(page.getByRole("button", { name: "Save view as PNG" })).toBeEnabled();
+  await expect(page.locator("[data-sketch-ignore] [role=status]", { hasText: "Back to browsing" })).toHaveCount(0);
+});

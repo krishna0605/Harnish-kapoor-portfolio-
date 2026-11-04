@@ -21,8 +21,8 @@ export function SketchDock() {
 
   const marks = state.strokes.filter((stroke) => stroke.points.length && stroke.layout === currentLayout()).length;
   const drawing = state.drawing;
-  // tools show in sketch mode, and afterwards while there are marks to save or clear
-  const expanded = drawing || marks > 0;
+  // the tools open with sketch mode and fold back into the pencil when it ends (the marks stay on the page)
+  const expanded = drawing;
   const { lockScroll } = useChapters();
 
   // sketch mode freezes the page: no scrolling, no keys, no drag (clicks are blocked in SketchLayer)
@@ -57,6 +57,8 @@ export function SketchDock() {
   const onPencil = () => {
     const on = !drawing;
     sketchStore.setDrawing(on);
+    if (!on) setConfirming(false);
+    else setToast(null); // the "back to browsing" note would sit over the sketch-mode label
     playSound(on ? "quick" : "slide", { volume: 0.5 });
     if (!on) say(touch ? "Scrolling again" : "Back to browsing");
   };
