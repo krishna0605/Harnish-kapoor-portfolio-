@@ -26,8 +26,10 @@ function clearHash() {
 /**
  * The sideways site. The track is pinned and moved horizontally while the page
  * scrolls vertically (wheel, trackpad, touch, keyboard). Mouse drag and horizontal
- * swipes move it too. After scrolling stops it snaps to the nearest chapter start
- * (or project card), in the direction of travel.
+ * swipes move it too, gliding on a little after a quick release. Wherever scrolling
+ * stops, the track stays: nothing snaps. Only deliberate moves jump to a place: the
+ * nav (goTo), the ← → keys stepping through [data-snap] stops, and tabbing to
+ * something off-screen.
  */
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -71,7 +73,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       const leftOf = (el: HTMLElement) => el.getBoundingClientRect().left - track.getBoundingClientRect().left;
 
       let chapterX: number[] = [];
-      let snapPoints: number[] = [0, 1];
+      let stops: number[] = [0, 1]; // [data-snap] positions as 0–1 progress, for the ← → keys
       const measure = () => {
         const d = distance() || 1;
         chapterX = chapters.map((el) => Math.min(leftOf(el), d));
@@ -79,7 +81,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           .toArray<HTMLElement>("[data-snap]", track)
           .filter((el) => el.getClientRects().length > 0)
           .map((el) => Math.min(1, Math.round((leftOf(el) / d) * 10000) / 10000));
-        snapPoints = [...new Set([0, ...points, 1])].sort((a, b) => a - b);
+        stops = [...new Set([0, ...points, 1])].sort((a, b) => a - b);
       };
 
       const tween = gsap.to(track, {
@@ -93,13 +95,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           scrub: true,
           invalidateOnRefresh: true,
           onRefresh: measure,
-          snap: {
-            snapTo: (value, self) => ScrollTrigger.snapDirectional(snapPoints)(value, self?.direction),
-            duration: reduced ? 0 : { min: 0.3, max: 0.8 },
-            delay: 0.12,
-            ease: "power2.inOut",
-            inertia: false,
-          },
           onUpdate: (self) => {
             const x = self.progress * distance();
             const edge = x + window.innerWidth * 0.45;
@@ -149,7 +144,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         scrollToX(chapterX[index] ?? 0, immediate);
       };
 
-      // ← → keys move between snap points
+      // ← → keys move between stops
       const onKey = (event: KeyboardEvent) => {
         if (locked) return;
         if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
@@ -158,8 +153,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         const progress = targetProgress();
         const next =
           event.key === "ArrowRight"
-            ? snapPoints.find((p) => p > progress + 0.001)
-            : [...snapPoints].reverse().find((p) => p < progress - 0.001);
+            ? stops.find((p) => p > progress + 0.001)
+            : [...stops].reverse().find((p) => p < progress - 0.001);
         if (next !== undefined) scrollToX(next * distance());
       };
       window.addEventListener("keydown", onKey);
@@ -183,9 +178,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       viewport.addEventListener("focusin", onFocus);
 
       // Mouse drag and horizontal swipes: the track follows the pointer from where the press
-      // started, then snaps onward. In sketch mode the page is locked and drags draw instead.
+      // started; a quick release glides on a little and eases to a stop, a slow one just stops.
+      // In sketch mode the page is locked and drags draw instead.
       let dragged = 0;
       let pressY = 0;
+      let dragScale = 1; // scroll px per pointer px for the drag in progress
       const observer = Observer.create({
         target: viewport,
         type: "pointer",
@@ -203,16 +200,31 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           if (mouse) track.classList.add(styles.dragging);
           const dx = self.x! - self.startX!;
           dragged = Math.abs(dx);
-          const y = gsap.utils.clamp(trigger.start, trigger.end, pressY - dx * (mouse ? 1.4 : 1.8));
+          dragScale = mouse ? 1.4 : 1.8;
+          const y = gsap.utils.clamp(trigger.start, trigger.end, pressY - dx * dragScale);
           if (lenis) lenis.scrollTo(y, { immediate: true });
           else window.scrollTo(0, y);
         },
         onDragEnd: (self) => {
           track.classList.remove(styles.dragging);
-          if (dragged < 6 || locked) return;
-          const direction = self.x! < self.startX! ? 1 : -1;
-          const next = ScrollTrigger.snapDirectional(snapPoints)(targetProgress(), direction);
-          scrollToX(next * distance());
+          if (dragged < 6 || locked || !lenis) return;
+          // the track's speed at release, in scroll px per second
+          const speed = -self.velocityX * dragScale;
+          if (Math.abs(speed) < 300) return; // a slow release just stops
+          // an ease-out-cubic glide starts at 3 × distance / duration, i.e. at the release speed;
+          // it goes at most one screen and never past either end of the track
+          const duration = 0.75;
+          const from = window.scrollY;
+          const throwBy = gsap.utils.clamp(-window.innerWidth, window.innerWidth, (speed * duration) / 3);
+          const y = gsap.utils.clamp(trigger.start, trigger.end, from + throwBy);
+          if (Math.abs(y - from) < 1) return;
+          destination = y;
+          lenis.scrollTo(y, {
+            duration,
+            easing: (t) => 1 - (1 - t) ** 3,
+            force: true,
+            onComplete: () => (destination = null),
+          });
         },
       });
       const blockClickAfterDrag = (event: MouseEvent) => {

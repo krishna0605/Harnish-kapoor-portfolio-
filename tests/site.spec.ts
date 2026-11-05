@@ -28,7 +28,7 @@ async function openChapter(page: Page, id: (typeof NAV)[number], menu: boolean) 
   }
   await expect(page.locator(`nav[aria-label="Main"] [data-go="${id}"]`)).toHaveAttribute("aria-current", "page");
   await expect(page).toHaveURL(/\/$/); // the address never shows the chapter
-  await page.waitForTimeout(1700); // scroll animation + snap
+  await page.waitForTimeout(1700); // scroll animation
 }
 
 /**
@@ -157,6 +157,62 @@ test.describe("1920×1080 matches the design exports", () => {
     expect(m.stamp).toEqual({ x: 790, y: 470, w: 394 });
     expect(m.firstCard).toMatchObject({ x: 1260, w: 360 });
     expect(m.toolkit).toEqual({ x: 3978, y: 140, w: 392 }); // eight stories: the end screen moved 660 along
+  });
+
+  test("scrolling and dragging stop where they stop: nothing snaps afterwards", async ({ page }) => {
+    // how far the track has moved, and where each chapter starts along it
+    const trackX = () =>
+      page.evaluate(() => Math.round(-new DOMMatrix(getComputedStyle(document.querySelector("[data-track]")!).transform).m41));
+    const chapterStarts = () =>
+      page.evaluate(() => {
+        const track = document.querySelector("[data-track]")!.getBoundingClientRect().left;
+        return [...document.querySelectorAll("[data-chapter]")].map((el) => Math.round(el.getBoundingClientRect().left - track));
+      });
+    const settle = async () => {
+      let last = await trackX();
+      for (let i = 0; i < 20; i++) {
+        await page.waitForTimeout(250);
+        const now = await trackX();
+        if (now === last) return now;
+        last = now;
+      }
+      return last;
+    };
+
+    await page.goto("/#about");
+    await page.waitForTimeout(3000);
+    const starts = await chapterStarts();
+    const aboutX = await trackX();
+
+    // a few wheel notches part way into About, short of Projects
+    await page.mouse.move(960, 1040);
+    for (let i = 0; i < 3; i++) {
+      await page.mouse.wheel(0, 250);
+      await page.waitForTimeout(60);
+    }
+    const stopped = await settle();
+    expect(stopped).toBeGreaterThan(aboutX + 100);
+    expect(stopped).toBeLessThan(starts[NAV.indexOf("projects")]);
+    await page.waitForTimeout(1500);
+    expect(await trackX(), "the track moved again after the wheel stopped").toBe(stopped);
+
+    // a quick mouse drag (on the story line, clear of the cards and the sketch dock)
+    // glides on a little past the release, then stays wherever it eased to
+    await page.mouse.move(1400, 560);
+    await page.mouse.down();
+    for (let i = 1; i <= 10; i++) {
+      await page.mouse.move(1400 - i * 30, 560);
+      await page.waitForTimeout(16);
+    }
+    await page.mouse.up();
+    const released = await trackX();
+    expect(released, "the drag moved the track").toBeGreaterThan(stopped + 200);
+    const glided = await settle();
+    expect(glided, "a quick release glides on").toBeGreaterThan(released + 50);
+    expect(glided - released).toBeLessThanOrEqual(1920); // never more than a screen
+    for (const start of starts) expect(Math.abs(glided - start), "the drag landed on a chapter start").toBeGreaterThan(2);
+    await page.waitForTimeout(1500);
+    expect(await trackX(), "the track moved again after the drag").toBe(glided);
   });
 });
 
