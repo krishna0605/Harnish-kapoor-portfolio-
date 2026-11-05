@@ -28,7 +28,8 @@
   background: var(--folder);
   border: var(--stroke) solid var(--ink);
   border-radius: 0 calc(16 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u));
-  box-shadow: calc(6 * var(--u)) calc(var(--shadow-y) * var(--u)) 0 var(--ink);
+  /* the same short drop for every folder, so none shows below the drawer's shelf */
+  box-shadow: calc(6 * var(--u)) calc(6 * var(--u)) 0 var(--ink);
   color: var(--ink);
   font: inherit;
   text-align: left;

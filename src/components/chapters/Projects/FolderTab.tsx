@@ -42,7 +42,6 @@ export function FolderTab({ project, slot, step, sunk, armed, onOpen, onPointerE
           "--top": geometry.top,
           "--h": geometry.height,
           "--folder": project.color,
-          "--shadow-y": geometry.height === 810 ? 14 : 6,
         } as React.CSSProperties
       }
       data-flip-id={project.id}
