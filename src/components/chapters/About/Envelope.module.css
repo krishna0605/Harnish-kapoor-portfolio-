@@ -35,7 +35,8 @@
 
 /* ---------- Envelope ---------- */
 .envelope {
-  --w: min(520px, 86vw);
+  /* wide, but never taller than ~60% of the screen (height = 0.62 × width) */
+  --w: min(720px, 88vw, calc(60svh / 0.62));
   position: relative;
   width: var(--w);
   height: calc(var(--w) * 0.62);
@@ -169,8 +170,9 @@
 
 /* ---------- Letter: laid out at reading size, scaled down inside the envelope ---------- */
 .letter {
-  --lw: min(640px, 92vw);
-  --lh: min(720px, 80svh);
+  --lw: min(960px, 94vw);
+  /* leaves room for the counter and arrows under it */
+  --lh: min(820px, calc(100svh - 170px));
   position: absolute;
   z-index: 2;
   left: 50%;
@@ -244,7 +246,7 @@
 
 .text {
   margin: 0;
-  font-size: clamp(15px, 1.6vw, 18px);
+  font-size: clamp(15px, 1.4vw, 19px);
   line-height: 1.6;
 }
 
@@ -381,6 +383,6 @@
   }
 
   .letter {
-    --lh: min(720px, 76svh);
+    --lh: min(820px, 76svh);
   }
 }
