@@ -306,7 +306,8 @@ export function About() {
         </div>
 
         {/* ---------- toolkit + closing ---------- */}
-        <div className={styles.endScreen} data-snap>
+        {/* a stop of its own in the sequence; on the board the end snap (below) covers it */}
+        <div className={styles.endScreen} data-snap={storyboard ? undefined : ""}>
           <section className={styles.toolkit} aria-labelledby="toolkit-title" data-toolkit data-reveal="toolkit">
             <h3 id="toolkit-title" className={styles.toolkitTitle}>
               {ABOUT.toolkit.title}

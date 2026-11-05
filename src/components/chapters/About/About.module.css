@@ -497,9 +497,17 @@
 }
 
 /* =====================================================================
-   STORYBOARD — the design's board, 4500×1080 with eight stories (landscape, ≥ 1325×745)
+   STORYBOARD — the design's board, 4500×1080 with eight stories (landscape, ≥ 1100×640)
    ===================================================================== */
-@media (orientation: landscape) and (min-width: 1325px) and (min-height: 745px) {
+@media (orientation: landscape) and (min-width: 1100px) and (min-height: 640px) {
+  /* on a short board the header's px minimums make it relatively taller than in the design:
+     the board scales to the screen less 48px, so the top-row stamps stay clear of it */
+  @media (max-height: 744px) {
+    .about {
+      --u: min(calc(100vw / 1920), calc((100svh - 48px) / 1080));
+    }
+  }
+
   .about {
     display: block;
     width: calc(4412 * var(--u)); /* BOARD_WIDTH in About.tsx */
@@ -518,9 +526,57 @@
 
   .intro,
   .storyRow,
-  .cell,
-  .endScreen {
+  .cell {
     display: contents;
+  }
+
+  /* the toolkit with the closing under it: stacked, so on a short board, where the pills'
+     px minimums make the card taller than the design, the closing moves down instead of
+     overlapping it (at 1920×1080 this is exactly the design: 140 and 688) */
+  .endScreen {
+    position: absolute;
+    left: calc(3978 * var(--u));
+    top: calc(140 * var(--u));
+    width: calc(392 * var(--u));
+    padding: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: calc(44 * var(--u));
+  }
+
+  .toolkit,
+  .closing {
+    flex: none;
+  }
+
+  /* boards shorter than the design's own range: a tighter end column, hung just under the
+     header (whatever the board's scale), so the closing stays above the bottom edge */
+  @media (max-height: 744px) {
+    .endScreen {
+      top: calc(var(--header-h) + 6px - (100svh - 1080 * var(--u)) / 2);
+      gap: calc(22 * var(--u));
+    }
+
+    .toolkit {
+      gap: calc(10 * var(--u));
+      padding: calc(22 * var(--u));
+    }
+
+    .tags {
+      gap: 4px;
+    }
+
+    .tag {
+      min-height: 16px;
+      padding-block: 1px;
+      line-height: 1.15;
+      letter-spacing: 0.03em; /* the long skill names stay on one line */
+    }
+
+    .closing {
+      gap: calc(16 * var(--u));
+    }
   }
 
   /* previous chapter edge */
@@ -659,17 +715,18 @@
     gap: calc(6 * var(--u));
   }
 
+  /* a pill too long for the card (on a small board) wraps inside it instead of poking out */
   .tag {
-    height: calc(26 * var(--u));
-    padding: 0 calc(10 * var(--u));
+    max-width: 100%;
+    height: auto;
+    min-height: max(18px, calc(26 * var(--u)));
+    padding: 2px max(6px, calc(10 * var(--u)));
     font-size: max(9px, calc(11 * var(--u)));
+    line-height: 1.2;
+    white-space: normal;
   }
 
   .toolkit {
-    position: absolute;
-    left: calc(3978 * var(--u));
-    top: calc(140 * var(--u));
-    width: calc(392 * var(--u));
     padding: calc(26 * var(--u));
     gap: calc(14 * var(--u));
     border-radius: calc(22 * var(--u));
@@ -689,10 +746,6 @@
   }
 
   .closing {
-    position: absolute;
-    left: calc(3978 * var(--u));
-    top: calc(688 * var(--u));
-    width: calc(392 * var(--u));
     gap: calc(22 * var(--u));
   }
 

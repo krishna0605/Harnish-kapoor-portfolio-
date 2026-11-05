@@ -283,13 +283,19 @@
 /* =====================================================================
    STORYBOARD — the design's board
    ===================================================================== */
-@media (orientation: landscape) and (min-width: 1325px) and (min-height: 745px) {
+@media (orientation: landscape) and (min-width: 1100px) and (min-height: 640px) {
   .stamp {
     --pu: var(--u);
   }
 
+  /* on a small board a long kicker wraps: it keeps clear of "SC 0n" and stays right-aligned */
   .head {
-    font-size: max(10px, calc(12 * var(--u)));
+    gap: calc(10 * var(--u));
+    font-size: max(9px, calc(12 * var(--u)));
+  }
+
+  .kicker {
+    text-align: right;
   }
 
   .art {

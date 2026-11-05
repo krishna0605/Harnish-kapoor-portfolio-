@@ -5,7 +5,10 @@ const NAV = ["home", "about", "experience", "projects", "contact"] as const;
 const SIZES = [
   { width: 1920, height: 1080 },
   { width: 1440, height: 900 },
+  { width: 1536, height: 730 },
+  { width: 1440, height: 700 },
   { width: 1280, height: 720 },
+  { width: 1100, height: 640 },
   { width: 1024, height: 768 },
   { width: 768, height: 1024 },
   { width: 390, height: 844 },
@@ -127,9 +130,16 @@ test.describe("1920×1080 matches the design exports", () => {
     await page.waitForTimeout(3000);
     const m = await page.evaluate(() => {
       const about = document.getElementById("about")!.getBoundingClientRect();
+      // position on the board (untransformed), however deep the element sits in it
       const at = (selector: string) => {
         const el = document.querySelector<HTMLElement>(selector)!;
-        return { x: Math.round(el.offsetLeft) + 0, y: Math.round(el.offsetTop) + 0, w: Math.round(el.offsetWidth) };
+        let x = 0;
+        let y = 0;
+        for (let node: HTMLElement | null = el; node && !/canvas/.test(String(node.className)); node = node.offsetParent as HTMLElement | null) {
+          x += node.offsetLeft;
+          y += node.offsetTop;
+        }
+        return { x: Math.round(x) + 0, y: Math.round(y) + 0, w: Math.round(el.offsetWidth) };
       };
       const title = document.getElementById("about-title")!.getBoundingClientRect();
       return {
