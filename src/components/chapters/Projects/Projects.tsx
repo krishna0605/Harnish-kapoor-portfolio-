@@ -56,6 +56,29 @@ export function Projects() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [armed, setArmed] = useState<string | null>(null);
   const [caseOpen, setCaseOpen] = useState(false);
+
+  // a desk wider than the design (a wide, short window): measure the room beyond its 1832u so
+  // the drawer can widen into it and the open file move to the middle (Projects.module.css).
+  // Set on the element directly: CSS can't divide one length by another.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (!desk) {
+      el.style.removeProperty("--spare");
+      el.style.removeProperty("--stretch");
+      return;
+    }
+    const fit = () => {
+      const u = designUnit();
+      const spare = Math.max(0, el.offsetWidth - 1832 * u);
+      const stretch = gsap.utils.clamp(1, 1.5, 1 + (0.6 * spare) / (742 * u));
+      el.style.setProperty("--spare", `${spare.toFixed(1)}px`);
+      el.style.setProperty("--stretch", stretch.toFixed(3));
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [desk]);
   useChapterReveal(ref);
 
   const flight = useRef<Flight | null>(null);

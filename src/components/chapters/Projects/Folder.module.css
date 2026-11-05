@@ -9,10 +9,13 @@
 /* ---------- a folder in the drawer ---------- */
 
 .slot {
+  /* --stretch: how much wider the drawer is than the design on a wide desk (1 = as designed;
+     set by Projects.tsx). --fx re-centres the contents in each folder's wider visible strip. */
+  --fx: calc(96 * var(--u) * (var(--stretch, 1) - 1) / 2);
   position: absolute;
-  left: calc(var(--i) * var(--step) * var(--u));
+  left: calc(var(--i) * var(--step) * var(--stretch, 1) * var(--u));
   top: calc(var(--top) * var(--u));
-  width: calc(124 * var(--u));
+  width: calc(124 * var(--stretch, 1) * var(--u));
   height: calc(var(--h) * var(--u));
 }
 
@@ -54,7 +57,7 @@
   position: absolute;
   left: calc(-1 * var(--stroke));
   top: calc(-30 * var(--u));
-  width: calc(70 * var(--u));
+  width: calc(70 * var(--stretch, 1) * var(--u));
   height: calc(30 * var(--u));
   box-sizing: border-box;
   background: var(--folder);
@@ -76,14 +79,14 @@
   position: absolute;
   left: 0;
   top: calc(18 * var(--u));
-  width: calc(96 * var(--u));
+  width: calc(96 * var(--stretch, 1) * var(--u));
   text-align: center;
   font-size: max(10px, calc(14 * var(--u)));
 }
 
 .folderDot {
   position: absolute;
-  left: calc(43 * var(--u));
+  left: calc(43 * var(--u) + var(--fx, 0px));
   top: calc(50 * var(--u));
   width: calc(10 * var(--u));
   height: calc(10 * var(--u));
@@ -93,7 +96,7 @@
 
 .folderTitle {
   position: absolute;
-  left: calc(22 * var(--u));
+  left: calc(22 * var(--u) + var(--fx, 0px));
   top: calc(84 * var(--u));
   writing-mode: vertical-rl;
   font-family: var(--font-accent);
@@ -105,7 +108,7 @@
 
 .folderType {
   position: absolute;
-  left: calc(64 * var(--u));
+  left: calc(64 * var(--u) + var(--fx, 0px));
   top: calc(88 * var(--u));
   writing-mode: vertical-rl;
   font-size: max(9.5px, calc(11 * var(--u)));
@@ -116,7 +119,7 @@
   position: absolute;
   left: 0;
   bottom: calc(18 * var(--u));
-  width: calc(96 * var(--u));
+  width: calc(96 * var(--stretch, 1) * var(--u));
   text-align: center;
   font-size: max(9.5px, calc(11 * var(--u)));
 }
@@ -125,7 +128,8 @@
 
 .open {
   position: absolute;
-  left: calc(640 * var(--u));
+  /* on a wide desk it moves into the middle of the room the wider drawer leaves */
+  left: calc(640 * var(--u) + var(--free, 0px) / 2);
   top: calc(212 * var(--u));
   width: calc(420 * var(--u));
   height: calc(748 * var(--u));

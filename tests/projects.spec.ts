@@ -159,6 +159,45 @@ test.describe("desk 1920×1080", () => {
   });
 });
 
+test.describe("wide, short desk 2000×800", () => {
+  test.use({ viewport: { width: 2000, height: 800 } });
+
+  test("the drawer widens to fill the screen and the open file sits between it and the intro", async ({ page }) => {
+    const errors = watchErrors(page);
+    await openProjects(page);
+    const m = await page.evaluate(() => {
+      // the next chapter's spine on the right edge
+      const spine = Math.min(
+        innerWidth,
+        ...[...document.querySelectorAll('[aria-label^="Chapter"]')].map((s) => s.getBoundingClientRect().left).filter((x) => x > innerWidth / 2),
+      );
+      const folders = [...document.querySelectorAll("[data-folder]")].map((f) => f.getBoundingClientRect());
+      const file = document.querySelector("[data-open-folder]")!.getBoundingClientRect();
+      const intro = document.querySelector("#projects-title, #projects h2")!.getBoundingClientRect();
+      return {
+        gapRight: spine - Math.max(...folders.map((b) => b.right)),
+        folderWidth: folders[0].width,
+        fileLeft: file.left,
+        fileRight: file.right,
+        introRight: intro.right,
+        drawerLeft: Math.min(...folders.map((b) => b.left)),
+        bottom: Math.max(...folders.map((b) => b.bottom)),
+      };
+    });
+    expect(m.gapRight).toBeLessThan(120); // was ~600 empty px before the drawer spread out
+    expect(m.folderWidth).toBeGreaterThan(124 * (800 / 1080) * 1.3); // wider than the design's folders
+    expect(m.fileLeft).toBeGreaterThan(m.introRight);
+    expect(m.fileRight).toBeLessThan(m.drawerLeft);
+    expect(m.bottom).toBeLessThanOrEqual(800);
+
+    // a pulled tab still swaps the files
+    await drawer(page).nth(1).click();
+    await page.waitForTimeout(2200);
+    await expect(open(page)).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+});
+
 test.describe("phone", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
 

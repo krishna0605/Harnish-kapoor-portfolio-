@@ -397,7 +397,12 @@
    DESK — the design's 1920×1080 frame (landscape, ≥ 1100×640)
    ===================================================================== */
 @media (orientation: landscape) and (min-width: 1100px) and (min-height: 640px) {
+  /* a desk wider than the design (wide, short windows): --spare is the room beyond the
+     design's 1832u, measured by Projects.tsx along with --stretch. The drawer widens by
+     --extra and the rest (--free) moves the drawer right and the open file to the middle. */
   .projects {
+    --extra: calc(742 * var(--u) * (var(--stretch, 1) - 1));
+    --free: max(0px, calc(var(--spare, 0px) - var(--extra)));
     display: block;
     width: max(calc(100vw - var(--spine)), calc(1832 * var(--u)));
   }
@@ -455,7 +460,7 @@
     position: absolute;
     left: 0;
     top: calc((100svh - 1080 * var(--u)) / 2);
-    width: calc(1832 * var(--u));
+    width: calc(1832 * var(--u) + var(--spare, 0px));
     height: calc(1080 * var(--u));
   }
 
@@ -515,23 +520,23 @@
   }
 
   .drawerBase {
-    left: calc(1080 * var(--u));
+    left: calc(1080 * var(--u) + var(--free));
     top: calc(948 * var(--u));
-    width: calc(742 * var(--u));
+    width: calc(742 * var(--stretch, 1) * var(--u));
     height: calc(40 * var(--u));
     border-radius: calc(8 * var(--u)) calc(8 * var(--u)) 0 0;
   }
 
   .folders {
     position: absolute;
-    left: calc(1100 * var(--u));
+    left: calc(1100 * var(--u) + var(--free));
     top: 0;
-    width: calc(742 * var(--u));
+    width: calc(742 * var(--stretch, 1) * var(--u));
     height: 100%;
   }
 
   .drawerLabel {
-    left: calc(1100 * var(--u));
+    left: calc(1100 * var(--u) + var(--free));
     top: calc(1000 * var(--u));
     font-size: max(9.5px, calc(12 * var(--u)));
   }
