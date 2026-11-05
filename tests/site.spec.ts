@@ -315,6 +315,33 @@ test.describe("motion and interaction", () => {
     expect(letter).toBeGreaterThan(600);
     await page.close();
   });
+
+  test("every story's letter is sized to its content and fits the screen without scrolling", async ({ browser }) => {
+    for (const viewport of [{ width: 1920, height: 1080 }, { width: 1440, height: 900 }]) {
+      const page = await browser.newPage({ viewport, reducedMotion: "reduce" });
+      await page.goto("/#experience");
+      await page.waitForTimeout(1500);
+      await page.locator('[data-card="0"] button').click();
+      await page.waitForTimeout(600);
+      for (let i = 0; i < 8; i++) {
+        const fit = await page.evaluate(() => {
+          const letter = document.querySelector<HTMLElement>("dialog[open] [class*=letter]")!;
+          const box = letter.getBoundingClientRect();
+          const pager = document.querySelector("dialog[open] [class*=pager]")!.getBoundingClientRect();
+          return { scrolls: "scroll" in letter.dataset, top: box.top, bottom: box.bottom, pager: pager.top, scale: box.width / letter.offsetWidth };
+        });
+        expect(fit.scrolls, `SC 0${i + 1} at ${viewport.width}`).toBe(false);
+        expect(fit.top).toBeGreaterThanOrEqual(68);
+        expect(fit.bottom).toBeLessThanOrEqual(fit.pager);
+        expect(fit.scale).toBeGreaterThan(0.99); // read at full size on these screens
+        if (i < 7) {
+          await page.getByRole("button", { name: "Next story" }).click();
+          await page.waitForTimeout(1200);
+        }
+      }
+      await page.close();
+    }
+  });
 });
 
 test.describe("phone", () => {

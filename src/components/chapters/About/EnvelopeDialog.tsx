@@ -24,6 +24,43 @@ type Phase = "opening" | "ready" | "busy" | "closing";
 
 const clamp01 = gsap.utils.clamp(0, 1);
 
+/** room left for the letter between the close button and the counter */
+const CONTROLS = 170;
+
+/** the smallest the letter's text may be read at */
+const MIN_TEXT_PX = 12;
+
+/**
+ * Sizes the letter to its story, so it needs no scrollbar: it starts at its reading width
+ * and, while the story is taller than the screen, widens (its text flows into more columns).
+ * If the widest sheet still doesn't fit, it comes forward a little smaller. Only where that
+ * would make the text unreadably small (long stories on a phone) does the sheet keep the
+ * screen's height and scroll inside instead. Returns the scale the letter is read at.
+ */
+function fitLetter(letter: HTMLElement) {
+  const room = innerHeight - CONTROLS;
+  const widest = Math.min(1560, innerWidth * 0.94);
+  let width = Math.min(960, widest);
+  const setWidth = () => gsap.set(letter, { width, marginLeft: -width / 2 });
+  delete letter.dataset.scroll;
+  gsap.set(letter, { height: "auto" });
+  setWidth();
+  while (letter.offsetHeight > room && width < widest) {
+    width = Math.min(widest, width + 80);
+    setWidth();
+  }
+  const fit = Math.min(1, room / letter.offsetHeight);
+  const text = letter.querySelector(`.${styles.text}`);
+  const textPx = text ? parseFloat(getComputedStyle(text).fontSize) : 16;
+  if (fit * textPx >= MIN_TEXT_PX) {
+    gsap.set(letter, { marginTop: -letter.offsetHeight / 2 });
+    return fit;
+  }
+  letter.dataset.scroll = "";
+  gsap.set(letter, { height: room, marginTop: -room / 2 });
+  return 1;
+}
+
 /**
  * An opened story. The stamp zooms in toward the viewer, zooms back out and sticks onto
  * an envelope. Scrolling then opens it: the flap lifts, the letter slides out and comes
@@ -110,6 +147,7 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
     const envelope = envelopeRef.current!;
     const letter = letterRef.current!;
     gsap.set(letter, { clearProps: "transform,clipPath,zIndex" });
+    const read = fitLetter(letter);
     const e = envelope.getBoundingClientRect();
     const l = letter.getBoundingClientRect();
     const scale = (e.width * 0.88) / l.width;
@@ -130,7 +168,7 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
       .set(flapRef.current, { zIndex: 1 }, 0.16)
       .to(letter, { y: risenY, clipPath: below(risenY), duration: 0.35 }, 0.3)
       .set(letter, { zIndex: 25 }, 0.65) // above the stamp once it comes forward
-      .to(letter, { y: 0, scale: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.35 }, 0.65)
+      .to(letter, { y: 0, scale: read, clipPath: "inset(0% 0% 0% 0%)", duration: 0.35 }, 0.65)
       .to([...parts(), flyerRef.current], { y: `+=${innerHeight * 0.6}`, duration: 0.3, ease: "power1.in" }, 0.68)
       .set([...parts(), flyerRef.current], { autoAlpha: 0 }, 0.98);
   };
@@ -334,10 +372,11 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
 
   useEffect(() => {
     const dialog = dialogRef.current!;
-    // the letter's own text scrolls natively once the letter is fully out
+    // a letter fits on screen whole, except a long one on a phone: that one's text scrolls
+    // natively once the letter is fully out
     const letterCanScroll = (delta: number) => {
       const body = letterBodyRef.current;
-      if (!body || target.current < 1) return false;
+      if (!body || target.current < 1 || letterRef.current?.dataset.scroll === undefined) return false;
       return delta > 0 ? body.scrollTop + body.clientHeight < body.scrollHeight - 1 : body.scrollTop > 0;
     };
     const observer = Observer.create({
@@ -405,9 +444,10 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
               </p>
               <h2 className={styles.title}>{scene.title}</h2>
               <span className={styles.rule} style={{ background: scene.color }} />
-              <p className={styles.text}>{scene.text}</p>
-              <div className={styles.columns}>
-                <div>
+              {/* the story flows into as many columns as the sheet is wide */}
+              <div className={styles.flow}>
+                <p className={styles.text}>{scene.text}</p>
+                <div className={styles.block}>
                   <h3 className={styles.columnTitle}>What I did</h3>
                   <ul className={styles.columnList}>
                     {scene.did.map((item) => (
@@ -415,19 +455,17 @@ export function EnvelopeDialog({ scenes, index, onIndexChange, onClose, getSourc
                     ))}
                   </ul>
                 </div>
-                <div>
-                  <h3 className={styles.columnTitle}>Highlights</h3>
-                  {scene.highlights.map((group, g) => (
-                    <div key={group.title ?? g} className={styles.highlightGroup}>
-                      {group.title && <h4 className={styles.groupTitle}>{group.title}</h4>}
-                      <ul className={styles.columnList}>
-                        {group.items.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
+                <h3 className={styles.columnTitle}>Highlights</h3>
+                {scene.highlights.map((group, g) => (
+                  <div key={group.title ?? g} className={styles.block}>
+                    {group.title && <h4 className={styles.groupTitle}>{group.title}</h4>}
+                    <ul className={styles.columnList}>
+                      {group.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
               <ul className={styles.tags}>
                 {scene.tags.map((tag) => (
